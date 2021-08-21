@@ -9,7 +9,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
     i am missing react
-        </p>
+        </p>nnjj
         <a
           className="App-link"
           href="https://reactjs.org"
