@@ -6,7 +6,7 @@ const UserAccess = require("./models/userAccess");
 
 const app = express();
 
-const mongoDB = "mongodb+srv://ucheNode-js:ucheprogramming@node-backend.jsodg.mongodb.net/VStreamer?retryWrites=true&w=majority";
+const mongoDB = "";
 
 ;
 mongoose
