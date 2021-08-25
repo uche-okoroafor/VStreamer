@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   // UserAccess.find()
   //   .sort({ createdAt: -1 })
-  //   .then((blogs) => {
+  //   .then((blogs) => {bhfhfjgjg
   //     res.render("home", { blogs });
   //   })
 res.send("working")
