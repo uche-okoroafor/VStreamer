@@ -1,19 +1,54 @@
-import './App.css';
-import Streamer from './Streamer'
-import Nav from './components/Nav'
-import UserPage from './components/UserPage'
-import { BrowserRouter as Router,Route} from "react-router-dom"
+import React, { Component } from "react";
+import "./App.css";
+import HomePage from "./routes/HomePage";
+import UserPage from "./routes/UserPage";
+import LoginPage from "./routes/LoginPage";
+import CreateAccountPage from "./routes/CreateAccountPage";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import StateContextProvider from './Context/StateContext';
+
+import axios from "axios";
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: "",
+    };
+  }
+
+//   componentDidMount() {
+//     axios.get("/login/chigo/123456")
+//      .then((response) => {
+//         this.setState({
+//           data: response.data,
+//         });
+
+// console.log(this.state.data)
+//       })
+//       .catch((err) => console.log(err,20));
+
+// axios.post("/create_account/ucheBond/123456")
+//      .then((response) => {
+//         this.setState({
+//           data: response.data,
+//         });
+
+// console.log(this.state.data)
+//       })
+//       .catch((err) => console.log(err,20));
 
 
-function App() {
-  return (
-    <div className="App">
-<Router>
-<Nav/>
+  // }
 
+  render() {
+    return (
+      <div className="App">
+				<StateContextProvider>
 
+        <Router>
 
-      {/* <header className="App-header">
+          {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -27,14 +62,15 @@ function App() {
           Learn React
         </a>
       </header> */}
-
-<Route  path="/" exact component={Streamer} />
-<Route  path="/users"  component={UserPage} />
-
-</Router>
-
-    </div>
-  );
+          <Route path="/" component={LoginPage} />
+         <Route path="/creat_account" component={CreateAccountPage} />
+          <Route path="/home" exact component={HomePage} />
+          <Route path="/:user" component={UserPage} />
+        </Router>
+				</StateContextProvider>
+      </div>
+    );
+  }
 }
 
 export default App;
