@@ -1,6 +1,7 @@
 import React, { createContext, Component } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 // import dogImages from '../dogImages.json';
 // import catImages from '../catImages.json';
@@ -12,21 +13,18 @@ class StateContextProvider extends Component {
   state = {
     userName: "",
     password: "",
-    secondPassword: "",
-    userExist: "",
+    loginUser: "",
     data: "",
     routeTo: "",
     userData: [],
-
-    // images: [ dogImages, catImages, birdImages ],
-    // displayedImages: dogImages,
-    // count: 0,
-    // clicked: null
+    response: "",
+    userConfirmed: false,
+allVideos:[]
   };
 
-  // componentDidMount() {
-  // 	this.shuffleImages();
-  // }
+  componentDidMount() {
+  	this.handleGetVideos();
+  }
 
   // shuffleCards = () => {
   // 	let images = this.state.displayedImages;
@@ -45,88 +43,99 @@ class StateContextProvider extends Component {
   // 		displayedImages: this.state.images[num]
   // 	});
   // };
+handleGetVideos= async ()=>{
+try{
+const response = await axios.post(`/download_videos/`)
+this.setState({allVideos:response.data})
+
+}
+catch (err) { 
+    console.log(err);
+  } 
+}
 
   handleUserAuthentication = async (userName, password) => {
-    // this.setState({
-    // routeTo:useHistory()
-    // })
-    // axios({
-    //   method: 'get',
-    //   url: '/user/12345',
-    //   data: {
-    //    userName,
-    //    password
-    //   }
-    // })
-    axios.get(`/login/${userName}/${password}`)
+    axios
+      .get(`/login/${userName}/${password}`)
       .then((response) => {
         this.setState({
-          userExist: response.data.status,
-        })
-
-// setTimeout(() => {
-//  this.handleGetUserData(userName,password)	
-// }, 2000);
+          userConfirmed: response.data.status,
+        });
       })
-.then( 
-()=>{
-this.handleGetUserData(userName,password)	
-
-}
-)
+      .then(() => {
+        this.handleGetUserData(userName);
+      })
       .catch((err) => console.log(err));
   };
-
-
-handleGetUserData= async (userName,password)=>{
-// console.log(this.state.userExist)
-
-        if (this.state.userExist) {
-
-         axios
-            .get(`/login/${userName}`)
-            .then((response) => {
-              this.setState({
-                userData: response.data.userData,
-              });
-
-            })
-            .catch((err) => console.log(err));
-        }
-
-}
-
-
-
 
   handleCreateUserAccount = (userName, password) => {
     axios
       .post(`/create_account/${userName}/${password}`)
       .then((response) => {
-        console.log(response.data);
+        this.setState({
+          userConfirmed: response.data.status,
+        });
+      })
+      .then(() => {
+        this.handleGetUserData(userName);
+      })
+
+      .catch((err) => console.log(err));
+  };
+
+  handleGetUserData = async (userName) => {
+    if (this.state.userConfirmed) {
+      axios
+        .get(`/login/${userName}`)
+        .then((response) => {
+          this.setState({
+            userData: response.data.userData,
+          });
+          this.setState({
+            loginUser: true,
+          });
+        })
+        .catch((err) => console.log(err));
+    } else {
+      this.setState({
+        loginUser: false,
+      });
+    }
+  };
+
+  uploadVideo = async (videoTitle, videoSource) => {
+    let userData = this.state.userData;
+    const videoId = uuidv4();
+  const userVideo = {
+        videoTitle,
+        videoSource,
+        videoId,
+    };
+
+
+axios.post(`/upload_video/${this.state.userData.userName}/${this.state.userData._id}`
+, userVideo)
+      .then((response) => {
+        console.log(response.data, "videos");
       })
       .catch((err) => console.log(err));
   };
 
-
-resetUserExist=()=>{
-this.setState({
-userExist:""
-})
-
-
-}
-
-
+  resetLoginUser = () => {
+    this.setState({
+      loginUser: "",
+    });
+  };
 
   render() {
     return (
       <StateContext.Provider
         value={{
           ...this.state,
+          uploadVideo: this.uploadVideo,
           handleUserAuthentication: this.handleUserAuthentication,
           handleCreateUserAccount: this.handleCreateUserAccount,
-         resetUserExist:this.resetUserExist
+          resetLoginUser: this.resetLoginUser,
         }}
       >
         {this.props.children}
