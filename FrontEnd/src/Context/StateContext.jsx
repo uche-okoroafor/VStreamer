@@ -19,7 +19,13 @@ class StateContextProvider extends Component {
     userData: [],
     response: "",
     userConfirmed: false,
-allVideos:[]
+allVideos:[],
+viewedVideo:{
+videoTitle:"",
+videoSource:"",
+_id:"22233",
+
+},
   };
 
   componentDidMount() {
@@ -56,7 +62,7 @@ catch (err) {
 
   handleUserAuthentication = async (userName, password) => {
     axios
-      .get(`/login/${userName}/${password}`)
+      .get(`/login/${userName}/`,{password})
       .then((response) => {
         this.setState({
           userConfirmed: response.data.status,
@@ -70,7 +76,7 @@ catch (err) {
 
   handleCreateUserAccount = (userName, password) => {
     axios
-      .post(`/create_account/${userName}/${password}`)
+      .post(`/create_account/${userName}`,{password})
       .then((response) => {
         this.setState({
           userConfirmed: response.data.status,
@@ -86,7 +92,7 @@ catch (err) {
   handleGetUserData = async (userName) => {
     if (this.state.userConfirmed) {
       axios
-        .get(`/login/${userName}`)
+        .get(`/login/${userName}/user_data`)
         .then((response) => {
           this.setState({
             userData: response.data.userData,
@@ -103,8 +109,17 @@ catch (err) {
     }
   };
 
+
+handleViewedVideo=(videoId)=>{
+const viewedVideo = this.state.allVideos.filter(video=>video._id === videoId)
+this.setState({
+viewedVideo:viewedVideo[0]
+})
+console.log(viewedVideo)
+}
+
+
   uploadVideo = async (videoTitle, videoSource) => {
-    let userData = this.state.userData;
     const videoId = uuidv4();
   const userVideo = {
         videoTitle,
@@ -136,6 +151,7 @@ axios.post(`/upload_video/${this.state.userData.userName}/${this.state.userData.
           handleUserAuthentication: this.handleUserAuthentication,
           handleCreateUserAccount: this.handleCreateUserAccount,
           resetLoginUser: this.resetLoginUser,
+handleViewedVideo:this.handleViewedVideo,
         }}
       >
         {this.props.children}
