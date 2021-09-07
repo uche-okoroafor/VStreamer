@@ -16,20 +16,23 @@ class StateContextProvider extends Component {
     loginUser: "",
     data: "",
     routeTo: "",
-    userData: [],
+    user: [],
     response: "",
     userConfirmed: false,
-allVideos:[],
-viewedVideo:{
-videoTitle:"",
-videoSource:"",
-_id:"22233",
-
-},
+    allVideos: [],
+    viewedVideo: {
+      videoTitle: "",
+      videoSource: "",
+      _id: "22233",
+      userData: {
+        userName: "Guest",
+        Videos: {},
+      },
+    },
   };
 
   componentDidMount() {
-  	this.handleGetVideos();
+    this.handleGetVideos();
   }
 
   // shuffleCards = () => {
@@ -49,59 +52,65 @@ _id:"22233",
   // 		displayedImages: this.state.images[num]
   // 	});
   // };
-handleGetVideos= async ()=>{
-try{
-const response = await axios.post(`/download_videos/`)
-this.setState({allVideos:response.data})
 
-}
-catch (err) { 
-    console.log(err);
-  } 
-}
+  handleGetVideos = async () => {
+    try {
+      const response = await axios.post(`/download_videos/`);
+      this.setState({ allVideos: response.data });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   handleUserAuthentication = async (userName, password) => {
+    let responseData = {};
+
     axios
-      .get(`/login/${userName}/`,{password})
+      .get(`/login/${userName}/`, { password })
       .then((response) => {
+        responseData = response.data;
+
         this.setState({
-          userConfirmed: response.data.status,
+          userConfirmed: responseData.status,
         });
       })
       .then(() => {
-        this.handleGetUserData(userName);
+        this.handleLoginUser(userName, responseData.userId);
       })
       .catch((err) => console.log(err));
   };
 
   handleCreateUserAccount = (userName, password) => {
+    let responseData = {};
+
     axios
-      .post(`/create_account/${userName}`,{password})
+      .post(`/create_account/${userName}`, { password })
       .then((response) => {
+        responseData = response.data;
+
         this.setState({
-          userConfirmed: response.data.status,
+          userConfirmed: responseData.status,
         });
       })
       .then(() => {
-        this.handleGetUserData(userName);
+        this.handleLoginUser(userName, responseData.userId);
       })
 
       .catch((err) => console.log(err));
   };
 
-  handleGetUserData = async (userName) => {
+  handleLoginUser = async (userName, userId) => {
     if (this.state.userConfirmed) {
-      axios
-        .get(`/login/${userName}/user_data`)
-        .then((response) => {
-          this.setState({
-            userData: response.data.userData,
-          });
-          this.setState({
-            loginUser: true,
-          });
-        })
-        .catch((err) => console.log(err));
+      try {
+        const loginUser = await this.handleGetUserData(userId, userName, true);
+        console.log(await this.handleGetUserData(userId, userName, true));
+
+        this.setState({
+          loginUser,
+        });
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       this.setState({
         loginUser: false,
@@ -109,27 +118,79 @@ catch (err) {
     }
   };
 
+  handleGetUserData = async (userId, userName, isUser) => {
+// this.check(userName,userId)
+    if (userName === this.state.user.userName) {
+   return   this.setState({
+        userData: this.state.user,
+      });
+    }
 
-handleViewedVideo=(videoId)=>{
-const viewedVideo = this.state.allVideos.filter(video=>video._id === videoId)
-this.setState({
-viewedVideo:viewedVideo[0]
-})
-console.log(viewedVideo)
-}
+    try {
+      const response = await axios.get(
+        `/login/${userName}/user_data/${userId}`,
+        { userId }
+      );
+      if (isUser) {
+        this.setState({
+          user: response.data.userData,
+        });
+        this.setState({
+          userData: response.data.userData,
+        });
 
+        return true;
+      } else {
+        this.setState({
+          userData: response.data.userData,
+        });
+        return false;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+
+// check=(userName,userId)=>{
+// axios.get(
+//         `/login/${userName}/user_data/${userId}`,
+//         { userId }
+//       )
+// .then((response)=>
+
+// console.log(response.data)
+
+// )
+// .catch(err=> console.log(err))
+
+// }
+
+
+  handleViewedVideo = (videoId) => {
+    const viewedVideo = this.state.allVideos.filter(
+      (video) => video._id === videoId
+    );
+    this.setState({
+      viewedVideo: viewedVideo[0],
+    });
+    console.log(viewedVideo);
+  };
 
   uploadVideo = async (videoTitle, videoSource) => {
     const videoId = uuidv4();
-  const userVideo = {
-        videoTitle,
-        videoSource,
-        videoId,
+    const userVideo = {
+      videoTitle,
+      videoSource,
+      videoId,
     };
 
-
-axios.post(`/upload_video/${this.state.userData.userName}/${this.state.userData._id}`
-, userVideo)
+    axios
+      .post(
+        `/upload_video/${this.state.user.userName}/${this.state.user._id}`,
+        userVideo
+      )
       .then((response) => {
         console.log(response.data, "videos");
       })
@@ -151,7 +212,7 @@ axios.post(`/upload_video/${this.state.userData.userName}/${this.state.userData.
           handleUserAuthentication: this.handleUserAuthentication,
           handleCreateUserAccount: this.handleCreateUserAccount,
           resetLoginUser: this.resetLoginUser,
-handleViewedVideo:this.handleViewedVideo,
+          handleViewedVideo: this.handleViewedVideo,
         }}
       >
         {this.props.children}
