@@ -24,11 +24,12 @@ class StateContextProvider extends Component {
       videoTitle: "",
       videoSource: "",
       _id: "22233",
-      userData: {
-        userName: "Guest",
-        Videos: {},
-      },
+     
     },
+ userData: {
+        userName: "Guest",
+        videos: [],
+      },
   };
 
   componentDidMount() {
@@ -66,7 +67,7 @@ class StateContextProvider extends Component {
     let responseData = {};
 
     axios
-      .get(`/login/${userName}/`, { password })
+      .post(`/login/${userName}/`, { password })
       .then((response) => {
         responseData = response.data;
 
@@ -103,7 +104,6 @@ class StateContextProvider extends Component {
     if (this.state.userConfirmed) {
       try {
         const loginUser = await this.handleGetUserData(userId, userName, true);
-        console.log(await this.handleGetUserData(userId, userName, true));
 
         this.setState({
           loginUser,
@@ -119,7 +119,6 @@ class StateContextProvider extends Component {
   };
 
   handleGetUserData = async (userId, userName, isUser) => {
-// this.check(userName,userId)
     if (userName === this.state.user.userName) {
    return   this.setState({
         userData: this.state.user,
@@ -127,8 +126,8 @@ class StateContextProvider extends Component {
     }
 
     try {
-      const response = await axios.get(
-        `/login/${userName}/user_data/${userId}`,
+      const response = await axios.post(
+        `/login/${userName}/user_data`,
         { userId }
       );
       if (isUser) {
@@ -153,19 +152,7 @@ class StateContextProvider extends Component {
 
 
 
-// check=(userName,userId)=>{
-// axios.get(
-//         `/login/${userName}/user_data/${userId}`,
-//         { userId }
-//       )
-// .then((response)=>
 
-// console.log(response.data)
-
-// )
-// .catch(err=> console.log(err))
-
-// }
 
 
   handleViewedVideo = (videoId) => {
@@ -192,7 +179,7 @@ class StateContextProvider extends Component {
         userVideo
       )
       .then((response) => {
-        console.log(response.data, "videos");
+        // console.log(response.data, "videos");
       })
       .catch((err) => console.log(err));
   };
