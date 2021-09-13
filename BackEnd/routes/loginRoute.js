@@ -1,16 +1,12 @@
 const express =require("express");
 router = express.Router();
-loginRoute =require("../Controllers/loginController")
+loginRoute =require("../controllers/loginController")
 
 
 
-router.get("/:userName/:password",loginRoute.loginController)
-router.get("/:userName",loginRoute.loginGetUserController )
-// router.get("/",(req,res)=>{
+router.post("/:userName",loginRoute.loginController)
+router.post("/:userName/user_data",loginRoute.getUserDataController )
 
-// console.log(req.params,200)
-// console.log(req.body,500)
-// })
 
 
 module.exports=router

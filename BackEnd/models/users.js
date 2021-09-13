@@ -1,23 +1,30 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const reqString = {
+  type: "string",
+  required: true,
+};
+const noReqString = {
+  type: "string",
+  required: false,
+};
+
 const usersSchema = new Schema(
   {
-    userName: {
-      type: "string",
-      required: true,
-    },
-    videos: {
-      videoUrl: {
-        type: "string",
-        required: true,
+    userName: reqString,
+    videos: [
+      {
+        videoSource:noReqString,
+        videoTitle:noReqString,
+        views:noReqString,
+        videoId:noReqString,
+        videoDuration: noReqString,
+        comments: noReqString,
+        likes:noReqString,
       },
-    },
-
-    userPhoto: {
-      type: "string",
-      required: true,
-    },
+    ],
+    userPhoto: noReqString,
   },
   { timestamps: true }
 );

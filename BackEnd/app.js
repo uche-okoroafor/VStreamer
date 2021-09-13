@@ -6,8 +6,8 @@ const mongoose = require("mongoose");
 const loginRoute = require("./routes/loginRoute.js");
 const createAccountRoute = require("./routes/createAccountRoute.js");
 const uploadVideoRoute = require("./routes/uploadVideoRoute.js");
-const downloadVideosRoute = require("./routes/downloadVideosRoute.js");
-const fs = require("fs");
+const streamVideosRoute = require("./routes/streamVideosRoute.js");
+const videosSourceRoute = require("./routes/videosSourceRoute.js");
 const usersRoute = require("./routes/usersRoute.js");
 require("dotenv/config");
 const app = express();
@@ -31,7 +31,8 @@ app.use("/login", loginRoute);
 app.use("/create_account", createAccountRoute);
 app.use("/users/", usersRoute);
 app.use("/upload_video", uploadVideoRoute);
-app.use("/download_videos", downloadVideosRoute);
+app.use("/stream_videos", streamVideosRoute);
+app.use("/videos_source", videosSourceRoute);
 
 
 
@@ -40,24 +41,7 @@ app.use("/download_videos", downloadVideosRoute);
 
 
 
-app.post("/upload/:videoId", (req, res) => {
-  console.log(req.params.videoId);  
-  if (req.files === null) {
-    return res.status(400).json({ meg: "no file upload" });
-  }
-  const file = req.files.file;
-  file.mv(`${__dirname}/uploads/${file.name}`, (err) => {
-    if (err) {
-      console.log(err, 500);
-      return res.status(500).send(err);
-    }
-fs.rename(`/uploads/${file.name}`,`/uploads/${req.params.videoId}`,(err)=>{ 
-console.log(err,101)
  
-})
-    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
-  });
-});
 
 // app.patch("/uses/uche/22266",(req,res)=>{
 

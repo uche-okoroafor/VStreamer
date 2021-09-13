@@ -1,8 +1,8 @@
 const express =require("express");
 router = express.Router();
-createAccountRoute =require("../Controllers/createAccountController")
+createAccountRoute =require("../controllers/createAccountController")
 
-router.post("/:userName/:password",createAccountRoute.createAccountController)
+router.post("/:userName",createAccountRoute.createAccountController)
 
 
 

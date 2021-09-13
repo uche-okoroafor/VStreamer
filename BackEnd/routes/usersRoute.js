@@ -1,6 +1,6 @@
 const express =require("express");
 router = express.Router();
-userRoute= require("../Controllers/usersController")
+userRoute= require("../controllers/usersController")
 
 router.get("/",userRoute.usersController)
  

@@ -12,6 +12,12 @@ type:'string',
 required:true
 
 },
+
+userId:{
+type:'string',
+required:true
+},
+
 },{timestamps:true})
 
 
