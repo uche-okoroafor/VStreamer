@@ -6,4 +6,7 @@ streamVideosRoute =require("../controllers/streamVideosController")
 
 router.get("/:videoSource",streamVideosRoute.streamVideosController)  
 
-module.exports=router  
+module.exports={
+router
+
+}  
