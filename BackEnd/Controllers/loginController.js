@@ -1,6 +1,6 @@
 const UserAccess = require("../models/userAccess");
 const Users = require("../models/users");
-const bcrypt = require('bcrypt')
+
 
 
 const loginController = async(req, res) => {
