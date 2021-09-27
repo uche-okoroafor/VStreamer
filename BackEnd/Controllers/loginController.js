@@ -22,6 +22,7 @@ const loginController = async(req, res) => {
  
                 }
             }
+         formikHelpers: FormikHelpers
             if (!userAccesData) {
                 return res.json({ status: false });
             }
