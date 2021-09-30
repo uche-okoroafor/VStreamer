@@ -4,7 +4,7 @@ const Users = require("../models/users");
 
 
 const loginController = async(req, res) => {
-    let userAccesData = false
+    let userAccesData = falsej
     UserAccess.find()
         .then((userAccess) => {
             for (let user of userAccess) {
