@@ -2,7 +2,7 @@ const UserAccess = require("../models/userAccess");
 const Users = require("../models/users");
 
 
-
+const loginController = async(req, res) => {
 const loginController = async(req, res) => {
     let userAccesData = falsej
     UserAccess.find()
