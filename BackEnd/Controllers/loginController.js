@@ -7,7 +7,7 @@ const loginController = async(req, res) => {
     let userAccesData = falsej
     UserAccess.find()
         .then((userAccess) => {
-            for (let user of userAccess) {
+
                 if (
                     req.params.userName === user.userName
                 ) {
