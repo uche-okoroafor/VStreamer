@@ -7,7 +7,7 @@ const fs = require("fs");
 const uploadVideoDetailsController = async (req, res) => {
   try {
     const uploadVideo = await Users.updateOne(
-      { _id: req.params.userId },
+      { _id: req.params.userIdName },
       {
         $push: {
           videos: [req.body],
