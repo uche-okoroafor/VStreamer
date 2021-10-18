@@ -3,12 +3,13 @@ const User = require('../models/User.js')
 exports.getAllVideosController = async (req, res) => {
   console.log('hers')
   try {
-    const allUsers = await User.find()
-    let allVideos = [];
-    allUsers.forEach((user) => {
-      allVideos = [...allVideos, ...user.userData.videos];
-    });
-    res.send({ data: allVideos })
+    const foundAllvideos = await User.find({}, { videos: 1, _id: 0 })
+    let allVideos = []
+    foundAllvideos.forEach(videoArray => {
+      allVideos = [...allVideos, ...videoArray.videos]
+    })
+
+    res.status(200).json(allVideos)
   } catch (err) {
     res.send(err)
   }
