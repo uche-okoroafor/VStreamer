@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Box, Container, Paper, Typography } from '@material-ui/core';
+import VideosList from '../../components/Videos/VideosList';
 import { useAuth } from '../../context/useAuthContext';
 
 export default function Home(): JSX.Element {
@@ -14,7 +15,7 @@ export default function Home(): JSX.Element {
       <Paper style={{ minHeight: '80vh', maxWidth: '80%', margin: '0 auto' }}>
 <Box>
 
-
+<VideosList/>
 
 </Box>
 
