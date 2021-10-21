@@ -1,103 +1,146 @@
-import { ChangeEvent, useState, useEffect, SyntheticEvent } from 'react';
-import useStyles from './useStyles';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { User } from '../../interface/User';
-import { useDebounce } from 'use-debounce';
-import { searchUsers } from '../../helpers/APICalls/searchUsers';
+/* eslint-disable prettier/prettier */
+import * as React from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+import { useState, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 
-interface Props {
-  search: string;
-  handleChange: (event: ChangeEvent<HTMLInputElement>, newInputValue: string) => void;
-}
-const Search = ({ search, handleChange }: Props): JSX.Element => {
-  const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  // limit our call to the api with a debounced value at max of 1 per 0.5 seconds
-  const [debouncedSearch] = useDebounce(search, 500);
+import { StyledInputBase, SearchIconWrapper, Search } from './SearchVideos/useStyles';
+import { Paper, Typography } from '@material-ui/core';
+import { ClassNames } from '@emotion/react';
+import useStyles from './SearchVideos/useStyles';
 
+export default function SearchVideo(): JSX.Element {
+  const [searchedVideo, setSearchedVideo] = useState<string>('');
+  // ()=>{useMemo(() => console.log(searchedVideo))}
+  const [drawerPosition, setDrawerPosition] = React.useState(false);
   const classes = useStyles();
 
-  const saveOptions = (users: User[]) => {
-    setOptions(users);
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+
+    setDrawerPosition(open);
   };
 
   useEffect(() => {
-    let active = true;
-
-    async function searchAndSaveUsers() {
-      // send request to backend API to get users limited to 20.
-      setLoading(true);
-      const response = await searchUsers({
-        search: debouncedSearch,
-      });
-
-      if (active && response && response.users) {
-        console.log(response);
-        saveOptions(response.users);
-      }
-      setLoading(false);
+    if (searchedVideo.length) {
+      setDrawerPosition(true);
     }
+  }, [searchedVideo]);
 
-    searchAndSaveUsers();
-
-    return () => {
-      active = false;
-    };
-  }, [debouncedSearch]);
-
-  // creates a combobox search which is dynamically updated with call's to the API
   return (
-    <form
-      onSubmit={(e: SyntheticEvent) => {
-        e.preventDefault();
-      }}
-    >
-      <Autocomplete
-        id="asynchronous-search"
-        open={open}
-        onOpen={() => {
-          setOpen(true);
-        }}
-        onClose={() => {
-          setOpen(false);
-        }}
-        getOptionSelected={(option, value) => option.username === value.username}
-        getOptionLabel={(option) => option.username}
-        options={options}
-        loading={loading}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        onInputChange={handleChange}
-        inputValue={search}
-        noOptionsText="No Users Found"
-        freeSolo
-        renderInput={(params) => (
-          <div className={classes.search}>
-            <InputBase
-              {...params.inputProps}
-              placeholder="Search"
-              classes={{
-                root: classes.searchRoot,
-                input: classes.searchInput,
-              }}
-              inputProps={{
-                'aria-label': 'search',
-                ref: params.InputProps.ref,
-              }}
-              startAdornment={
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-              }
-            />
-          </div>
-        )}
+    <Search>
+      <SearchIconWrapper>
+        <SearchIcon />
+      </SearchIconWrapper>
+      <StyledInputBase
+        placeholder="Search for Videos…"
+        value={searchedVideo}
+        onChange={(e) => setSearchedVideo(e.target.value)}
+        inputProps={{ 'aria-label': 'search' }}
       />
-    </form>
+      <Drawer className={classes.drawer} anchor="top" open={drawerPosition} onClose={toggleDrawer(false)}>
+        <Paper>
+          <Box
+            sx={{
+              bgcolor: 'grey.700',
+              color: 'text.primary',
+              p: 2,
+              position: 'absolute',
+              width: '93.7%',
+              zIndex: 'modal',
+              bottom: '-130%',
+              borderEndEndRadius: '5px',
+              borderBottomLeftRadius: '5px',
+            }}
+            role="presentation"
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+          >
+            <Typography>{searchedVideo}</Typography>
+          </Box>
+          dhgghaejjhhhhhhhhhhhhhadgsa Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi similique quae
+          officiis praesentium distinctio sunt sapiente ullam corporis accusantium voluptate rem quaerat, ducimus
+          repellat blanditiis quidem eveniet eligendi aspernatur sit.
+        </Paper>
+      </Drawer>
+      {/*  */}
+    </Search>
   );
-};
+}
 
-export default Search;
+// import * as React from 'react';
+// import Box from '@mui/material/Box';
+// import Drawer from '@mui/material/Drawer';
+// import Button from '@mui/material/Button';
+// import List from '@mui/material/List';
+// import Divider from '@mui/material/Divider';
+// import ListItem from '@mui/material/ListItem';
+// import ListItemIcon from '@mui/material/ListItemIcon';
+// import ListItemText from '@mui/material/ListItemText';
+// import InboxIcon from '@mui/icons-material/MoveToInbox';
+// import MailIcon from '@mui/icons-material/Mail';
+
+// type Anchor = 'top' | 'left' | 'bottom' | 'right';
+
+// export default function TemporaryDrawer() {
+//   const [state, setState] = React.useState({
+//     top: false,
+//   });
+
+//   const toggleDrawer = (anchor: Anchor, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+//     if (
+//       event.type === 'keydown' &&
+//       ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
+//     ) {
+//       return;
+//     }
+
+//     setState({ ...state, [anchor]: open });
+//   };
+
+//   const list = (anchor: Anchor) => (
+//     <Box
+//       sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+//       role="presentation"
+//       onClick={toggleDrawer(anchor, false)}
+//       onKeyDown={toggleDrawer(anchor, false)}
+//     >
+//       <List>
+//         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+//           <ListItem button key={text}>
+//             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+//             <ListItemText primary={text} />
+//           </ListItem>
+//         ))}
+//       </List>
+//       <Divider />
+//       <List>
+//         {['All mail', 'Trash', 'Spam'].map((text, index) => (
+//           <ListItem button key={text}>
+//             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+//             <ListItemText primary={text} />
+//           </ListItem>
+//         ))}
+//       </List>
+//     </Box>
+//   );
+
+//   return (
+//     <div>
+//       {(['left', 'right', 'top', 'bottom'] as const).map((anchor) => (
+//         <React.Fragment key={anchor}>
+//           <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
+//           <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
+//             {list(anchor)}
+//           </Drawer>
+//         </React.Fragment>
+//       ))}
+//     </div>
+//   );
+// }
