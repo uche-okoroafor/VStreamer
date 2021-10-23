@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-lowercase:true
+    lowercase: true
   },
   password: {
     type: String,
@@ -23,7 +23,8 @@ lowercase:true
     type: Date,
     default: Date.now
   },
-  userData: { type: Schema.Types.Object, ref: 'userData' }
+  userData: { type: Schema.Types.Object, ref: 'userData' },
+  videos: { type: Schema.Types.Array, ref: 'videos' }
 })
 
 userSchema.methods.matchPassword = async function (enteredPassword) {

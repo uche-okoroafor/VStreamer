@@ -5,6 +5,8 @@ import { useAuth } from '../../context/useAuthContext';
 import UploadVideoForm from './UploadVideoForm/UploadVideoForm';
 import { uploadVideoDetails, uploadVideoLocally } from '../../helpers/APICalls/uploadVideo';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import { useAllVideos } from '../../context/useAllVideosContext';
 
 interface IState {
   stringValue: string;
@@ -25,24 +27,27 @@ export default function UploadVideo(): JSX.Element {
   const [uploadProgress, setUploadProgress] = useState<IState['numberValue']>(0);
   const [videoSource, setVideoSource] = useState('');
   const [videoTitle, setVideoTitle] = useState('');
-  const [videoId, setVideoId] = useState('');
+  const [videoId, setVideoId] = useState<string>('');
   const [isSubmitting, setSubmitting] = useState(false);
+  const { handleGetAllVideos } = useAllVideos();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setSubmitting(true);
+    const video_Id = uuidv4();
+    setVideoId(video_Id);
     const userDetails: { username: string; email: string; id: string } | any = loggedInUser;
     const videoDetails = {
       username: userDetails.username,
       userId: userDetails.id,
       videoTitle,
       videoSource,
-      videoId,
+      videoId: video_Id,
     };
 
     if (file) {
-    const formData:any = new FormData();
-    formData.append("file", file);
+      const formData: any = new FormData();
+      formData.append('file', file);
       try {
         await axios
           .post(`/upload_video/${videoId}`, formData, {
@@ -64,12 +69,17 @@ export default function UploadVideo(): JSX.Element {
       } catch (err) {
         console.log(err, 400);
       }
+      // handleGetAllVideos()
     } else {
       try {
         const response = await uploadVideoDetails(videoDetails);
-        console.log(response);
+        if (response) {
+          console.log(response.data, 10101);
+        }
       } catch (err) {
-        console.log(err, 400);
+        if (err) {
+          console.log(err, 400);
+        }
       }
     }
 
@@ -135,7 +145,6 @@ export default function UploadVideo(): JSX.Element {
         handleSubmit={handleSubmit}
         videoSource={videoSource}
         setFile={setFile}
-        setVideoId={setVideoId}
         setFileName={setFileName}
         setVideoSource={setVideoSource}
         setVideoTitle={setVideoTitle}

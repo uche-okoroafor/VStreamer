@@ -48,7 +48,7 @@ app.use((req, res, next) => {
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
-app.use("/upload_video", uploadVideoRouter);
+app.use("/upload-video", uploadVideoRouter);
 app.use("/profile",userProfileRouter)
 app.use("/request", requestRouter);
 app.use("/get-videos", getVideosRouter);

@@ -5,7 +5,7 @@ const {
   uploadVideoController
 } = require('../controllers/uploadVideoController')
 
-router.post('/video_details', uploadVideoDetailsController)
+router.post('/video-details', uploadVideoDetailsController)
 router.post('/:videoId', uploadVideoController)
 
 module.exports = router

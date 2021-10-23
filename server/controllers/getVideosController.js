@@ -1,30 +1,28 @@
 const User = require('../models/User.js')
 
 exports.getAllVideosController = async (req, res) => {
-  console.log('hers')
   try {
-    const foundAllvideos = await User.find({}, { videos: 1, _id: 0 })
+    const response = await User.find({}, { videos: 1, _id: 0 })
     let allVideos = []
-    foundAllvideos.forEach(videoArray => {
+    response.forEach(videoArray => {
       allVideos = [...allVideos, ...videoArray.videos]
     })
 
     res.status(200).json(allVideos)
   } catch (err) {
-    res.send(err)
+    res.status(404).json(err)
   }
 }
 
 exports.getUserVideosController = async (req, res) => {
+  const { userId } = req.body
+  if (!userId) {
+    return res.status(404).json({ err: 'userId is undefined' })
+  }
   try {
-    const usersData = await Users.find()
-
-    let userVideos = []
-    usersData.forEach(user => {
-      userVideos = [...userVideos, ...user.videos]
-    })
-    res.send(userVideos)
+    const userVideos = await User.find({ _id: userId }, { videos: 1, _id: 0 })
+    res.status(200).json(userVideos)
   } catch (err) {
-    res.send(err)
+ res.status(404).json({err:err.message})
   }
 }

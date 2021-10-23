@@ -3,8 +3,7 @@ import React from 'react';
 import { Container, Paper, TextField, Typography, Button, Box, CircularProgress, styled } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
-import VideoPlayer from './VideoPlayer/VideoPlayer';
-import { v4 as uuidv4 } from 'uuid';
+import VideoPlayer from '../../../components/VideoPlayer/VideosPlayer';
 
 interface Props {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
@@ -16,7 +15,6 @@ interface Props {
       type: string;
     } | null>
   >;
-  setVideoId: React.Dispatch<React.SetStateAction<string>>;
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setVideoSource: React.Dispatch<React.SetStateAction<string>>;
   setVideoTitle: React.Dispatch<React.SetStateAction<string>>;
@@ -28,7 +26,6 @@ interface Props {
 export default function UploadVideoForm({
   handleSubmit,
   setFile,
-  setVideoId,
   setFileName,
   videoSource,
   setVideoSource,
@@ -36,13 +33,12 @@ export default function UploadVideoForm({
   isSubmitting,
   uploadProgress,
 }: Props): JSX.Element {
-  //   const { handleUpdataData, user } = useContext(StateContext);
-  const [tempOtherVideoSource, setTempOtherVideoSource] = useState('');
-  const [tempYoutubeVideoSource, setTempYoutubeVideoSource] = useState('');
-  const [displayVideo, setDisplayVideo] = useState('block');
-  const [displayYouTubeVideo, setDisplayYouTubeVideo] = useState('none');
-
-  //   const [videoSource, setVideoSource] = useState('');
+  const [tempVideoSource, setTempVideoSource] = useState<string | undefined>(undefined);
+  const videoPlayerOptions = {
+    width: '560',
+    height: '315',
+  autoPlay: false,
+  };
 
   const Input = styled('input')({
     display: 'none',
@@ -52,30 +48,30 @@ export default function UploadVideoForm({
   //  const classes = useStyles();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const video_Id = uuidv4();
     const { name, value, files } = e.target;
-    setVideoId(video_Id);
+    console.log(name, 1);
     switch (name) {
       case 'videoSource':
         if (value.includes('youtu')) {
           handleYoutubeUrl(value);
         } else {
-          setDisplayYouTubeVideo('none');
-          setDisplayVideo('block');
-          setTempOtherVideoSource(value);
           setVideoSource(value);
+          setTempVideoSource(value);
         }
 
         break;
 
       case 'videoFile':
         const videoTypeIndex = 6;
+        console.log(name, 2);
+
         if (files) {
           const videoType = files[0].type.slice(videoTypeIndex);
           setVideoTitle(files[0].name.replace(`.${videoType}`, ''));
-          setTempOtherVideoSource(URL.createObjectURL(files[0]));
-          setVideoSource(`/stream_videos/${video_Id}`);
+          setVideoSource(`/stream_videos/${Date.now()}`);
+          setTempVideoSource(URL.createObjectURL(files[0]));
           setFile(files[0]);
+          console.log(files, 1010);
         }
         break;
 
@@ -85,13 +81,10 @@ export default function UploadVideoForm({
   };
 
   const handleYoutubeUrl = (videoFromYoutube: string): void => {
-    setDisplayYouTubeVideo('block');
-    setDisplayVideo('none');
-
     if (+videoFromYoutube.includes('embed') > 0) {
       setVideoSource(videoFromYoutube);
 
-      return setTempYoutubeVideoSource(videoFromYoutube);
+      return setTempVideoSource(videoFromYoutube);
     } else {
       const urlParams = 'youtu.be/';
       const indexOfvideoId = videoFromYoutube.search(urlParams) + urlParams.length;
@@ -100,7 +93,7 @@ export default function UploadVideoForm({
       const videoUrl = `https://www.youtube.com/embed/${videoId}`;
       setVideoSource(videoUrl);
 
-      return setTempYoutubeVideoSource(videoUrl);
+      return setTempVideoSource(videoUrl);
     }
   };
 
@@ -112,14 +105,8 @@ export default function UploadVideoForm({
   return (
     <Container>
       <Paper style={{ minHeight: '80vh', maxWidth: '80%', margin: '0 auto' }}>
-        <Box>
-          <VideoPlayer
-            tempOtherVideoSource={tempOtherVideoSource}
-            videoSource={videoSource}
-            displayYouTubeVideo={displayYouTubeVideo}
-            tempYoutubeVideoSource={tempYoutubeVideoSource}
-            displayVideo={displayVideo}
-          />
+        <Box display="flex" justifyContent="center">
+          {videoSource && <VideoPlayer videoSource={tempVideoSource} videoPlayerOptions={videoPlayerOptions} />}
         </Box>
 
         <form onSubmit={handleSubmit} noValidate>
@@ -140,20 +127,55 @@ export default function UploadVideoForm({
                 <Typography align="center">OR</Typography>
               </Box>
               <Box display="flex" justifyContent="center">
+                <input
+                  accept="video/mp4"
+                  name="fileUpload"
+                  onChange={handleChange}
+                  id="contained-button-file"
+                  multiple
+                  type="file"
+                />
                 <label htmlFor="contained-button-file">
-                  <Input
+                  <Button variant="contained" component="span">
+                    ChooseFile
+                  </Button>
+
+                  <input
                     accept="video/mp4"
                     name="videoFile"
                     onChange={handleChange}
-                    id="contained-button-file"
+                    id="button-file"
                     multiple
                     type="file"
                   />
-                  <Button fullWidth color="secondary" variant="contained" component="span">
-                    Select Video
-                  </Button>
+                <input
+                  className="form-control"
+                  type="file"
+                  name="fileUpload"
+                  accept="video/mp4"
+                  onChange={handleChange}
+                  id="inputGroupFile02"
+                />
                 </label>
               </Box>
+              {/* <Box>
+                <input
+                  accept="video/mp4"
+                  name="videoFile"
+                  onChange={handleChange}
+                  id="button-file"
+                  multiple
+                  type="file"
+                />
+                <input
+                  className="form-control"
+                  type="file"
+                  name="fileUpload"
+                  accept="video/mp4"
+                  onChange={(e) => handleChange(e)}
+                  id="inputGroupFile02"
+                />
+              </Box> */}
             </>
           ) : (
             <>

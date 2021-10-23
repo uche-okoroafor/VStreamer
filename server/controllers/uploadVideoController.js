@@ -6,13 +6,13 @@ exports.uploadVideoDetailsController = async (req, res) => {
   if ((!userId, !videoTitle, !videoSource, !videoId)) {
     return res
       .status(400)
-      .json({ err: 'userId,videoSource,videoTitle or videoId is undefined' })
+      .send({ err: 'userId,videoSource,videoTitle or videoId is undefined' })
   }
 
   try {
     const videoUpdateStatus = await User.updateOne(
       { _id: userId },
-      { $push: { 'userData.videos': [{ videoTitle, videoSource, videoId }] } }
+      { $push: { videos: [{ videoTitle, videoSource, videoId }] } }
     )
 
     res.status(200).json(videoUpdateStatus)
