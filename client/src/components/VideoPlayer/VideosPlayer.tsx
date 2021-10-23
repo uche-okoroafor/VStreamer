@@ -15,7 +15,7 @@ export default function VideoPlayer({ videoSource, videoPlayerOptions }: IProps)
   // const nameRef = useRef<HTMLVideoElement | undefined>(undefined);
 
   useEffect(() => {
-    if (videoSource) console.log(document.getElementsByTagName('video'));
+    if (videoSource) console.log(videoSource);
   }, [videoSource]);
 
   return (
@@ -24,10 +24,11 @@ export default function VideoPlayer({ videoSource, videoPlayerOptions }: IProps)
         !videoSource.includes('youtube') ? (
           <video
             id="video"
-            // ref={nameRef}
+            autoPlay={videoPlayerOptions.autoPlay}
             width={videoPlayerOptions.width}
             height={videoPlayerOptions.height}
             controls
+            style={{ zIndex: 0 }}
           >
             <source src={videoSource} type="video/mp4" />
             <source src={videoSource} type="video/ogg" />
