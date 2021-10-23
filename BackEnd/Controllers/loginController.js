@@ -1,13 +1,13 @@
 const UserAccess = require("../models/userAccess");
 const Users = require("../models/users");
-const bcrypt = require('bcrypt')
 
 
 const loginController = async(req, res) => {
-    let userAccesData = false
+const loginController = async(req, res) => {
+    let userAccesData = falsej
     UserAccess.find()
         .then((userAccess) => {
-            for (let user of userAccess) {
+
                 if (
                     req.params.userName === user.userName
                 ) {
@@ -22,6 +22,7 @@ const loginController = async(req, res) => {
  
                 }
             }
+         formikHelpers: FormikHelpers
             if (!userAccesData) {
                 return res.json({ status: false });
             }
@@ -37,6 +38,28 @@ const loginController = async(req, res) => {
         })
         .catch((err) => console.log(err));
 };
+
+
+
+const stripe = require('stripe')(process.env.STRIPE_SK)
+const asyncHandler = require('express-async-handler')
+
+exports.createPaymentIntent = asyncHandler(async (req, res) => {
+  const { amount } = req.body
+  if (!amount) {
+    return res.status(400).json({ err: 'amount is undefined' })
+  }
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: 'usd'
+    })
+
+    res.status(200).send(paymentIntent.client_secret)
+  } catch (err) {
+    res.status(500).json({ statusCode: 500, message: err.message })
+  }
+})
 
 
 
