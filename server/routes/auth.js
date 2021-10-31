@@ -10,7 +10,7 @@ const {
 } = require('../controllers/auth');
 
 router.route('/register').post(validateRegister, registerUser);
-
+//validation
 router.route('/login').post(validateLogin, loginUser);
 
 router.route('/user').get(protect, loadUser);
