@@ -5,7 +5,7 @@ exports.getAllVideosController = async (req, res) => {
     const response = await User.find({}, { videos: 1, _id: 0 })
     let allVideos = []
     response.forEach(videoArray => {
-      allVideos = [...allVideos, ...videoArray.videos]
+      allVideos = [...allVideos, .....videoArray.videos]
     })
 
     res.status(200).json(allVideos)
