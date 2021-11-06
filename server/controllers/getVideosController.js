@@ -15,7 +15,7 @@ exports.getAllVideosController = async (req, res) => {
 }
 
 exports.getUserVideosController = async (req, res) => {
-  const { userId } = req.body
+  const userId = req.user.id
   if (!userId) {
     return res.status(404).json({ err: 'userId is undefined' })
   }
