@@ -2,7 +2,8 @@ const User = require('../models/User')
 const fs = require('fs')
 
 exports.uploadVideoDetailsController = async (req, res) => {
-  const { userId, videoTitle, videoSource, videoId } = req.body
+  const userId = req.user.id
+  const { videoTitle, videoSource, videoId } = req.body
   if ((!userId, !videoTitle, !videoSource, !videoId)) {
     return res
       .status(400)
