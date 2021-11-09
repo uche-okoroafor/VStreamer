@@ -4,6 +4,9 @@ import { Container, Paper, TextField, Typography, Button, Box, CircularProgress,
 import { Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
 import VideoPlayer from '../../../components/VideoPlayer/VideosPlayer';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DropZone from '../../../components/DropZone/DropZone';
+import RenderFile from '../../../components/RenderFile/RenderFile';
 
 interface Props {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
@@ -17,7 +20,7 @@ interface Props {
   >;
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setVideoSource: React.Dispatch<React.SetStateAction<string>>;
-  setVideoTitle: React.Dispatch<React.SetStateAction<string>>;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
   isSubmitting: boolean;
   uploadProgress: number | null | undefined;
   videoSource: string;
@@ -29,7 +32,7 @@ export default function UploadVideoForm({
   setFileName,
   videoSource,
   setVideoSource,
-  setVideoTitle,
+  setTitle,
   isSubmitting,
   uploadProgress,
 }: Props): JSX.Element {
@@ -37,9 +40,10 @@ export default function UploadVideoForm({
   const videoPlayerOptions = {
     width: '560',
     height: '315',
-  autoPlay: false,
+    autoPlay: true,
+    component: 'UploadVideoForm',
+    classes: null,
   };
-
   const Input = styled('input')({
     display: 'none',
   });
@@ -47,31 +51,28 @@ export default function UploadVideoForm({
 
   //  const classes = useStyles();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value, files } = e.target;
-    console.log(name, 1);
+  const handleChange = (name: string, value: string | undefined, file: any): void => {
     switch (name) {
       case 'videoSource':
-        if (value.includes('youtu')) {
-          handleYoutubeUrl(value);
-        } else {
-          setVideoSource(value);
-          setTempVideoSource(value);
+        if (value) {
+          if (value?.includes('youtu')) {
+            handleYoutubeUrl(value);
+          } else {
+            setVideoSource(value);
+            setTempVideoSource(value);
+          }
         }
 
         break;
 
       case 'videoFile':
         const videoTypeIndex = 6;
-        console.log(name, 2);
-
-        if (files) {
-          const videoType = files[0].type.slice(videoTypeIndex);
-          setVideoTitle(files[0].name.replace(`.${videoType}`, ''));
+        if (file) {
+          const videoType = file.type.slice(videoTypeIndex);
+          setTitle(file.name.replace(`.${videoType}`, ''));
           setVideoSource(`/stream_videos/${Date.now()}`);
-          setTempVideoSource(URL.createObjectURL(files[0]));
-          setFile(files[0]);
-          console.log(files, 1010);
+          setTempVideoSource(URL.createObjectURL(file));
+          setFile(file);
         }
         break;
 
@@ -100,122 +101,44 @@ export default function UploadVideoForm({
   const handleTitleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value, files } = e.target;
 
-    setVideoTitle(value);
+    setTitle(value);
   };
   return (
-    <Container>
-      <Paper style={{ minHeight: '80vh', maxWidth: '80%', margin: '0 auto' }}>
-        <Box display="flex" justifyContent="center">
-          {videoSource && <VideoPlayer videoSource={tempVideoSource} videoPlayerOptions={videoPlayerOptions} />}
-        </Box>
+    <Container style={{ paddingTop: '5rem' }}>
+      {!videoSource.length ? (
+        <DropZone handleChange={handleChange} />
+      ) : (
+        <Paper style={{ minHeight: '80vh', maxWidth: '80%', margin: '0 auto' }}>
+          <Box display="flex" justifyContent="center">
+            <Box>
+              <DeleteIcon onClick={() => setVideoSource('')} />
+              <VideoPlayer videoSource={tempVideoSource} videoPlayerOptions={videoPlayerOptions} />
+            </Box>
+          </Box>
 
-        <form onSubmit={handleSubmit} noValidate>
-          {!videoSource.length ? (
-            <>
-              {' '}
+          <form onSubmit={handleSubmit} noValidate>
+            <Box>
               <TextField
-                id="videoSource"
+                id="title"
                 label={<Typography>Enter Video Source</Typography>}
                 fullWidth
                 margin="normal"
                 variant="outlined"
-                name="videoSource"
+                name="title"
                 autoFocus
-                onChange={handleChange}
+                onChange={handleTitleInput}
               />
-              <Box>
-                <Typography align="center">OR</Typography>
-              </Box>
-              <Box display="flex" justifyContent="center">
-                <input
-                  accept="video/mp4"
-                  name="fileUpload"
-                  onChange={handleChange}
-                  id="contained-button-file"
-                  multiple
-                  type="file"
-                />
-                <label htmlFor="contained-button-file">
-                  <Button variant="contained" component="span">
-                    ChooseFile
-                  </Button>
-
-                  <input
-                    accept="video/mp4"
-                    name="videoFile"
-                    onChange={handleChange}
-                    id="button-file"
-                    multiple
-                    type="file"
-                  />
-                <input
-                  className="form-control"
-                  type="file"
-                  name="fileUpload"
-                  accept="video/mp4"
-                  onChange={handleChange}
-                  id="inputGroupFile02"
-                />
-                </label>
-              </Box>
-              {/* <Box>
-                <input
-                  accept="video/mp4"
-                  name="videoFile"
-                  onChange={handleChange}
-                  id="button-file"
-                  multiple
-                  type="file"
-                />
-                <input
-                  className="form-control"
-                  type="file"
-                  name="fileUpload"
-                  accept="video/mp4"
-                  onChange={(e) => handleChange(e)}
-                  id="inputGroupFile02"
-                />
-              </Box> */}
-            </>
-          ) : (
-            <>
-              <Box>
-                <TextField
-                  id="videoTitle"
-                  label={<Typography>Enter Video Source</Typography>}
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  name="videoTitle"
-                  autoFocus
-                  onChange={handleTitleInput}
-                />
-              </Box>
-
-              <Box>
-                <TextField
-                  id="videoTitle"
-                  label={<Typography>Enter Video Source</Typography>}
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  name="videoTitle"
-                  autoFocus
-                  onChange={handleTitleInput}
-                />
-              </Box>
-              <Box textAlign="center">
-                <Button type="submit" size="large" variant="contained" color="primary">
-                  {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'Upload Video'}
-                  {isSubmitting && `${uploadProgress}%`}
-                </Button>
-              </Box>
-            </>
-          )}
-
-          <div style={{ height: 95 }} />
-        </form>
-      </Paper>
+            </Box>
+            <Box textAlign="center">
+              <Button type="submit" size="large" variant="contained" color="primary">
+                {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'Upload Video'}
+                {isSubmitting && `${uploadProgress}%`}
+              </Button>
+            </Box>
+            <div style={{ height: 95 }} />
+          </form>
+        </Paper>
+      )}
     </Container>
   );
 }
