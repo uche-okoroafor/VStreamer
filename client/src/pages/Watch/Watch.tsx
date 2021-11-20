@@ -1,24 +1,36 @@
 import { Grid, Box } from '@mui/material';
-// import { useContext, useEffect, useState } from 'react';
-// import { useAllVideos } from '../../../../../context/useAllVideosContext';
-// import { useHistory } from 'react-router-dom';
-// import { List, Paper, Typography, ListItem, ListItemText } from '@material-ui/core';
-// import { IVideoDetails } from '../../../../../interface/VideoDetails';
-
 import { Typography } from '@mui/material';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import VideoPlayer from '../../components/VideoPlayer/VideosPlayer';
-import VideosList from '../../components/Videos/VideosList';
-interface IProps {
-  searchedVideo: string;
-}
+import VideosList from '../../components/VideosList/VideosList';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../../context/useAuthContext';
+import useStyles from './useStyles';
+import Likes from './Likes/Likes';
+import Comments from './Comments/Comments';
+import Viewers from './Viewers/Viewers';
 
 export default function Watch(): JSX.Element {
-  const { allVideos, watchVideo } = useAllVideos();
+  const classes = useStyles();
+  const { allVideos, watchVideo, handleGetAllVideos, handleSetWatchVideo } = useAllVideos();
+  const [videoSource, setVideoSource] = useState<string | undefined>(undefined);
+  const { loggedInUser } = useAuth();
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    if (watchVideo?.videoSource.includes('youtube')) {
+      setVideoSource(watchVideo?.videoSource + '?autoplay=1');
+    } else {
+      setVideoSource(watchVideo?.videoSource);
+    }
+  }, [watchVideo]);
+
   const videoPlayerOptions = {
     width: '800',
     height: '400',
     autoPlay: true,
+    component: 'Watch',
+    classes,
   };
 
   const videosListPlayerOptions = {
@@ -26,31 +38,50 @@ export default function Watch(): JSX.Element {
     height: '200',
     autoPlay: false,
     displayDetails: false,
+    component: 'Watch',
+    classes,
   };
-  // const [userName, setUserName] = useState("");
-  // // const [watchVideo, setViewedVideo] = useState("");
-  // const [userNotFound, setUserNotFound] = useState(false);
-  // const history = useHistory();
 
   return (
     <>
-      <Typography variant="h3">welcome to watch</Typography>
       <Grid container className="viewed-video-container">
         <Grid item xs={8} className="viewed-video-box">
           <Box display="flex" flexDirection="column">
             <Box display="flex" justifyContent="center" className="video-frame">
               {watchVideo ? (
-                <VideoPlayer videoSource={watchVideo.videoSource} videoPlayerOptions={videoPlayerOptions} />
+                <VideoPlayer videoSource={videoSource} videoPlayerOptions={videoPlayerOptions} />
               ) : (
                 <Typography>no video to display</Typography>
               )}
             </Box>
-            <Grid className="details">rjufruuritoototototppypypyp</Grid>
+            <Likes />
+            <Comments />
+            <Viewers />
           </Box>
         </Grid>
 
-        <Grid item xs={4} className="all-video-container">
-          <VideosList videoPlayerOptions={videosListPlayerOptions} allVideos={allVideos} />
+        <Grid
+          item
+          xs={4}
+          sx={{
+            position: 'relative',
+            height: '100vh',
+            overflow: 'hidden',
+          }}
+          className="all-video-container"
+        >
+          <Box
+            sx={{
+              overflowY: 'scroll',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: -17,
+              position: 'absolute',
+            }}
+          >
+            <VideosList videoPlayerOptions={videosListPlayerOptions} videos={allVideos} />
+          </Box>
         </Grid>
       </Grid>
     </>

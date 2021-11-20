@@ -18,13 +18,16 @@ import logo from '../NavBar/Logo/logo.svg';
 import { useHistory } from 'react-router';
 import { useAuth } from '../../../context/useAuthContext';
 import SearchVideo from './Search/Search';
-
+import { useUserDetails } from '../../../context/useUserContext';
+import { User } from '../../../interface/User';
+import { Avatar } from '@material-ui/core';
+import { stringAvatar } from '../../../pages/Profile/useStyles';
 
 interface IProps {
-  userName: string|undefined;
+  loggedInUser: User;
 }
 
-export default function NavBar({ userName }: IProps): JSX.Element {
+export default function NavBar({ loggedInUser }: IProps): JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -33,6 +36,7 @@ export default function NavBar({ userName }: IProps): JSX.Element {
 
   const { logout } = useAuth();
   const history = useHistory();
+  const { handleGetUser } = useUserDetails();
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,6 +52,11 @@ export default function NavBar({ userName }: IProps): JSX.Element {
     }
     setAnchorEl(null);
     handleMobileMenuClose();
+  };
+
+  const handleShowAccount = (): void => {
+    handleGetUser(loggedInUser);
+    history.push(`/profile/${loggedInUser.username}`);
   };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -126,7 +135,7 @@ export default function NavBar({ userName }: IProps): JSX.Element {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1}}>
       <AppBar position="static">
         <Toolbar sx={{ height: 50 }}>
           <IconButton
@@ -147,7 +156,7 @@ export default function NavBar({ userName }: IProps): JSX.Element {
             </Box>
           </IconButton>
 
-        <SearchVideo/>
+          <SearchVideo />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
@@ -161,12 +170,7 @@ export default function NavBar({ userName }: IProps): JSX.Element {
               </Badge> */}
               <Typography>Home</Typography>
             </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-              onClick={() => history.push(`/profile/${userName}`)}
-            >
+            <IconButton size="large" aria-label="show 17 new notifications" color="inherit" onClick={handleShowAccount}>
               {/* <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
               </Badge> */}
@@ -185,6 +189,20 @@ export default function NavBar({ userName }: IProps): JSX.Element {
 
               <Typography>UploadVideo</Typography>
             </IconButton>
+
+            <IconButton
+              size="large"
+              aria-label="show 17 new notifications"
+              color="inherit"
+              onClick={() => history.push('/DragDrop')}
+            >
+              {/* <Badge badgeContent={17} color="error">
+                <NotificationsIcon />
+              </Badge> */}
+
+              <Typography>DragDrop</Typography>
+            </IconButton>
+
             <IconButton
               size="large"
               edge="end"
@@ -194,7 +212,8 @@ export default function NavBar({ userName }: IProps): JSX.Element {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              {/* <AccountCircle /> */}
+              <Avatar {...stringAvatar(loggedInUser.username.toUpperCase(), 50, 50)} src=" userDetails.image" />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

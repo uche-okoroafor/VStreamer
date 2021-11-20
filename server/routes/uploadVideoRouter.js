@@ -4,8 +4,8 @@ const {
   uploadVideoDetailsController,
   uploadVideoController
 } = require('../controllers/uploadVideoController')
+const { upload } = require('../middleware/multerConfig')
 
 router.post('/video-details', uploadVideoDetailsController)
-router.post('/:videoId', uploadVideoController)
-
+router.post('/upload-video', upload, uploadVideoController)
 module.exports = router

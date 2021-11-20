@@ -16,6 +16,8 @@ import Profile from './pages/Profile/Profile';
 
 import './App.css';
 import UploadVideo from './pages/UploadVideo/UploadVideo';
+import { UserDetailsProvider } from './context/useUserContext';
+import DragDrop from './pages/DragDrop/Dragdrop';
 
 function App(): JSX.Element {
   return (
@@ -26,24 +28,27 @@ function App(): JSX.Element {
             <SocketProvider>
               {/* <UploadVideoProvider> */}
               <AllVideosProvider>
-                <Layout />
-                <Switch>
-                  <>
-                    <Route exact path="/login" component={Login} />
-                    <Route exact path="/signup" component={Signup} />
-                    <Route exact path="/upload-video" component={UploadVideo} />
-                    <Route exact path="/home" component={Home} />
-                    <Route exact path="/watch/:videoTitle" component={Watch} />
-                    <Route exact path="/profile/:username" component={Profile} />
+                <UserDetailsProvider>
+                  <Layout />
+                  <Switch>
+                    <>
+                      <Route exact path="/login" component={Login} />
+                      <Route exact path="/signup" component={Signup} />
+                      <Route exact path="/upload-video" component={UploadVideo} />
+                      <Route exact path="/home" component={Home} />
+                      <Route exact path="/watch/:title" component={Watch} />
+                      <Route exact path="/profile/:username" component={Profile} />
+                      <Route exact path="/DragDrop" component={DragDrop} />
 
-                    <Route path="/">
-                      <Redirect to="/home" />
-                    </Route>
-                    <Route path="*">
-                      <Redirect to="/login" />
-                    </Route>
-                  </>
-                </Switch>
+                      <Route path="/">
+                        <Redirect to="/home" />
+                      </Route>
+                      <Route path="*">
+                        <Redirect to="/login" />
+                      </Route>
+                    </>
+                  </Switch>
+                </UserDetailsProvider>
               </AllVideosProvider>
               {/* </UploadVideoProvider> */}
             </SocketProvider>
