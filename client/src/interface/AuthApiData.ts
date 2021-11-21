@@ -1,3 +1,4 @@
+import { string } from 'yup/lib/locale';
 import { User } from './User';
 
 export interface AuthApiDataSuccess {
@@ -7,6 +8,16 @@ export interface AuthApiDataSuccess {
 }
 
 export interface AuthApiData {
+  error?: { message: string };
+  success?: AuthApiDataSuccess;
+}
+
+export interface DemoAuthData {
+  error?: { message: string };
+  success?: AuthApiDataSuccess;
+}
+
+export interface UploadProfilePic {
   error?: { message: string };
   success?: AuthApiDataSuccess;
 }

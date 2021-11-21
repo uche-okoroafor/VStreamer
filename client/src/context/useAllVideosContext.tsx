@@ -2,45 +2,72 @@
 import axios from 'axios';
 
 import { useState, useContext, createContext, FunctionComponent, useEffect, useCallback } from 'react';
-import { getAllVideos } from '../helpers/APICalls/getVideos';
+import { getAllVideos } from '../helpers/APICalls/videosApis';
 // import logoutAPI from '../helpers/APICalls/logout';
 import { IAllVideos, IVideoDetails } from '../interface/VideoDetails';
 
 interface IAllVideosContext {
   handleGetAllVideos: () => void;
-  handleSetwatchVideo: (videoDetails: IAllVideosContext['watchVideo']) => void;
+  handleSetWatchVideo: (videoDetails: IAllVideosContext['watchVideo']) => void;
   allVideos: IAllVideos | undefined;
   watchVideo: IVideoDetails | undefined;
+  // handleSetEditVideo: (videoDetails: IAllVideosContext['watchVideo']) => void;
+  // editVideo: IVideoDetails | undefined;
+  // setEditVideo: React.Dispatch<React.SetStateAction<IVideoDetails | undefined>>;
 }
 
 export const AllVideosContext = createContext<IAllVideosContext>({
   handleGetAllVideos: () => null,
-  handleSetwatchVideo: () => null,
+  handleSetWatchVideo: () => null,
+  // handleSetEditVideo: () => null,
+  // editVideo: undefined,
   allVideos: undefined,
   watchVideo: undefined,
+  // setEditVideo:undefined
 });
 
 export const AllVideosProvider: FunctionComponent = ({ children }): JSX.Element => {
   const [allVideos, setAllVideos] = useState<IAllVideosContext['allVideos']>(undefined);
-  const [watchVideo, setwatchVideo] = useState<IAllVideosContext['watchVideo']>(undefined);
+  const [watchVideo, setWatchVideo] = useState<IAllVideosContext['watchVideo']>(undefined);
+  // const [editVideo, setEditVideo] = useState<IAllVideosContext['watchVideo']>(undefined);
   const handleGetAllVideos = async (): Promise<void> => {
     try {
       const response = await getAllVideos();
-      setAllVideos(response);
+      if (response) {
+        setAllVideos(response);
+      }
     } catch (err) {
       console.log(err);
     }
   };
-  const handleSetwatchVideo = (videoDetails: IAllVideosContext['watchVideo']): void => {
-    setwatchVideo(videoDetails);
-    console.log(watchVideo,10000);
+
+  const handleSetWatchVideo = (videoDetails: IAllVideosContext['watchVideo']): void => {
+    const watchedVideo = allVideos?.filter((video: IVideoDetails) => video.videoId === videoDetails?.videoId);
+    setWatchVideo(watchedVideo[0]);
   };
+
+  // const handleSetEditVideo = (videoDetails: IAllVideosContext['watchVideo']): void => {
+  //   setEditVideo(videoDetails);
+  //   console.log('here');
+  // };
+
   useEffect(() => {
     handleGetAllVideos();
-  }, [allVideos]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <AllVideosContext.Provider value={{ allVideos, watchVideo, handleGetAllVideos, handleSetwatchVideo }}>
+    <AllVideosContext.Provider
+      value={{
+        allVideos,
+        // editVideo,
+        watchVideo,
+        handleGetAllVideos,
+        handleSetWatchVideo,
+        // handleSetEditVideo,
+        // setEditVideo,
+      }}
+    >
       {children}
     </AllVideosContext.Provider>
   );

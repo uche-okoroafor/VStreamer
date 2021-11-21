@@ -1,43 +1,39 @@
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { Typography } from '@mui/material';
-import { useEffect, useRef } from 'react';
+import { Component, useEffect, useRef } from 'react';
 
 interface IProps {
   videoSource: string | undefined;
+
   videoPlayerOptions: {
     width: string;
     height: string;
     autoPlay: boolean;
+    component: string;
+    classes: any;
   };
 }
 
 export default function VideoPlayer({ videoSource, videoPlayerOptions }: IProps): JSX.Element {
-  // const nameRef = useRef<HTMLVideoElement | undefined>(undefined);
+  const { width, height, autoPlay, component, classes } = videoPlayerOptions;
 
-  useEffect(() => {
-    if (videoSource) console.log(videoSource);
-  }, [videoSource]);
+  // useEffect(() => {
+  //   if (videoSource) console.log(videoSource);
+  // }, [videoSource]);
 
   return (
     <>
       {videoSource ? (
         !videoSource.includes('youtube') ? (
-          <video
-            id="video"
-            autoPlay={videoPlayerOptions.autoPlay}
-            width={videoPlayerOptions.width}
-            height={videoPlayerOptions.height}
-            controls
-            style={{ zIndex: 0 }}
-          >
+          <video id="video" autoPlay={autoPlay} width={width} height={height} controls style={{ zIndex: 0 }}>
             <source src={videoSource} type="video/mp4" />
             <source src={videoSource} type="video/ogg" />
             Your browser does not support HTML video.
           </video>
         ) : (
           <iframe
-            width={videoPlayerOptions.width}
-            height={videoPlayerOptions.height}
+            width={width}
+            height={height}
             src={videoSource}
             title="YouTube video player"
             frameBorder="0"
@@ -46,7 +42,18 @@ export default function VideoPlayer({ videoSource, videoPlayerOptions }: IProps)
           ></iframe>
         )
       ) : (
-        <Typography>Video source undefined</Typography>
+        <>
+          <video id="video" autoPlay={autoPlay} width={width} height={height} controls style={{ zIndex: 0 }}>
+            <source src={videoSource} type="video/mp4" />
+            <source src={videoSource} type="video/ogg" />
+            Your browser does not support HTML video.
+          </video>
+          {component !== 'UploadVideoForm' ? (
+            <CircularProgress sx={{ position: 'absolute', top: '40%', right: '45%', color: 'white' }} />
+          ) : (
+            <Typography>Select video</Typography>
+          )}
+        </>
       )}
     </>
   );

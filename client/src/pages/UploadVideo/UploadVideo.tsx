@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Container, Typography } from '@material-ui/core';
+import { Container, Typography, Button } from '@material-ui/core';
 import { useState } from 'react';
 import { useAuth } from '../../context/useAuthContext';
 import UploadVideoForm from './UploadVideoForm/UploadVideoForm';
@@ -7,6 +7,8 @@ import { uploadVideoDetails, uploadVideoLocally } from '../../helpers/APICalls/u
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { useAllVideos } from '../../context/useAllVideosContext';
+
+import { IVideoDetails } from '../../interface/VideoDetails';
 
 interface IState {
   stringValue: string;
@@ -23,7 +25,10 @@ interface IState {
 export default function UploadVideo(): JSX.Element {
   const { loggedInUser } = useAuth();
   const [file, setFile] = useState<IState['file']>(null);
+  //  const [file, setFile] = useState(null);
+
   const [fileName, setFileName] = useState('Choose a file');
+  const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>(undefined);
   const [uploadProgress, setUploadProgress] = useState<IState['numberValue']>(0);
   const [videoSource, setVideoSource] = useState('');
   const [videoTitle, setVideoTitle] = useState('');
@@ -35,15 +40,20 @@ export default function UploadVideo(): JSX.Element {
     e.preventDefault();
     setSubmitting(true);
     const video_Id = uuidv4();
+    let videoDetails: IVideoDetails | undefined = undefined;
     setVideoId(video_Id);
-    const userDetails: { username: string; email: string; id: string } | any = loggedInUser;
-    const videoDetails = {
-      username: userDetails.username,
-      userId: userDetails.id,
-      videoTitle,
-      videoSource,
-      videoId: video_Id,
-    };
+    if (loggedInUser) {
+      videoDetails = {
+        username: loggedInUser.username,
+        userId: loggedInUser.id,
+        videoTitle,
+        videoSource,
+        videoId: video_Id,
+        videoDescription: '',
+        videoTags: '',
+        videoCategory: '',
+      };
+    }
 
     if (file) {
       const formData: any = new FormData();
@@ -72,13 +82,20 @@ export default function UploadVideo(): JSX.Element {
       // handleGetAllVideos()
     } else {
       try {
+        console.log(videoDetails, 2001000);
         const response = await uploadVideoDetails(videoDetails);
         if (response) {
-          console.log(response.data, 10101);
+          setUploadSuccess(true);
+          handleGetAllVideos();
         }
       } catch (err) {
         if (err) {
+          setUploadSuccess(false);
+
           console.log(err, 400);
+          setTimeout(() => {
+            setUploadSuccess(undefined);
+          }, 5000);
         }
       }
     }
@@ -90,7 +107,7 @@ export default function UploadVideo(): JSX.Element {
   // const handleUploadVideoDetails = async (e) => {
   //   e.preventDefault();
   //   const videoDetails = {
-  //     videoTitle,
+  //     title,
   //     videoSource,
   //     videoId,
   //   };
@@ -139,8 +156,7 @@ export default function UploadVideo(): JSX.Element {
   // };
 
   return (
-    <Container>
-      <Typography variant="h3">Upload Videos</Typography>
+    <Container style={{ backgroundColor: '#f0f0f0', minHeight: '90vh' }}>
       <UploadVideoForm
         handleSubmit={handleSubmit}
         videoSource={videoSource}
@@ -148,8 +164,10 @@ export default function UploadVideo(): JSX.Element {
         setFileName={setFileName}
         setVideoSource={setVideoSource}
         setVideoTitle={setVideoTitle}
+        videoTitle={videoTitle}
         isSubmitting={isSubmitting}
         uploadProgress={uploadProgress}
+        uploadSuccess={uploadSuccess}
       />
     </Container>
   );

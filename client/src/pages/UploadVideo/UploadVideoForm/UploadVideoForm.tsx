@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Paper, TextField, Typography, Button, Box, CircularProgress, styled } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
@@ -7,6 +7,9 @@ import VideoPlayer from '../../../components/VideoPlayer/VideosPlayer';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DropZone from '../../../components/DropZone/DropZone';
 import RenderFile from '../../../components/RenderFile/RenderFile';
+import VideoDetailsForm from './VideoDetailsForm/VideoDetailsForm';
+// import { useAllVideos } from '../../../context/useAllVideosContext';
+// import { useLocation } from 'react-router-dom';
 
 interface Props {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
@@ -20,10 +23,12 @@ interface Props {
   >;
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setVideoSource: React.Dispatch<React.SetStateAction<string>>;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setVideoTitle: React.Dispatch<React.SetStateAction<string>>;
   isSubmitting: boolean;
   uploadProgress: number | null | undefined;
   videoSource: string;
+  videoTitle: string;
+  uploadSuccess: boolean | undefined;
 }
 
 export default function UploadVideoForm({
@@ -32,10 +37,13 @@ export default function UploadVideoForm({
   setFileName,
   videoSource,
   setVideoSource,
-  setTitle,
+  setVideoTitle,
   isSubmitting,
   uploadProgress,
+  videoTitle,
+  uploadSuccess,
 }: Props): JSX.Element {
+  // const location = useLocation();
   const [tempVideoSource, setTempVideoSource] = useState<string | undefined>(undefined);
   const videoPlayerOptions = {
     width: '560',
@@ -44,12 +52,17 @@ export default function UploadVideoForm({
     component: 'UploadVideoForm',
     classes: null,
   };
-  const Input = styled('input')({
-    display: 'none',
-  });
-  //   const [isSubmitting, setSubmitting] = useState(false);
 
-  //  const classes = useStyles();
+  // useEffect(() => {
+  //   console.log(location.pathname);
+  //   if (editVideo && location.pathname === '/edit-video') {
+  //     setVideoSource(editVideo.videoSource);
+  //     setTempVideoSource(editVideo.videoSource);
+  //     setVideoTitle(editVideo.videoTitle);
+  //   } else {
+  //     handleSetEditVideo(undefined);
+  //   }
+  // }, [editVideo, handleSetEditVideo, location.pathname, setVideoSource, setVideoTitle]);
 
   const handleChange = (name: string, value: string | undefined, file: any): void => {
     switch (name) {
@@ -69,7 +82,7 @@ export default function UploadVideoForm({
         const videoTypeIndex = 6;
         if (file) {
           const videoType = file.type.slice(videoTypeIndex);
-          setTitle(file.name.replace(`.${videoType}`, ''));
+          setVideoTitle(file.name.replace(`.${videoType}`, ''));
           setVideoSource(`/stream_videos/${Date.now()}`);
           setTempVideoSource(URL.createObjectURL(file));
           setFile(file);
@@ -98,45 +111,40 @@ export default function UploadVideoForm({
     }
   };
 
-  const handleTitleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value, files } = e.target;
-
-    setTitle(value);
-  };
   return (
-    <Container style={{ paddingTop: '5rem' }}>
+    <Container style={{ paddingTop: '3rem' }}>
       {!videoSource.length ? (
         <DropZone handleChange={handleChange} />
       ) : (
-        <Paper style={{ minHeight: '80vh', maxWidth: '80%', margin: '0 auto' }}>
-          <Box display="flex" justifyContent="center">
-            <Box>
-              <DeleteIcon onClick={() => setVideoSource('')} />
-              <VideoPlayer videoSource={tempVideoSource} videoPlayerOptions={videoPlayerOptions} />
-            </Box>
+        <Paper
+          style={{
+            minHeight: '80vh',
+            maxWidth: '70%',
+            margin: '0 auto',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Box display="flex" justifyContent="center" style={{ paddingTop: '3rem', position: 'relative' }}>
+            <DeleteIcon
+              color="secondary"
+              style={{ position: 'absolute', zIndex: 1, right: '17%', top: '17%', cursor: 'pointer' }}
+              onClick={() => {
+                setVideoTitle('');
+                setVideoSource('');
+              }}
+            />
+            <VideoPlayer videoSource={tempVideoSource} videoPlayerOptions={videoPlayerOptions} />
           </Box>
 
-          <form onSubmit={handleSubmit} noValidate>
-            <Box>
-              <TextField
-                id="title"
-                label={<Typography>Enter Video Source</Typography>}
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                name="title"
-                autoFocus
-                onChange={handleTitleInput}
-              />
-            </Box>
-            <Box textAlign="center">
-              <Button type="submit" size="large" variant="contained" color="primary">
-                {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'Upload Video'}
-                {isSubmitting && `${uploadProgress}%`}
-              </Button>
-            </Box>
-            <div style={{ height: 95 }} />
-          </form>
+          <VideoDetailsForm
+            handleSubmit={handleSubmit}
+            setVideoTitle={setVideoTitle}
+            isSubmitting={isSubmitting}
+            uploadProgress={uploadProgress}
+            videoTitle={videoTitle}
+            uploadSuccess={uploadSuccess}
+          />
         </Paper>
       )}
     </Container>

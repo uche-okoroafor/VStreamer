@@ -6,17 +6,17 @@ exports.uploadVideoDetailsController = async (req, res) => {
   const {
     username,
     userId,
-    title,
-    source,
+    videoTitle,
+    videoSource,
     videoId,
     videoDescription,
     videoTags,
-    category
+    videoCategory
   } = req.body
-  if ((!userId, !title, !source, !videoId)) {
+  if ((!userId, !videoTitle, !videoSource, !videoId)) {
     return res
       .status(400)
-      .send({ err: 'userId,source,title or videoId is undefined' })
+      .send({ err: 'userId,videoSource,videoTitle or videoId is undefined' })
   }
 
   try {
@@ -28,12 +28,16 @@ exports.uploadVideoDetailsController = async (req, res) => {
             {
               username,
               userId,
-              title,
-              source,
+              videoTitle,
+              videoSource,
               videoId,
               videoDescription,
               videoTags,
-              category
+              videoCategory,
+              likes: [],
+              dislikes: [],
+              views: [],
+              comments: []
             }
           ]
         }
@@ -50,12 +54,16 @@ exports.uploadVideoController = async (req, res) => {
   const {
     username,
     userId,
-    title,
-    source,
+    videoTitle,
+    videoSource,
     videoId,
     videoDescription,
     videoTags,
-    category
+    videoCategory,
+    likes: [],
+   dislikes: [],
+    views: [],
+    comments: []
   } = req.body
 
   // const userId = req.user.id
@@ -70,12 +78,12 @@ exports.uploadVideoController = async (req, res) => {
     //           {
     //             username,
     //             userId,
-    //             title,
-    //             source:uploadStatus.url,
+    //             videoTitle,
+    //             videoSource:uploadStatus.url,
     //             videoId:uploadStatus.asset_id,
     //             videoDescription,
     //             videoTags,
-    //             category
+    //             videoCategory
     //           }
     //         ]
     //       }

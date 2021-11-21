@@ -23,7 +23,17 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  userData: { type: Schema.Types.Object, ref: 'userData' },
+  userImage: {
+    imageName: {
+      type: 'string'
+    },
+    imageSource: {
+      type: 'string'
+    },
+    imageId: {
+      type: 'string'
+    }
+  },
   videos: { type: Schema.Types.Array, ref: 'videos' }
 })
 

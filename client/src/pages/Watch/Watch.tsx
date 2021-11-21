@@ -1,4 +1,5 @@
 import { Grid, Box } from '@mui/material';
+
 // import { useContext, useEffect, useState } from 'react';
 // import { useAllVideos } from '../../../../../context/useAllVideosContext';
 // import { useHistory } from 'react-router-dom';
@@ -6,6 +7,7 @@ import { Grid, Box } from '@mui/material';
 import { ILike } from '../../interface/VideoDetails';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
+
 import { Typography } from '@mui/material';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import VideoPlayer from '../../components/VideoPlayer/VideosPlayer';
@@ -13,6 +15,11 @@ import VideosList from '../../components/VideosList/VideosList';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/useAuthContext';
 import useStyles from './useStyles';
+
+import Likes from './Likes/Likes';
+import Comments from './Comments/Comments';
+import Viewers from './Viewers/Viewers';
+
 import IconButton from '@mui/material/IconButton';
 import { updateLikes, updateUnLikes, removeLikes, removeUnLikes } from '../../helpers/APICalls/likesApis';
 interface IProps {
@@ -24,6 +31,7 @@ export default function Watch(): JSX.Element {
   const { allVideos, watchVideo, handleGetAllVideos, handleSetWatchVideo } = useAllVideos();
   const [videoSource, setVideoSource] = useState<string | undefined>(undefined);
   const { loggedInUser } = useAuth();
+
   const [likes, setLikes] = useState<[ILike] | undefined>(undefined);
   const [unLikes, setUnLikes] = useState<[ILike] | undefined>(undefined);
 
@@ -37,6 +45,7 @@ export default function Watch(): JSX.Element {
       } else {
         setVideoSource(watchVideo.videoSource);
       }
+
     }
   }, [watchVideo]);
 
@@ -55,6 +64,7 @@ export default function Watch(): JSX.Element {
     displayDetails: false,
     component: 'Watch',
     classes,
+
   };
 
   const handleLike = async (): Promise<void> => {
@@ -108,6 +118,7 @@ export default function Watch(): JSX.Element {
   // const [userNotFound, setUserNotFound] = useState(false);
   // const history = useHistory();
 
+
   return (
     <>
       <Grid container className="viewed-video-container">
@@ -120,6 +131,7 @@ export default function Watch(): JSX.Element {
                 <Typography>no video to display</Typography>
               )}
             </Box>
+
             <Box style={{ minHeight: '100px', paddingTop: '20px' }}>
               <Box>
                 <IconButton
@@ -143,6 +155,7 @@ export default function Watch(): JSX.Element {
                 </IconButton>
               </Box>
             </Box>
+
           </Box>
         </Grid>
 
@@ -151,7 +164,9 @@ export default function Watch(): JSX.Element {
           xs={4}
           sx={{
             position: 'relative',
+
             height: '80vh',
+
             overflow: 'hidden',
           }}
           className="all-video-container"

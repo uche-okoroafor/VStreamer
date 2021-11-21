@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Box, CircularProgress } from '@material-ui/core';
 import { useAuth } from '../../context/useAuthContext';
 import NavBar from './NavBar/NavBar';
@@ -9,7 +8,6 @@ import { useState } from 'react';
 
 function Layout(): JSX.Element {
   const { loggedInUser } = useAuth();
-  const [userName, setUserName] = useState<string | undefined>(undefined);
 
   const history = useHistory();
   const { initSocket } = useSocket();
@@ -17,12 +15,6 @@ function Layout(): JSX.Element {
   useEffect(() => {
     initSocket();
   }, [initSocket]);
-
-  useEffect(() => {
-    if (loggedInUser) {
-      setUserName(loggedInUser.username);
-    }
-  }, [loggedInUser]);
 
   if (loggedInUser === undefined) {
     return <CircularProgress />;
@@ -34,11 +26,20 @@ function Layout(): JSX.Element {
   }
 
   return (
-    <Box style={{ display: !loggedInUser ? 'none' : 'block', position: 'fixed', width: '100%', top: 0, left: 0 }}>
+    <Box
+      style={{
+        display: !loggedInUser ? 'none' : 'block',
+        position: 'fixed',
+        width: '100%',
+        top: 0,
+        left: 0,
+        zIndex: 1000,
+      }}
+    >
       {/* <Paper style={{ minHeight: '80vh', maxWidth: '80%', margin: '0 auto' }}>
         <Box></Box>
       </Paper> */}
-      <NavBar userName={userName} />
+      <NavBar loggedInUser={loggedInUser} />
     </Box>
   );
 }

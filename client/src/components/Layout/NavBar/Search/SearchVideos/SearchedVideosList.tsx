@@ -14,8 +14,8 @@ interface IProps {
   setSearchedVideo: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function SearchedVideosList({ searchedVideo, setSearchedVideo, toggleDrawer }: IProps) {
-  const { allVideos, handleSetwatchVideo } = useAllVideos();
+function SearchedVideosList({ searchedVideo, setSearchedVideo, toggleDrawer }: IProps): JSX.Element {
+  const { allVideos, handleSetWatchVideo } = useAllVideos();
   const [searchResult, setSearchResult] = useState([]);
   const history = useHistory();
 
@@ -37,7 +37,7 @@ function SearchedVideosList({ searchedVideo, setSearchedVideo, toggleDrawer }: I
   }
 
   function handleClickedSearchResult(video: IVideoDetails) {
-    handleSetwatchVideo(video);
+    handleSetWatchVideo(video);
     toggleDrawer(false, '0', 0, null);
     setSearchedVideo('');
     history.push('/watch/' + video.videoTitle);
