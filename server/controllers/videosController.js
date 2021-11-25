@@ -24,7 +24,7 @@ exports.getUserVideosController = asyncHandler(async (req, res) => {
     const userVideos = await User.find({ _id: userId }, { videos: 1, _id: 0 })
     res.status(200).json(userVideos)
   } catch (err) {
-    res.status(404).json({ err: err.message })
+    res.status(404).json({ err: err.messages })
   }
 })
 
