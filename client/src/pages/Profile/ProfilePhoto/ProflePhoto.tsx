@@ -5,27 +5,38 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Avatar from '@mui/material/Avatar';
 import useStyles from '../useStyles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { stringAvatar } from '../useStyles';
-import { User } from '../../../interface/User';
+import { IUserDetails, User } from '../../../interface/User';
 import Icon from '@material-ui/core/Icon/Icon';
-import { uploadImage } from '../../../helpers/APICalls/imageApis';
+import { uploadImage, deleteImage } from '../../../helpers/APICalls/imageApis';
+import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import { IFile } from '../../../interface/File';
 import UpdateIcon from '@mui/icons-material/Update';
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-
+import { useSnackBar } from '../../../context/useSnackbarContext';
+import { useUserDetails } from '../../../context/useUserContext';
+import { mockLoggedInUser } from '../../../mocks/mockUser';
 interface Props {
-  user: User;
+  user: IUserDetails;
 }
 
 export default function ProflePhoto({ user }: Props): JSX.Element {
   const classes = useStyles();
-  // const { loggedInUser } = useAuth();
+  const { userDetails, handleGetUserDetails } = useUserDetails();
   const [image, setImage] = useState<IFile | null>(null);
-  const [files, setFiles] = useState<string | undefined>(undefined);
+  const [file, setFiles] = useState<string | undefined>(undefined);
   const [openUpdateForm, setOpenUpdateForm] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState('uploading...');
+  const [uploadStatus, setUploadStatus] = useState(false);
+  const { updateSnackBarMessage } = useSnackBar();
+  // console.log(downloadImage(user.userImage));
+  // useEffect(() => {
+  //   if (userDetails) {
+  //     setFiles(userDetails?.userImage);
+  //   }
+  // }, [userDetails]);
+
   const onDrop = useCallback(
     (acceptedFile) => {
       // onSetFile(acceptedFile[0]);
@@ -40,41 +51,60 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
     accept: 'image/jpeg, image/png',
   });
 
-  const handleSaveImage = async (): Promise<void> => {
-    console.log('no problem');
-    // if (uploadStatus === 'uploading...') {
-    //   return;
-    // }
-    // setUploadStatus('uploading...');
-    try {
-      const response = await uploadImage(image);
-      // .then((data) => {
-      //         if (data.error) {
-      //           // updateSnackBarMessage(data.error.message);
-      //           // setUploadState('picture upload failed!');
-      //           // onSetFile(null);
-      //           // setOpen(false);
-      //           // setTimeout(() => {
-      //           //   setUploadState('');
-      //           // }, 3000);
-      //         } else if (data.success) {
-      //           // updateLoginContext(data.success);
-      //           // setUploadState('picture uploaded successfully');
-      //           // onSetFile(null);
-      //           // setOpen(false);
-      //           // setTimeout(() => {
-      //           //   setUploadState('');
-      //           // }, 3000);
-      //         } else {
-      //           // updateSnackBarMessage('Unexpected error! Please try again');
-      //         }
-      //       });
-
-      console.log(response, 101010);
-    } catch (err) {
-      return console.log(err);
+  const handleUserImage = (): string => {
+    if (file === undefined) {
+      if (user?.userImage !== undefined) {
+        return `/image/download-image/${user.userImage}`;
+      } else {
+        return '';
+      }
+    } else {
+      return file;
     }
-    setUploadStatus('');
+  };
+
+  const handleSaveImage = async (): Promise<void> => {
+    setUploadStatus(true);
+    try {
+      const { data } = await uploadImage(image);
+      if (data) {
+        if (data.success) {
+          handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
+
+          setFiles(undefined);
+          setOpenUpdateForm(false);
+        } else if (data?.error) {
+          updateSnackBarMessage(data?.error?.message);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      updateSnackBarMessage('Unexpected error! Please try again');
+    }
+    setUploadStatus(false);
+  };
+  const handledeleteImage = async (): Promise<void> => {
+    setUploadStatus(true);
+    setFiles(undefined);
+
+    try {
+      const { data } = await deleteImage();
+      console.log(data);
+      if (data) {
+        if (data.success) {
+          handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
+
+          setFiles(undefined);
+          setOpenUpdateForm(false);
+        } else if (data?.error) {
+          updateSnackBarMessage(data?.error?.message);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      updateSnackBarMessage('Unexpected error! Please try again');
+    }
+    setUploadStatus(false);
   };
 
   return (
@@ -85,16 +115,24 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
           sx={{ position: 'fixed', width: '100%', height: '100vh', left: 0, top: 0 }}
         ></Box>
       )}
-      <Box sx={{ position: 'relative', marginBottom: '20px' }}>
-        <Avatar {...stringAvatar(user.username.toUpperCase(), 100, 100)} src={files} />
+      <Box className={classes.bottomSpace} sx={{ position: 'relative' }}>
+        <Avatar {...stringAvatar(user.username.toUpperCase(), 100, 100)} src={handleUserImage()} />
         {!openUpdateForm ? (
           <IconButton
-            sx={{ position: 'absolute', right: '10%', top: '80%' }}
+            sx={{
+              position: 'absolute',
+              right: '10%',
+              top: '80%',
+              background: 'green',
+              '&:hover': {
+                background: 'green',
+              },
+            }}
             aria-label="update"
-            color="secondary"
+            // color="secondary"
             onClick={() => setOpenUpdateForm(true)}
           >
-            <UpdateIcon sx={{ color: 'white' }} />
+            <DriveFolderUploadIcon sx={{ color: 'white' }} />
           </IconButton>
         ) : (
           <Paper
@@ -108,28 +146,30 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
               margin: '0 auto',
             }}
           >
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              {isDragReject ? (
-                <Box>Drop </Box>
-              ) : (
-                <Button sx={{ marginBottom: '10px' }} startIcon={<AddAPhotoIcon />} variant="contained" color="info">
-                  browse
-                </Button>
-              )}
-            </div>
-
-            <Button
-              sx={{ marginBottom: '10px' }}
-              startIcon={<SaveIcon />}
-              variant="contained"
-              color="success"
-              type="submit"
-              onClick={handleSaveImage}
-            >
-              Save Image
-            </Button>
-            <Button startIcon={<DeleteIcon />} variant="contained" color="secondary">
+            {file === undefined ? (
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                {isDragReject ? (
+                  <Box>Drop </Box>
+                ) : (
+                  <Button sx={{ marginBottom: '10px' }} startIcon={<AddAPhotoIcon />} variant="contained" color="info">
+                    browse
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <Button
+                sx={{ marginBottom: '10px' }}
+                startIcon={<SaveIcon />}
+                variant="contained"
+                color="success"
+                type="submit"
+                onClick={handleSaveImage}
+              >
+                Save Image
+              </Button>
+            )}
+            <Button onClick={handledeleteImage} startIcon={<DeleteIcon />} variant="contained" color="secondary">
               Delete
             </Button>
           </Paper>
