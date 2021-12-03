@@ -1,4 +1,4 @@
-import { Typography, Grid, Box, Button, Paper } from '@mui/material';
+import { Typography, Grid, Box, Button, Paper, CircularProgress } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import SaveIcon from '@mui/icons-material/Save';
 import IconButton from '@mui/material/IconButton';
@@ -12,12 +12,10 @@ import Icon from '@material-ui/core/Icon/Icon';
 import { uploadImage, deleteImage } from '../../../helpers/APICalls/imageApis';
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import { IFile } from '../../../interface/File';
-import UpdateIcon from '@mui/icons-material/Update';
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 import { useUserDetails } from '../../../context/useUserContext';
-import { mockLoggedInUser } from '../../../mocks/mockUser';
 interface Props {
   user: IUserDetails;
 }
@@ -30,6 +28,7 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
   const [openUpdateForm, setOpenUpdateForm] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(false);
   const { updateSnackBarMessage } = useSnackBar();
+  const [isSaving, setIsSaving] = useState(false);
   // console.log(downloadImage(user.userImage));
   // useEffect(() => {
   //   if (userDetails) {
@@ -65,10 +64,12 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
 
   const handleSaveImage = async (): Promise<void> => {
     setUploadStatus(true);
+    setIsSaving(true);
     try {
       const { data } = await uploadImage(image);
       if (data) {
         if (data.success) {
+          console.log('profilePhoto');
           handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
 
           setFiles(undefined);
@@ -82,16 +83,20 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
       updateSnackBarMessage('Unexpected error! Please try again');
     }
     setUploadStatus(false);
+    setIsSaving(false);
   };
   const handledeleteImage = async (): Promise<void> => {
     setUploadStatus(true);
     setFiles(undefined);
+    setIsSaving(true);
 
     try {
       const { data } = await deleteImage();
       console.log(data);
       if (data) {
         if (data.success) {
+          console.log('handleSaveImage');
+
           handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
 
           setFiles(undefined);
@@ -105,6 +110,7 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
       updateSnackBarMessage('Unexpected error! Please try again');
     }
     setUploadStatus(false);
+    setIsSaving(false);
   };
 
   return (
@@ -166,7 +172,7 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
                 type="submit"
                 onClick={handleSaveImage}
               >
-                Save Image
+                {isSaving ? <CircularProgress style={{ fontSize: 0, width: '20px', height: '20px' }} /> : 'Save'}
               </Button>
             )}
             <Button onClick={handledeleteImage} startIcon={<DeleteIcon />} variant="contained" color="secondary">
