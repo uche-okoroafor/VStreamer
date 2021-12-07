@@ -25,7 +25,10 @@ This project is a video streaming website that allows users to upload video to t
 * Upload videos.
 * Delete videos.
 * upload profile image.
-* update user profile
+* update user profile.
+* Comment on a Video.
+* Like or dislike a Video.
+* Like or dislike a Comment.
 
 
 ## Installation:
