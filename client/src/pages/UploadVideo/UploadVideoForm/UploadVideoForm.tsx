@@ -1,15 +1,11 @@
-/* eslint-disable prettier/prettier */
-import React, { useEffect } from 'react';
-import { Container, Paper, TextField, Typography, Button, Box, CircularProgress, styled } from '@material-ui/core';
-import { Formik, FormikHelpers } from 'formik';
+import React from 'react';
+import { Container, Paper, Box, useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
 import VideoPlayer from '../../../components/VideoPlayer/VideosPlayer';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DropZone from '../../../components/DropZone/DropZone';
-import RenderFile from '../../../components/RenderFile/RenderFile';
+import DropZone from './DropZone/DropZone';
 import VideoDetailsForm from './VideoDetailsForm/VideoDetailsForm';
-// import { useAllVideos } from '../../../context/useAllVideosContext';
-// import { useLocation } from 'react-router-dom';
+import IconButton from '@mui/material/IconButton';
 
 interface Props {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
@@ -24,11 +20,16 @@ interface Props {
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setVideoSource: React.Dispatch<React.SetStateAction<string>>;
   setVideoTitle: React.Dispatch<React.SetStateAction<string>>;
+  setArtist: React.Dispatch<string>;
+  setDescription: React.Dispatch<string>;
+  setCategory: React.Dispatch<string>;
   isSubmitting: boolean;
   uploadProgress: number | null | undefined;
   videoSource: string;
   videoTitle: string;
+  category: string;
   uploadSuccess: boolean | undefined;
+  setVideoDuration: React.Dispatch<string>;
 }
 
 export default function UploadVideoForm({
@@ -42,27 +43,39 @@ export default function UploadVideoForm({
   uploadProgress,
   videoTitle,
   uploadSuccess,
+  setVideoDuration,
+  setArtist,
+  setDescription,
+  setCategory,
+  category,
 }: Props): JSX.Element {
   // const location = useLocation();
   const [tempVideoSource, setTempVideoSource] = useState<string | undefined>(undefined);
+  const theme = useTheme();
+  const isSmallOrLess = useMediaQuery(theme.breakpoints.up('sm'));
   const videoPlayerOptions = {
-    width: '560',
-    height: '315',
+    width: isSmallOrLess ? '560' : '480',
+    height: isSmallOrLess ? '315' : '280',
     autoPlay: true,
     component: 'UploadVideoForm',
     classes: null,
   };
 
-  // useEffect(() => {
-  //   console.log(location.pathname);
-  //   if (editVideo && location.pathname === '/edit-video') {
-  //     setVideoSource(editVideo.videoSource);
-  //     setTempVideoSource(editVideo.videoSource);
-  //     setVideoTitle(editVideo.videoTitle);
-  //   } else {
-  //     handleSetEditVideo(undefined);
-  //   }
-  // }, [editVideo, handleSetEditVideo, location.pathname, setVideoSource, setVideoTitle]);
+  const bytesToSize = (bytes: number | undefined): void => {
+    const decimals = 2;
+    if (bytes === 0) {
+      setVideoDuration('0 Bytes');
+    }
+    if (bytes) {
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+      setVideoDuration(parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]);
+    }
+  };
 
   const handleChange = (name: string, value: string | undefined, file: any): void => {
     switch (name) {
@@ -112,29 +125,44 @@ export default function UploadVideoForm({
   };
 
   return (
-    <Container style={{ paddingTop: '3rem' }}>
+    <Box style={{ paddingTop: '3rem' }}>
       {!videoSource.length ? (
         <DropZone handleChange={handleChange} />
       ) : (
         <Paper
-          style={{
+          sx={{
             minHeight: '80vh',
-            maxWidth: '70%',
+            width: { sm: '100%', md: '75%', lg: '60%' },
             margin: '0 auto',
             display: 'flex',
             flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Box display="flex" justifyContent="center" style={{ paddingTop: '3rem', position: 'relative' }}>
-            <DeleteIcon
-              color="secondary"
-              style={{ position: 'absolute', zIndex: 1, right: '17%', top: '17%', cursor: 'pointer' }}
+            <IconButton
+              style={{
+                position: 'absolute',
+                zIndex: 1,
+                right: '2%',
+                top: '17%',
+                cursor: 'pointer',
+              }}
+              aria-label="update"
               onClick={() => {
                 setVideoTitle('');
                 setVideoSource('');
               }}
+            >
+              {' '}
+              <DeleteIcon sx={{ color: 'red' }} />
+            </IconButton>
+
+            <VideoPlayer
+              videoSource={tempVideoSource}
+              setVideoDuration={setVideoDuration}
+              videoPlayerOptions={videoPlayerOptions}
             />
-            <VideoPlayer videoSource={tempVideoSource} videoPlayerOptions={videoPlayerOptions} />
           </Box>
 
           <VideoDetailsForm
@@ -144,9 +172,13 @@ export default function UploadVideoForm({
             uploadProgress={uploadProgress}
             videoTitle={videoTitle}
             uploadSuccess={uploadSuccess}
+            setArtist={setArtist}
+            setDescription={setDescription}
+            setCategory={setCategory}
+            category={category}
           />
         </Paper>
       )}
-    </Container>
+    </Box>
   );
 }

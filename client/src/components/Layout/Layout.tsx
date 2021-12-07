@@ -4,11 +4,11 @@ import NavBar from './NavBar/NavBar';
 import { useHistory } from 'react-router';
 import { useSocket } from '../../context/useSocketContext';
 import { useEffect } from 'react';
-import { useState } from 'react';
+import { useUserDetails } from '../../context/useUserContext';
 
 function Layout(): JSX.Element {
   const { loggedInUser } = useAuth();
-
+  const { userDetails } = useUserDetails();
   const history = useHistory();
   const { initSocket } = useSocket();
 
@@ -36,9 +36,6 @@ function Layout(): JSX.Element {
         zIndex: 1000,
       }}
     >
-      {/* <Paper style={{ minHeight: '80vh', maxWidth: '80%', margin: '0 auto' }}>
-        <Box></Box>
-      </Paper> */}
       <NavBar loggedInUser={loggedInUser} />
     </Box>
   );

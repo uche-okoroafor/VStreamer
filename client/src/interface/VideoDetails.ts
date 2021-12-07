@@ -1,35 +1,51 @@
-import { string } from 'yup/lib/locale';
-
-export interface IAllVideos {
-  // filter(arg0: (video: IVideoDetails) => boolean);
-  // [x: string]: any;
-  filter: any;
-  map(arg0: (video: IVideoDetails) => JSX.Element): import('react').ReactNode;
-  [index: number]: IVideoDetails;
-}
-
 export interface IVideoDetails {
+  _id: string;
   videoTitle: string;
   videoSource: string;
   videoId: string;
   username: string;
+  userImage?: string;
   userId: string;
   videoDescription: string;
-  videoTags: string;
+  datePosted?: any;
+  videoDuration: string;
+  artist: string;
   videoCategory: string;
   likes?: ILike[];
   dislikes?: ILike[];
   views?: IViews[];
+  comments?: Array<IComment>;
 }
 
 export interface ILike {
   username: string;
   userId: string;
   likeId: string;
+  userImage?: string;
 }
 
 export interface IViews {
   username: string;
   userId: string;
+  userImage?: string;
   viewId: string;
+}
+
+export interface IFollowers {
+  username: string;
+  userId: string;
+  userImage?: string;
+  followId?: string;
+  _id?: string;
+}
+export interface IComment {
+  username: string;
+  userId: string;
+  userImage?: string;
+  commentId?: string;
+  comment: string;
+  commentDate: Date;
+  _id?: string;
+  likes?: Array<ILike>;
+  dislikes?: Array<ILike>;
 }

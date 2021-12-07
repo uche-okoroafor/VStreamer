@@ -55,6 +55,10 @@ const useStyles = makeStyles(() => ({
   videos: {
     minHeight: '90vh',
   },
+  videoContainer: {
+    marginBottom: '5px ',
+  },
+  addCommentBtn: { position: 'absolute', marginTop: '-3rem', right: '0%', background: '#1976D2' },
 }));
 
 export default useStyles;

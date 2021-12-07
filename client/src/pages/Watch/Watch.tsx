@@ -1,172 +1,170 @@
-import { Grid, Box } from '@mui/material';
-
-// import { useContext, useEffect, useState } from 'react';
-// import { useAllVideos } from '../../../../../context/useAllVideosContext';
-// import { useHistory } from 'react-router-dom';
-// import { List, Paper, Typography, ListItem, ListItemText } from '@material-ui/core';
-import { ILike } from '../../interface/VideoDetails';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
-
-import { Typography } from '@mui/material';
+import { Grid, Box, Container, Stack, Avatar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import VideoPlayer from '../../components/VideoPlayer/VideosPlayer';
 import VideosList from '../../components/VideosList/VideosList';
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/useAuthContext';
+import { stringAvatar } from './useStyles';
+import { useUserDetails } from '../../context/useUserContext';
 import useStyles from './useStyles';
-
 import Likes from './Likes/Likes';
 import Comments from './Comments/Comments';
 import Viewers from './Viewers/Viewers';
-
-import IconButton from '@mui/material/IconButton';
-import { updateLikes, updateUnLikes, removeLikes, removeUnLikes } from '../../helpers/APICalls/likesApis';
-interface IProps {
-  searchedVideo: string;
-}
+import moment from 'moment';
+import TrackVisibility from 'react-on-screen';
+import { useHistory } from 'react-router';
 
 export default function Watch(): JSX.Element {
   const classes = useStyles();
+  const { handleGetUserDetails } = useUserDetails();
   const { allVideos, watchVideo, handleGetAllVideos, handleSetWatchVideo } = useAllVideos();
   const [videoSource, setVideoSource] = useState<string | undefined>(undefined);
-  const { loggedInUser } = useAuth();
-
-  const [likes, setLikes] = useState<[ILike] | undefined>(undefined);
-  const [unLikes, setUnLikes] = useState<[ILike] | undefined>(undefined);
-
+  const [videoDuration, setVideoDuration] = useState<string | undefined>(undefined);
+  const [displayCommentBtn, setDisplayCommentBtn] = useState(false);
+  const theme = useTheme();
+  const isSmallOrLess = useMediaQuery(theme.breakpoints.up('sm'));
+  const history = useHistory();
   useEffect(() => {
-    if (watchVideo) {
-      setLikes(watchVideo.likes);
-      setUnLikes(watchVideo.unLikes);
-
-      if (watchVideo.videoSource.includes('youtube')) {
-        setVideoSource(watchVideo.videoSource + '?autoplay=1');
-      } else {
-        setVideoSource(watchVideo.videoSource);
-      }
-
+    if (watchVideo?.videoSource.includes('youtube')) {
+      setVideoSource(watchVideo?.videoSource + '?autoplay=1');
+    } else {
+      setVideoSource(watchVideo?.videoSource);
     }
   }, [watchVideo]);
 
   const videoPlayerOptions = {
-    width: '800',
-    height: '400',
+    width: '850',
+    height: isSmallOrLess ? '480' : '480',
     autoPlay: true,
     component: 'Watch',
     classes,
   };
 
   const videosListPlayerOptions = {
-    width: '350',
+    width: '300',
     height: '200',
     autoPlay: false,
     displayDetails: false,
     component: 'Watch',
     classes,
-
   };
 
-  const handleLike = async (): Promise<void> => {
-    if (loggedInUser) {
-      if (watchVideo) {
-        const { videoId, userId } = watchVideo;
-        const checkUser = likes?.filter((user) => user.userId === loggedInUser.id);
-        try {
-          if (checkUser?.length) {
-            console.log('yes');
-            const response = await removeLikes(userId, videoId);
-            console.log(response, 1010);
-            if (response) {
-              await handleGetAllVideos();
-              handleSetWatchVideo(watchVideo);
-              console.log(response, 1010);
-            }
-          } else {
-            console.log('@yes');
-
-            const response = await updateLikes(loggedInUser.username, userId, videoId);
-            // await removeLikes(userId, videoId);
-            await handleGetAllVideos();
-            handleSetWatchVideo(watchVideo);
-            console.log(response, 1010);
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      }
+  const handleDisplayUserProfile = async (): Promise<void> => {
+    if (watchVideo) {
+      const user = { username: watchVideo.username, id: watchVideo.userId, email: 'undefined' };
+      await handleGetUserDetails(user);
+      history.push(`/profile/${watchVideo.username}`);
     }
   };
-
-  const handleUnLike = async (): Promise<void> => {
-    try {
-      if (watchVideo) {
-        if (loggedInUser) {
-          const loggedInUsername = loggedInUser.username;
-          const { videoId, userId } = watchVideo;
-
-          const response = await updateUnLikes(loggedInUsername, userId, videoId);
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // const [userName, setUserName] = useState("");
-  // // const [watchVideo, setViewedVideo] = useState("");
-  // const [userNotFound, setUserNotFound] = useState(false);
-  // const history = useHistory();
-
-
   return (
     <>
-      <Grid container className="viewed-video-container">
-        <Grid item xs={8} className="viewed-video-box">
+      <Grid container style={{ paddingTop: '30px', position: 'relative' }} className="viewed-video-container">
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={9}
+          className="viewed-video-box"
+          sx={{ paddingBottom: 5, paddingLeft: '10px', paddingRight: { xs: '10px', sm: '10px', md: '0' } }}
+        >
           <Box display="flex" flexDirection="column">
-            <Box display="flex" justifyContent="center" className="video-frame">
-              {watchVideo ? (
-                <VideoPlayer videoSource={videoSource} videoPlayerOptions={videoPlayerOptions} />
-              ) : (
-                <Typography>no video to display</Typography>
-              )}
+            <Box display="flex" justifyContent="center" sx={{ background: 'black' }}>
+              {
+                <VideoPlayer
+                  videoSource={videoSource}
+                  videoPlayerOptions={videoPlayerOptions}
+                  setVideoDuration={setVideoDuration}
+                />
+              }{' '}
+              <TrackVisibility>
+                {({ isVisible }) => {
+                  setDisplayCommentBtn(isVisible);
+                }}
+              </TrackVisibility>
             </Box>
 
-            <Box style={{ minHeight: '100px', paddingTop: '20px' }}>
-              <Box>
-                <IconButton
-                  // sx={{ position: 'absolute', right: '10%', top: '80%' }}
-                  aria-label="update"
-                  color="secondary"
-                  onClick={handleLike}
-                >
-                  <ThumbUpIcon sx={{ color: 'green' }} />
-                  {likes?.length}
-                </IconButton>
+            <Container sx={{ borderBottom: '2px solid #f9f9f9', background: 'white' }}>
+              <Box sx={{ padding: '10px 0', whiteSpace: 'nowrap' }}>
+                <Stack direction="row" alignItems="center">
+                  <Stack direction="row" spacing={1} style={{ flexGrow: 1 }} alignItems="center">
+                    <Typography variant="h5">{watchVideo?.videoTitle}</Typography>{' '}
+                    {watchVideo?.artist && <Typography variant="h5">-</Typography>}
+                    <Typography variant="h5">{watchVideo?.artist}</Typography>{' '}
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    {' '}
+                    <Typography
+                      color="primary"
+                      sx={{ cursor: 'pointer' }}
+                      onClick={handleDisplayUserProfile}
+                      variant="h5"
+                    >
+                      {watchVideo?.username}
+                    </Typography>
+                    <Avatar
+                      style={{ cursor: 'pointer', border: '1px solid #1976D2' }}
+                      onClick={handleDisplayUserProfile}
+                      {...stringAvatar(watchVideo ? watchVideo.username.toUpperCase() : '', 50, 50)}
+                      src={`/image/get-image/${watchVideo?.userId}`}
+                    />
+                  </Stack>
+                </Stack>
+                <Box sx={{ margin: '5px auto' }}>
+                  <Typography>{watchVideo?.videoDescription}</Typography>
+                </Box>
+                <Stack direction="row" alignItems="center" sx={{ margin: '5px auto' }}>
+                  <Box display="flex" alignItems="center" style={{ flexGrow: 1 }}>
+                    <Stack direction="row" spacing={5} alignItems="center">
+                      {' '}
+                      <Likes />
+                      <Viewers />
+                    </Stack>
+                  </Box>{' '}
+                  <Box>
+                    <Stack direction="row" spacing={5} alignItems="center">
+                      <Typography style={{ fontSize: '0.9rem' }}>
+                        {moment(watchVideo?.datePosted).format('MMMM Do YYYY')}
+                      </Typography>
+                      <Typography>{watchVideo?.videoCategory}</Typography>
+                    </Stack>
+                  </Box>
+                </Stack>
+              </Box>{' '}
+            </Container>
 
-                <IconButton
-                  // sx={{ position: 'absolute', right: '10%', top: '80%' }}
-                  aria-label="update"
-                  color="secondary"
-                  onClick={handleUnLike}
+            <Container sx={{ padding: 0 }}>
+              <Grid container sx={{ position: 'relative' }}>
+                <Grid item xs={12} sm={8} md={12} sx={{}}>
+                  {' '}
+                  <Comments displayCommentBtn={displayCommentBtn} />
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  sx={{
+                    overflowY: 'scroll',
+                    top: 0,
+                    bottom: 0,
+                    // left: 0,
+                    right: -17,
+                    position: 'absolute',
+                    display: { sm: 'block', xs: 'none', md: 'none' },
+                    paddingTop: '0',
+                  }}
                 >
-                  <ThumbDownAltIcon sx={{ color: 'red' }} />
-                  {unLikes?.length}
-                </IconButton>
-              </Box>
-            </Box>
-
+                  {' '}
+                  <VideosList videoPlayerOptions={videosListPlayerOptions} videos={allVideos} />
+                </Grid>
+              </Grid>
+            </Container>
           </Box>
         </Grid>
 
         <Grid
           item
-          xs={4}
+          md={3}
           sx={{
             position: 'relative',
-
-            height: '80vh',
-
+            display: { sm: 'none', xs: 'none', md: 'block' },
             overflow: 'hidden',
           }}
           className="all-video-container"
@@ -179,6 +177,8 @@ export default function Watch(): JSX.Element {
               left: 0,
               right: -17,
               position: 'absolute',
+              padding: '10px',
+              paddingTop: '0',
             }}
           >
             <VideosList videoPlayerOptions={videosListPlayerOptions} videos={allVideos} />

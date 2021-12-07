@@ -1,4 +1,4 @@
-import { Grid, Box } from '@mui/material';
+import { Grid, Box, Typography, Stack } from '@mui/material';
 import { ILike } from '../../../interface/VideoDetails';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
@@ -8,6 +8,7 @@ import { useAuth } from '../../../context/useAuthContext';
 import useStyles from '../useStyles';
 import IconButton from '@mui/material/IconButton';
 import { updateLikes, updateDislikes, removeLikes, removeDislikes } from '../../../helpers/APICalls/likesApis';
+import { useSnackBar } from '../../../context/useSnackbarContext';
 
 export default function Likes(): JSX.Element {
   const classes = useStyles();
@@ -15,7 +16,7 @@ export default function Likes(): JSX.Element {
   const { loggedInUser } = useAuth();
   const [likes, setLikes] = useState<ILike[] | undefined>([]);
   const [dislikes, setDislikes] = useState<ILike[] | undefined>([]);
-
+  const { updateSnackBarMessage } = useSnackBar();
   useEffect(() => {
     setLikes(watchVideo?.likes);
     setDislikes(watchVideo?.dislikes);
@@ -39,8 +40,8 @@ export default function Likes(): JSX.Element {
   const handleLike = async (): Promise<void> => {
     if (loggedInUser) {
       if (watchVideo) {
-        const { videoId, userId } = watchVideo;
-
+        const { _id, userId } = watchVideo;
+        const videoId = _id;
         try {
           if (checkUserExist(dislikes)) {
             await handleDislike();
@@ -52,13 +53,16 @@ export default function Likes(): JSX.Element {
               return handleGetAllVideos();
             }
           } else {
-            const { data } = await updateLikes(loggedInUser.username, userId, videoId);
+            const { data } = await updateLikes(loggedInUser.username, userId, videoId, loggedInUser.userImage);
             if (data?.success) {
               return handleGetAllVideos();
+            } else {
+              updateSnackBarMessage('something went wrong,please try again');
             }
           }
         } catch (err) {
-          console.log(err);
+          console.error(err);
+          updateSnackBarMessage('something went wrong,please try again');
         }
       }
     }
@@ -67,7 +71,8 @@ export default function Likes(): JSX.Element {
   const handleDislike = async (): Promise<void> => {
     if (loggedInUser) {
       if (watchVideo) {
-        const { videoId, userId } = watchVideo;
+        const { _id, userId } = watchVideo;
+        const videoId = _id;
 
         try {
           if (checkUserExist(likes)) {
@@ -83,10 +88,12 @@ export default function Likes(): JSX.Element {
             const { data } = await updateDislikes(loggedInUser.username, userId, videoId);
             if (data?.success) {
               return handleGetAllVideos();
+            } else {
+              updateSnackBarMessage('something went wrong,please try again');
             }
           }
         } catch (err) {
-          console.log(err);
+          updateSnackBarMessage('something went wrong,please try again');
         }
       }
     }
@@ -94,29 +101,21 @@ export default function Likes(): JSX.Element {
 
   return (
     <>
-      <Box style={{ minHeight: '100px', paddingTop: '20px' }}>
-        <Box>
-          <IconButton
-            // sx={{ position: 'absolute', right: '10%', top: '80%' }}
-            aria-label="update"
-            color="secondary"
-            onClick={handleLike}
-          >
-            <ThumbUpIcon sx={{ color: 'green' }} />
-            {likes?.length}
+      <Stack direction="row" spacing={1}>
+        <Stack direction="row" alignItems="center">
+          <IconButton aria-label="update" onClick={handleLike} size="small">
+            <ThumbUpIcon sx={{ color: checkUserExist(likes) ? 'green' : '#757575' }} />
           </IconButton>
+          <Typography> {likes?.length}</Typography>
+        </Stack>
 
-          <IconButton
-            // sx={{ position: 'absolute', right: '10%', top: '80%' }}
-            aria-label="update"
-            color="secondary"
-            onClick={handleDislike}
-          >
-            <ThumbDownAltIcon sx={{ color: 'red' }} />
-            {dislikes?.length}
+        <Stack direction="row" alignItems="center">
+          <IconButton aria-label="update" size="small" onClick={handleDislike}>
+            <ThumbDownAltIcon sx={{ color: checkUserExist(dislikes) ? 'red' : '#757575' }} />
           </IconButton>
-        </Box>
-      </Box>
+          <Typography> {dislikes?.length}</Typography>
+        </Stack>
+      </Stack>
     </>
   );
 }

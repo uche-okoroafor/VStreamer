@@ -21,10 +21,26 @@ export const Search = styled('div')(({ theme }) => ({
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
+  width: '60%',
+  [theme.breakpoints.up(1200)]: {
     marginLeft: theme.spacing(3),
-    width: 'auto',
+    width: '60%',
+  },
+  [theme.breakpoints.down(1200)]: {
+    marginLeft: theme.spacing(3),
+    width: '50%',
+  },
+  [theme.breakpoints.down(1044)]: {
+    marginLeft: theme.spacing(3),
+    width: '40%',
+  },
+  [theme.breakpoints.down(900)]: {
+    marginLeft: theme.spacing(3),
+    width: '60%',
+  },
+  [theme.breakpoints.down(500)]: {
+    marginLeft: theme.spacing(2),
+    width: '100%',
   },
 }));
 
@@ -35,10 +51,6 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '50ch',
-    },
   },
 }));
 

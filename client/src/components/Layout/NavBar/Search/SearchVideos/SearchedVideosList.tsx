@@ -16,7 +16,7 @@ interface IProps {
 
 function SearchedVideosList({ searchedVideo, setSearchedVideo, toggleDrawer }: IProps): JSX.Element {
   const { allVideos, handleSetWatchVideo } = useAllVideos();
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchResult, setSearchResult] = useState<Array<IVideoDetails>>([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function SearchedVideosList({ searchedVideo, setSearchedVideo, toggleDrawer }: I
 
   function handleSearch(): void {
     if (allVideos) {
-      const filteredSearchedVideo = allVideos.filter((video: IVideoDetails) => {
+      const filteredSearchedVideo = allVideos.filter((video) => {
         const trimmedSearchValue = searchedVideo.replace(/\s+/g, '').toLowerCase();
         return video.videoTitle.toLowerCase().includes(trimmedSearchValue);
       });
@@ -48,9 +48,6 @@ function SearchedVideosList({ searchedVideo, setSearchedVideo, toggleDrawer }: I
       {searchResult.length ? (
         searchResult.map((video: IVideoDetails) => (
           <ListItem button key={video.videoId} onClick={() => handleClickedSearchResult(video)}>
-            {/* <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon> */}
             <ListItemText primary={video.videoTitle} />
           </ListItem>
         ))
