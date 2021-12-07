@@ -1,7 +1,5 @@
-import { duration } from '@material-ui/core';
-import { Box, CircularProgress } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { Typography } from '@mui/material';
-import { Component, useEffect, useRef } from 'react';
 import Player from 'react-player';
 
 interface IProps {
