@@ -8,7 +8,7 @@ This project is a video streaming website that allows users to upload video to t
 
 ## Built With:
 ### Frontend
-* [React](https://reactjs.org/) - The framework used for developing the components and UI.
+* [React/Typescript](https://reactjs.org/) - The framework used for developing the components and UI.
 * [Material UI](https://material-ui.com/) - Javascript framework for styling and CSS compartmentalization.
 * [ReactPlayer](https://github.com/feross/simple-peer) - ReactPlayer is used for the video player.
 
