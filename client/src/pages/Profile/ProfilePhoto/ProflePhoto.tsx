@@ -1,4 +1,4 @@
-import { Typography, Grid, Box, Button, Paper, CircularProgress } from '@mui/material';
+import { Box, Button, Paper, CircularProgress } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import SaveIcon from '@mui/icons-material/Save';
 import IconButton from '@mui/material/IconButton';
@@ -7,12 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import useStyles from '../useStyles';
 import { useEffect, useState } from 'react';
 import { stringAvatar } from '../useStyles';
-import { IUserDetails, User } from '../../../interface/User';
-import Icon from '@material-ui/core/Icon/Icon';
-import { uploadImage, deleteImage } from '../../../helpers/APICalls/imageApis';
-import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import { IFile } from '../../../interface/File';
-import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 import { useUserDetails } from '../../../context/useUserContext';
@@ -29,16 +24,9 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
   const [uploadStatus, setUploadStatus] = useState(false);
   const { updateSnackBarMessage } = useSnackBar();
   const [isSaving, setIsSaving] = useState(false);
-  // console.log(downloadImage(user.userImage));
-  // useEffect(() => {
-  //   if (userDetails) {
-  //     setFiles(userDetails?.userImage);
-  //   }
-  // }, [userDetails]);
 
   const onDrop = useCallback(
     (acceptedFile) => {
-      // onSetFile(acceptedFile[0]);
       setImage(acceptedFile[0]);
       setFiles(URL.createObjectURL(acceptedFile[0]));
     },
@@ -65,11 +53,11 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
   const handleSaveImage = async (): Promise<void> => {
     setUploadStatus(true);
     setIsSaving(true);
+
     try {
       const { data } = await uploadImage(image);
       if (data) {
         if (data.success) {
-          console.log('profilePhoto');
           handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
 
           setFiles(undefined);
@@ -92,11 +80,8 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
 
     try {
       const { data } = await deleteImage();
-      console.log(data);
       if (data) {
         if (data.success) {
-          console.log('handleSaveImage');
-
           handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
 
           setFiles(undefined);
