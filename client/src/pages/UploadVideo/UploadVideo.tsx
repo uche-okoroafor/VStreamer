@@ -1,16 +1,12 @@
-/* eslint-disable prettier/prettier */
-import { Container, Typography, Button } from '@material-ui/core';
-import { useEffect, useState } from 'react';
+import { Box } from '@material-ui/core';
+import { useState } from 'react';
 import { useAuth } from '../../context/useAuthContext';
 import UploadVideoForm from './UploadVideoForm/UploadVideoForm';
 import { uploadVideoDetails } from '../../helpers/APICalls/uploadVideo';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 import { useAllVideos } from '../../context/useAllVideosContext';
-
 import { IVideoDetails } from '../../interface/VideoDetails';
 import { useSnackBar } from '../../context/useSnackbarContext';
-import { IViewerResponse } from '../../interface/ApiResponse';
 
 interface IState {
   stringValue: string;
@@ -39,8 +35,6 @@ export default function UploadVideo(): JSX.Element {
   const [artist, setArtist] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
-
-  console.log(videoDuration, 'videoDuration');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -87,7 +81,6 @@ export default function UploadVideo(): JSX.Element {
       });
       if (data) {
         videoDetails.videoSource = data.url;
-        console.log(videoDetails, 10101);
         await handleUploadVideoDetails(videoDetails);
       } else {
         updateSnackBarMessage('video not uploaded');
@@ -101,7 +94,6 @@ export default function UploadVideo(): JSX.Element {
   const handleUploadVideoDetails = async (videoDetails: IVideoDetails): Promise<void> => {
     try {
       const { data } = await uploadVideoDetails(videoDetails);
-      console.log(data, data?.success);
       if (data?.success) {
         setUploadSuccess(true);
         handleGetAllVideos();
@@ -120,7 +112,7 @@ export default function UploadVideo(): JSX.Element {
   };
 
   return (
-    <Container style={{ minHeight: '90vh' }}>
+    <Box style={{ minHeight: '90vh' }}>
       <UploadVideoForm
         handleSubmit={handleSubmit}
         videoSource={videoSource}
@@ -138,6 +130,6 @@ export default function UploadVideo(): JSX.Element {
         setCategory={setCategory}
         category={category}
       />
-    </Container>
+    </Box>
   );
 }
