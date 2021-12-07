@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '.8rem',
     height: '2rem',
     padding: '5px',
-    background: 'none',
     borderRadius: '5px',
   },
   forgot: {

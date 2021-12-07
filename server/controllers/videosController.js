@@ -2,6 +2,10 @@ const User = require('../models/User.js')
 const asyncHandler = require('express-async-handler')
 const ObjectID = require('mongodb').ObjectID
 
+// @route POST /videos
+// @desc get all videos
+// @access Private
+
 exports.getAllVideosController = asyncHandler(async (req, res) => {
   try {
     const response = await User.find({}, { videos: 1, _id: 0 })
@@ -17,6 +21,10 @@ exports.getAllVideosController = asyncHandler(async (req, res) => {
     res.status(404).json(err)
   }
 })
+
+// @route POST /videos
+// @desc get all user videos
+// @access Private
 
 exports.getUserVideosController = asyncHandler(async (req, res) => {
   const { userId } = req.body
@@ -36,6 +44,10 @@ exports.getUserVideosController = asyncHandler(async (req, res) => {
     res.status(404).json({ err: err.message })
   }
 })
+
+// @route POST /videos
+// @desc deletes videos
+// @access Private
 
 exports.deleteVideoController = asyncHandler(async (req, res) => {
   const { videoId } = req.body

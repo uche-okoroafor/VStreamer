@@ -26,14 +26,8 @@ exports.validateRemoveBoardParams = [
   }
 ]
 
-exports.validateCreateColumnParams = [
-  // if ((!userId, !videoTitle, !videoSource, !videoId)) {
-  //   return res
-  //     .status(400)
-  //     .send({ err: 'userId,videoSource,videoTitle or videoId is undefined' })
-  // }
-  handleParams('boardId'),
-  handleParams('columnTitle'),
+exports.validateImageKeyParams = [
+  handleParams('key'),
   (req, res, next) => {
     handleError(req, res, next)
   }

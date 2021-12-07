@@ -5,9 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Avatar from '@mui/material/Avatar';
 import useStyles from '../useStyles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { stringAvatar } from '../useStyles';
+import { IUserDetails } from '../../../interface/User';
+import { uploadImage, deleteImage } from '../../../helpers/APICalls/imageApis';
+import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import { IFile } from '../../../interface/File';
+import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 import { useUserDetails } from '../../../context/useUserContext';
@@ -53,7 +57,6 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
   const handleSaveImage = async (): Promise<void> => {
     setUploadStatus(true);
     setIsSaving(true);
-
     try {
       const { data } = await uploadImage(image);
       if (data) {

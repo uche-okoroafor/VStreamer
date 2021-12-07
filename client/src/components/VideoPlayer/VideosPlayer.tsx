@@ -35,23 +35,6 @@ export default function VideoPlayer({ videoSource, videoPlayerOptions, setVideoD
           url={videoSource}
         />
       ) : (
-        // !videoSource.includes('youtube') ? (
-        //   <video id="videoId" autoPlay={autoPlay} width={width} height={height} controls style={{ zIndex: 0 }}>
-        //     <source src={videoSource} type="video/mp4" />
-        //     <source src={videoSource} type="video/ogg" />
-        //     Your browser does not support HTML video.
-        //   </video>
-        // ) : (
-        //   <iframe
-        //     width={width}
-        //     height={height}
-        //     src={videoSource}
-        //     title="YouTube video player"
-        //     frameBorder="0"
-        //     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        //     allowFullScreen
-        //   ></iframe>
-        // )
         <>
           <video id="videoId" autoPlay={autoPlay} width={width} height={height} controls style={{ zIndex: 0 }}>
             <source src={videoSource} type="video/mp4" />
