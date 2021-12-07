@@ -1,11 +1,18 @@
 import { makeStyles } from '@material-ui/core/styles';
+import image from '../../Images/backgroundImg.jpg';
 
 const useStyles = makeStyles(() => ({
   root: {
-    minHeight: '100vh',
-    '& .MuiInput-underline:before': {
-      borderBottom: '1.2px solid rgba(0, 0, 0, 0.2)',
-    },
+    height: '100vh',
+    position: 'fixed',
+    top: 0,
+    backgroundColor: 'rgb(0, 0, 0, 0.8)',
+    backgroundRepeat: ' no-repeat',
+    backgroundSize: 'cover',
+    backgroundImage: `url(${image})`,
+    backgroundAttachment: 'fixed',
+    backgroundPosition: 'center',
+    padding: '20px',
   },
   authWrapper: {
     display: 'flex',
@@ -13,6 +20,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
     flexDirection: 'column',
     minHeight: '100vh',
+    width: '100%',
     paddingTop: 23,
   },
   welcome: {

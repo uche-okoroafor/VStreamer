@@ -1,8 +1,8 @@
-/* eslint-disable prettier/prettier */
 import axios from 'axios';
-import { IAllVideos, IVideoDetails } from '../../interface/VideoDetails';
+import { IResponse } from '../../interface/ApiResponse';
+import { IVideoDetails } from '../../interface/VideoDetails';
 
-export const getAllVideos = async (): Promise<IAllVideos | undefined> => {
+export const getAllVideos = async (): Promise<Array<IVideoDetails> | undefined> => {
   try {
     const response = await axios.post(`/videos/all-videos`);
     return response.data;
@@ -11,13 +11,6 @@ export const getAllVideos = async (): Promise<IAllVideos | undefined> => {
   }
 };
 
-// Promise<AuthApiData>
-
-export const deleteVideo = async (video: IVideoDetails | undefined): Promise<any> => {
-  // console.log(video);
-  try {
-    return await axios.post('/videos/delete-video',{ video});
-  } catch (err) {
-    console.log(err);
-  }
+export const deleteVideo = async (videoId: string): Promise<IResponse> => {
+  return await axios.post('/videos/delete-video', { videoId });
 };

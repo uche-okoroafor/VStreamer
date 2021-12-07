@@ -42,15 +42,15 @@ export const stringAvatar = (
   };
 };
 
-const useStyles = makeStyles(() => ({
-  root: {
-    minHeight: '100vh',
-    '& .MuiInput-underline:before': {
-      borderBottom: '1.2px solid rgba(0, 0, 0, 0.2)',
-    },
-  },
+const useStyles = makeStyles((theme) => ({
+  // root: {
+  //   minHeight: '100vh',
+  //   '& .MuiInput-underline:before': {
+  //     borderBottom: '1.2px solid rgba(0, 0, 0, 0.2)',
+  //   },
+  // },
   profile: {
-    minHeight: '90vh',
+    color: 'white',
   },
   videos: {
     minHeight: '90vh',
@@ -59,11 +59,29 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     margin: '10px',
     padding: '10px',
-    backgroundColor: '#f2f2f7',
     borderRadius: '5px',
+    textOverflow: 'ellipsis',
+    [theme.breakpoints.down(1200)]: {
+      flexDirection: 'column',
+    },
+  },
+  videoDetailsContainer: {
+    padding: '0 10px',
+    [theme.breakpoints.down(1200)]: {
+      paddingTop: '10px',
+    },
+  },
+  iconButton: {
+    position: 'absolute',
+    right: '10%',
+    top: '80%',
+    background: 'green',
+    '&:hover': {
+      background: 'green',
+    },
   },
 
-  boxes: {},
+  bottomSpace: { marginBottom: '30px' },
 }));
 
 export default useStyles;

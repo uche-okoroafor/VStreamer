@@ -5,14 +5,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import logo from '../NavBar/Logo/logo.svg';
 import { useHistory } from 'react-router';
@@ -22,6 +14,8 @@ import { useUserDetails } from '../../../context/useUserContext';
 import { User } from '../../../interface/User';
 import { Avatar } from '@material-ui/core';
 import { stringAvatar } from '../../../pages/Profile/useStyles';
+import MobileMenu from './Menubar/MobileMenu';
+import DesktopMenu from './Menubar/DesktopMenu';
 
 interface IProps {
   loggedInUser: User;
@@ -36,26 +30,14 @@ export default function NavBar({ loggedInUser }: IProps): JSX.Element {
 
   const { logout } = useAuth();
   const history = useHistory();
-  const { handleGetUser } = useUserDetails();
+  const { handleGetUserDetails } = useUserDetails();
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = (params: string) => {
-    if (params === 'logout') {
-      logout();
-    }
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleShowAccount = (): void => {
-    handleGetUser(loggedInUser);
+  const handleShowAccount = async (): Promise<void> => {
+    await handleGetUserDetails(loggedInUser);
     history.push(`/profile/${loggedInUser.username}`);
   };
 
@@ -64,78 +46,21 @@ export default function NavBar({ loggedInUser }: IProps): JSX.Element {
   };
 
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={() => handleMenuClose('profile')}>Profile</MenuItem>
-      <MenuItem onClick={() => handleMenuClose('my account')}>My account</MenuItem>
-      <MenuItem onClick={() => handleMenuClose('logout')}>Logout</MenuItem>
-    </Menu>
-  );
+  const renderMenu = <DesktopMenu loggedInUser={loggedInUser} setAnchorEl={setAnchorEl} anchorEl={anchorEl} />;
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
+    <MobileMenu
+      setMobileMoreAnchorEl={setMobileMoreAnchorEl}
+      loggedInUser={loggedInUser}
+      setAnchorEl={setAnchorEl}
+      mobileMoreAnchorEl={mobileMoreAnchorEl}
+      anchorEl={anchorEl}
+    />
   );
 
   return (
-    <Box sx={{ flexGrow: 1}}>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar sx={{ height: 50 }}>
           <IconButton
@@ -143,7 +68,7 @@ export default function NavBar({ loggedInUser }: IProps): JSX.Element {
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            onClick={() => history.push('/home')}
+            onClick={() => '/home'}
             sx={{ mr: 2 }}
           >
             {/* <MenuIcon /> */}
@@ -165,16 +90,9 @@ export default function NavBar({ loggedInUser }: IProps): JSX.Element {
               color="inherit"
               onClick={() => history.push('/home')}
             >
-              {/* <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge> */}
               <Typography>Home</Typography>
             </IconButton>
             <IconButton size="large" aria-label="show 17 new notifications" color="inherit" onClick={handleShowAccount}>
-              {/* <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge> */}
-
               <Typography>My Account</Typography>
             </IconButton>
             <IconButton
@@ -183,26 +101,8 @@ export default function NavBar({ loggedInUser }: IProps): JSX.Element {
               color="inherit"
               onClick={() => history.push('/upload-video')}
             >
-              {/* <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge> */}
-
-              <Typography>UploadVideo</Typography>
+              <Typography>Upload Video</Typography>
             </IconButton>
-
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-              onClick={() => history.push('/DragDrop')}
-            >
-              {/* <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge> */}
-
-              <Typography>DragDrop</Typography>
-            </IconButton>
-
             <IconButton
               size="large"
               edge="end"
@@ -212,8 +112,10 @@ export default function NavBar({ loggedInUser }: IProps): JSX.Element {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              {/* <AccountCircle /> */}
-              <Avatar {...stringAvatar(loggedInUser.username.toUpperCase(), 50, 50)} src=" userDetails.image" />
+              <Avatar
+                {...stringAvatar(loggedInUser.username.toUpperCase(), 50, 50)}
+                src={`/image/get-image/${loggedInUser.id}`}
+              />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

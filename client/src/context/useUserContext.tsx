@@ -1,40 +1,37 @@
-/* eslint-disable prettier/prettier */
-import axios from 'axios';
-
-import { useState, useContext, createContext, FunctionComponent, useEffect, useCallback } from 'react';
-// import { getAllVideos } from '../helpers/APICalls/videosApis';
-// import logoutAPI from '../helpers/APICalls/logout';
-import { IVideoDetails, IAllVideos } from '../interface/VideoDetails';
-import { useAllVideos } from './useAllVideosContext';
-import { User } from '../interface/User';
+import { getUserDetails } from '../helpers/APICalls/userApis';
+import { useState, useContext, createContext, FunctionComponent } from 'react';
+import { IVideoDetails } from '../interface/VideoDetails';
+import { IUserDetails, User } from '../interface/User';
+import { useSnackBar } from './useSnackbarContext';
 
 interface IUserDetailsContext {
-  handleUserVideos: (userId: string) => void;
-  handleGetUser: (user: User) => void;
-  userVideos: IAllVideos | undefined;
-  userDetails: User | undefined;
+  handleGetUserDetails: (user: User) => void;
+  userVideos: Array<IVideoDetails> | undefined;
+  userDetails: IUserDetails | undefined;
 }
 
 export const UserDetailsContext = createContext<IUserDetailsContext>({
-  handleUserVideos: () => null,
-  handleGetUser: () => null,
+  handleGetUserDetails: () => null,
   userVideos: undefined,
   userDetails: undefined,
 });
 
 export const UserDetailsProvider: FunctionComponent = ({ children }): JSX.Element => {
-  const { allVideos } = useAllVideos();
   const [userVideos, setUserVideos] = useState<IUserDetailsContext['userVideos']>(undefined);
-  const [userDetails, setUserDetails] = useState<User | undefined>(undefined);
-  const handleGetUser = (user: User): void => {
-    setUserDetails(user);
-    handleUserVideos(user.id);
-  };
+  const [userDetails, setUserDetails] = useState<IUserDetails | undefined>(undefined);
+  const { updateSnackBarMessage } = useSnackBar();
 
-  const handleUserVideos = (userId: string): void => {
-    const allUserVideos = allVideos?.filter((video: IVideoDetails) => video.userId === userId);
-    setUserVideos(allUserVideos);
-    console.log('handleUserVideos', allUserVideos);
+  const handleGetUserDetails = async (user: User): Promise<void> => {
+    try {
+      const response = await getUserDetails(user.id);
+      if (response?.data) {
+        setUserVideos(response.data.videos);
+        setUserDetails(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+      updateSnackBarMessage('profile not updated, please try again');
+    }
   };
 
   return (
@@ -42,8 +39,7 @@ export const UserDetailsProvider: FunctionComponent = ({ children }): JSX.Elemen
       value={{
         userVideos,
         userDetails,
-        handleGetUser,
-        handleUserVideos,
+        handleGetUserDetails,
       }}
     >
       {children}

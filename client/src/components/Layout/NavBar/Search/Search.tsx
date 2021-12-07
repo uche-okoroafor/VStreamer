@@ -2,10 +2,8 @@ import * as React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-
 import { StyledInputBase, SearchIconWrapper, Search } from './SearchVideos/useStyles';
-import { List, Paper, Typography, ListItem, ListItemText } from '@material-ui/core';
+import { Paper, useMediaQuery, useTheme } from '@material-ui/core';
 import useStyles from './SearchVideos/useStyles';
 import SearchedVideosList from './SearchVideos/SearchedVideosList';
 
@@ -14,6 +12,8 @@ export default function SearchVideo(): JSX.Element {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [drawerHeight, setDrawerHeight] = useState('0');
   const [searchBarIndex, setSearchBarIndex] = useState(0);
+  const theme = useTheme();
+  const isSmallOrLess = useMediaQuery(theme.breakpoints.up('sm'));
   const classes = useStyles();
 
   const toggleDrawer = (

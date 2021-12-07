@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect } from 'react';
-import { Container, Paper, TextField, MenuItem, Button, Box, CircularProgress, styled } from '@material-ui/core';
+import { Container, Paper, TextField, MenuItem, Button, CircularProgress, styled } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import { useState } from 'react';
 import { width } from '@mui/system';
@@ -10,27 +11,28 @@ interface Props {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   isSubmitting: boolean;
   uploadProgress: number | null | undefined;
-  setVideoTitle: React.Dispatch<React.SetStateAction<string>>;
+  setVideoTitle: React.Dispatch<string>;
+  setArtist: React.Dispatch<string>;
+  setDescription: React.Dispatch<string>;
+  setCategory: React.Dispatch<string>;
   videoTitle: string;
+  category: string;
   uploadSuccess: boolean | undefined;
 }
 
 export default function VideoDetailsForm({
   handleSubmit,
-  //   setFile,
-  //   setFileName,
-  //   videoSource,
-  //   setVideoSource,
+  setCategory,
+  setArtist,
+  setDescription,
   videoTitle,
   setVideoTitle,
   isSubmitting,
   uploadProgress,
   uploadSuccess,
+  category,
 }: Props): JSX.Element {
-  const [category, setCategory] = useState('');
-  console.log(uploadSuccess);
   const [buttonColor, setButtonColor] = useState<string | undefined>('primary');
-
   useEffect(() => {
     if (uploadSuccess === undefined) {
       return setButtonColor('primary');
@@ -41,30 +43,26 @@ export default function VideoDetailsForm({
 
   const categories = [
     {
-      value: 'USD',
-      label: '$',
+      value: 'Music Video',
+      label: 'Music Video',
     },
     {
-      value: 'EUR',
-      label: '€',
+      value: 'Music Aduio',
+      label: 'Music Aduio',
     },
     {
-      value: 'BTC',
-      label: '฿',
+      value: 'Movie',
+      label: 'Movie',
     },
     {
-      value: 'JPY',
-      label: '¥',
+      value: 'Skit',
+      label: 'Skit',
     },
   ];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    console.log('rhrjjrj');
-  };
-
   return (
-    <Box style={{ padding: '2rem', width: '80%', margin: '0 auto' }}>
-      <form onSubmit={handleSubmit} noValidate>
+    <Box sx={{ padding: '2rem', width: { xs: '95%', sm: '80%', md: '80%', lg: '80%' }, margin: '0 auto' }}>
+      <form onSubmit={handleSubmit}>
         <Box style={{ margin: '20px 0' }}>
           <TextField
             id="outlined-basic"
@@ -75,6 +73,39 @@ export default function VideoDetailsForm({
             value={videoTitle}
             variant="outlined"
             size="small"
+            required
+          />
+        </Box>
+        <Box style={{ margin: '20px 0' }}>
+          <TextField
+            id="outlined-select-currency"
+            size="small"
+            fullWidth
+            variant="outlined"
+            select
+            label="Select video Category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          >
+            {categories.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>{' '}
+        </Box>
+
+        <Box style={{ margin: '20px 0' }}>
+          <TextField
+            size="small"
+            id="outlined-basic"
+            onChange={(e) => setArtist(e.target.value)}
+            label="Artist"
+            fullWidth
+            name="Artist"
+            variant="outlined"
+            required
           />
         </Box>
 
@@ -82,49 +113,12 @@ export default function VideoDetailsForm({
           <TextField
             size="small"
             id="outlined-basic"
-            onChange={handleChange}
-            label="Category"
-            fullWidth
-            name="category"
-            variant="outlined"
-          />
-        </Box>
-        <Box style={{ margin: '20px 0' }}>
-          <TextField
-            id="outlined-basic"
-            size="small"
-            onChange={handleChange}
-            label="Tag"
-            fullWidth
-            name="tag"
-            variant="outlined"
-          />
-        </Box>
-        <TextField
-          id="outlined-select-currency"
-          size="small"
-          fullWidth
-          variant="outlined"
-          select
-          label="Select video Category"
-          value={category}
-          onChange={handleChange}
-        >
-          {categories.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <Box style={{ margin: '20px 0' }}>
-          <TextField
-            size="small"
-            id="outlined-basic"
-            onChange={handleChange}
+            onChange={(e) => setDescription(e.target.value)}
             label="Description"
             fullWidth
             name="description"
             variant="outlined"
+            required
           />
         </Box>
         <Box textAlign="center">

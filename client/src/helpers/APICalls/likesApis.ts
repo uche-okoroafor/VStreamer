@@ -5,8 +5,9 @@ export const updateLikes = async (
   loggedInUsername: string,
   userId: string,
   videoId: string,
+  userImage?: string,
 ): Promise<IUpdateLikesResponse> => {
-  return await axios.post('/likes/add-like', { loggedInUsername, userId, videoId });
+  return await axios.post('/likes/add-like', { loggedInUsername, userId, videoId, userImage });
 };
 
 export const updateDislikes = async (

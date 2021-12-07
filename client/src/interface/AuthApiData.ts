@@ -1,4 +1,3 @@
-import { string } from 'yup/lib/locale';
 import { User } from './User';
 
 export interface AuthApiDataSuccess {
