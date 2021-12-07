@@ -54,3 +54,9 @@ CLOUDINARY_API_SECRET=<your cloudinary api secret key>
 ```
 9. Run ```npm run dev``` to start the server on the root directory and ```npm start``` on client to start the application
 
+
+## Features:
+### Watch the video to see the site performance
+[![VStreamer](https://user-images.githubusercontent.com/71725892/145043084-3fff7691-61b1-41a4-b322-e72cf313e546.jpg)](https://user-images.githubusercontent.com/71725892/145041787-edc3f536-3f35-4d33-94f8-bc9ee8d37406.mp4)
+
+
