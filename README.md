@@ -57,4 +57,8 @@ CLOUDINARY_API_SECRET=<your cloudinary api secret key>
 
 ## Features:
 ### Watch the video to see the site performance
-[![VStreamer](https://user-images.githubusercontent.com/71725892/145043084-3fff7691-61b1-41a4-b322-e72cf313e546.jpg)](https://user-images.githubusercontent.com/71725892/145041787-edc3f536-3f35-4d33-94f8-bc9ee8d37406.mp4)
+[![VStreamer](https://user-images.githubusercontent.com/71725892/145043084-3fff7691-61b1-41a4-b322-e72cf313e546.jpg)](https://user-images.githubusercontent.com/71725892/145594851-61671072-ca9c-4242-a4a0-6642d7479b79.mp4)
+
+
+
+
