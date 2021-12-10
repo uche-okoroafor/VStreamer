@@ -1,14 +1,8 @@
-*node_modules
-server/.env
-server/server/.env
-*.env
-*sample.env
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
 node_modules/
 
-*sample.env
 
 # production
 /build/
@@ -31,4 +25,3 @@ __snapshots__
 
 # debug & other vs code settings
 .vscode
-*.env
