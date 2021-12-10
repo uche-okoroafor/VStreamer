@@ -3,6 +3,7 @@
 # dependencies
 node_modules/
 
+*sample.env
 
 # production
 /build/
@@ -25,3 +26,4 @@ __snapshots__
 
 # debug & other vs code settings
 .vscode
+*.env
