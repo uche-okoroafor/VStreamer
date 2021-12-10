@@ -1,0 +1,5 @@
+*node_modules
+server/.env
+server/server/.env
+*.env
+*sample.env
