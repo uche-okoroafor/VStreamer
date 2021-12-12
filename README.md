@@ -24,8 +24,8 @@ This project is a video streaming website that allows users to upload video to t
 ## Features:
 
 - User login/sign up authentication.
-- Able to watch videos which is streamed from the server.
 - Upload videos.
+- Users are able to watch videos which is streamed from the server.
 - Delete videos.
 - upload profile image.
 - update user profile.
