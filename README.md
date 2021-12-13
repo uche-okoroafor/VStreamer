@@ -4,7 +4,10 @@ This project is a video streaming website that allows users to upload video to t
 
 ## Contributors:
 
-[Uchechukwu Okoroafor](https://github.com/uche-okoroafor)
+[Uche Okoroafor](https://github.com/uche-okoroafor)
+
+---
+
 
 ## Built With:
 
@@ -21,6 +24,8 @@ This project is a video streaming website that allows users to upload video to t
 - [AWS Bucket](https://aws.amazon/) - AWS bucket is used for storing of user profile Image.
 - [Cloudinary](https://cloudinary.com/) - Cloudinary is used for storing of videos.
 
+---
+
 ## Features:
 
 - User login/sign up authentication.
@@ -32,6 +37,7 @@ This project is a video streaming website that allows users to upload video to t
 - Comment on a Video.
 - Like or dislike a Video.
 - Like or dislike a Comment.
+---
 
 ## Installation:
 
@@ -61,8 +67,9 @@ CLOUDINARY_API_SECRET=<your cloudinary api secret key>
 
 9. Run `npm run dev` to start the server on the root directory and `npm start` on client to start the application
 
-## Features:
+---
 
-### Watch the video to see the site performance
+## DEMO
+
 
 [![VStreamer](https://user-images.githubusercontent.com/71725892/145043084-3fff7691-61b1-41a4-b322-e72cf313e546.jpg)](https://user-images.githubusercontent.com/71725892/145594851-61671072-ca9c-4242-a4a0-6642d7479b79.mp4)
