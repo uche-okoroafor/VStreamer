@@ -9,8 +9,6 @@ interface IProps {
 }
 
 const ProtectedRoute: React.FC<IProps> = (props) => {
-  const { loggedInUser } = useAuth();
-
-  return loggedInUser ? <Route {...props} /> : <Redirect to="/login" />;
+  return localStorage.getItem('user-token') ? <Route {...props} /> : <Redirect to="/login" />;
 };
 export default ProtectedRoute;

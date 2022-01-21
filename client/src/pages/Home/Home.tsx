@@ -33,7 +33,7 @@ export default function Home(): JSX.Element {
         md={11}
         sm={10}
         xs={12}
-        style={{ minHeight: '80vh', padding: ' 25px  10px', margin: '0 auto' }}
+        style={{ minHeight: '100vh', padding: ' 25px  10px', margin: '0 auto' }}
       >
         <VideosList videos={allVideos} videoPlayerOptions={videoPlayerOptions} />
       </Grid>

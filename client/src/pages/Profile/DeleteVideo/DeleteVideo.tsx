@@ -20,8 +20,6 @@ export default function UpdateVideo({ renderedComponent, video }: Props): JSX.El
   const [isDeleting, setDeleting] = useState(false);
   const { updateSnackBarMessage } = useSnackBar();
 
-  // const history = useHistory();
-
   useEffect(() => {
     if (loggedInUser && userDetails) {
       if (loggedInUser.username === userDetails.username && renderedComponent === 'Profile') {
@@ -38,12 +36,13 @@ export default function UpdateVideo({ renderedComponent, video }: Props): JSX.El
       const { data } = await deleteVideo(video._id);
       if (data?.success) {
         handleGetAllVideos();
+        updateSnackBarMessage('video successfully deleted');
       } else {
-        updateSnackBarMessage('video not deleted');
+        updateSnackBarMessage('video not deleted, Please try again later');
       }
     } catch (err) {
       console.error(err);
-      updateSnackBarMessage('video not deleted');
+      updateSnackBarMessage('video not deleted, Please try again later');
     }
     setDeleting(false);
   };

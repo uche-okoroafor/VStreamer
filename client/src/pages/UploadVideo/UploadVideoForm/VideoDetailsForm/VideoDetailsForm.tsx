@@ -124,13 +124,15 @@ export default function VideoDetailsForm({
         <Box textAlign="center">
           <Button type="submit" size="large" variant="contained" color="primary">
             {isSubmitting ? (
-              <CircularProgress style={{ color: 'white' }} />
+              uploadSuccess ? (
+                'Upload Successful'
+              ) : (
+                <CircularProgress style={{ color: 'white' }} />
+              )
             ) : uploadSuccess === undefined ? (
               'Upload Video'
-            ) : uploadSuccess ? (
-              'Upload Successful'
             ) : (
-              'Upload Failed'
+              !uploadSuccess && 'Upload Failed'
             )}
             {isSubmitting && `${uploadProgress}%`}
           </Button>

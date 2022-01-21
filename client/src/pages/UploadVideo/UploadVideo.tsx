@@ -64,7 +64,6 @@ export default function UploadVideo(): JSX.Element {
         await handleUploadVideoDetails(videoDetails);
       }
     }
-    setSubmitting(false);
   };
 
   const handleUploadVideoToCloud = async (videoDetails: IVideoDetails) => {
@@ -84,10 +83,12 @@ export default function UploadVideo(): JSX.Element {
         await handleUploadVideoDetails(videoDetails);
       } else {
         updateSnackBarMessage('video not uploaded');
+        setSubmitting(false);
       }
     } catch (err) {
       console.error(err);
       updateSnackBarMessage('video not uploaded');
+      setSubmitting(false);
     }
   };
 
@@ -99,16 +100,16 @@ export default function UploadVideo(): JSX.Element {
         handleGetAllVideos();
       } else {
         updateSnackBarMessage('video not uploaded');
+        setSubmitting(false);
+        setUploadSuccess(false);
       }
     } catch (err) {
       setUploadSuccess(false);
+      setSubmitting(false);
 
       console.error(err);
       updateSnackBarMessage('video not uploaded');
     }
-    setTimeout(() => {
-      setUploadSuccess(undefined);
-    }, 5000);
   };
 
   return (
@@ -129,6 +130,8 @@ export default function UploadVideo(): JSX.Element {
         setDescription={setDescription}
         setCategory={setCategory}
         category={category}
+        setSubmitting={setSubmitting}
+        setUploadSuccess={setUploadSuccess}
       />
     </Box>
   );

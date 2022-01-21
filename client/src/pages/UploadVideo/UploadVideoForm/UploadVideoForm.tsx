@@ -20,6 +20,8 @@ interface Props {
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setVideoSource: React.Dispatch<React.SetStateAction<string>>;
   setVideoTitle: React.Dispatch<React.SetStateAction<string>>;
+  setSubmitting: React.Dispatch<boolean>;
+  setUploadSuccess: React.Dispatch<boolean | undefined>;
   setArtist: React.Dispatch<string>;
   setDescription: React.Dispatch<string>;
   setCategory: React.Dispatch<string>;
@@ -35,6 +37,8 @@ interface Props {
 export default function UploadVideoForm({
   handleSubmit,
   setFile,
+  setUploadSuccess,
+  setSubmitting,
   setFileName,
   videoSource,
   setVideoSource,
@@ -152,6 +156,8 @@ export default function UploadVideoForm({
               onClick={() => {
                 setVideoTitle('');
                 setVideoSource('');
+                setSubmitting(false);
+                setUploadSuccess(undefined);
               }}
             >
               {' '}
