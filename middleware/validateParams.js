@@ -33,14 +33,7 @@ exports.validateImageKeyParams = [
   }
 ]
 
-exports.validateUpdateColumnParams = [
-  handleParams('boardId'),
-  handleParams('columnId'),
-  handleParams('columnTitle'),
-  (req, res, next) => {
-    handleError(req, res, next)
-  }
-]
+
 
 exports.validateColumnParams = [
   handleParams('boardId'),
