@@ -60,7 +60,7 @@ app.use('/views', viewerRouter)
 app.use('/follow', followRouter)
 app.use('/about', aboutRouter)
 app.use('/check', (req, res) => {
-  res.json({ success: 'Hello world' })
+  res.json({ success: 'Hello worlds' })
 })
 
 if (process.env.NODE_ENV === 'production') {
