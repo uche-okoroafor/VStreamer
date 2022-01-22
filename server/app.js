@@ -59,6 +59,9 @@ app.use('/comment', commentRouter)
 app.use('/views', viewerRouter)
 app.use('/follow', followRouter)
 app.use('/about', aboutRouter)
+app.use('/check', (req, res) => {
+  res.json({ success: 'Hello world' })
+})
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/client/build')))
