@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import { useUserDetails } from '../../context/useUserContext';
 import VideosList from '../../components/VideosList/VideosList';
 import { IUserDetails } from '../../interface/User';
-import ProfilePhoto from './ProfilePhoto/ProflePhoto';
+import ProfilePhoto from './ProfilePhoto/ProfilePhoto';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import { IVideoDetails } from '../../interface/VideoDetails';
+
 import Follow from './Follow/Follow';
 import AboutUser from './AboutUser/AboutUser';
 import { useHistory } from 'react-router';
@@ -15,7 +16,10 @@ import { useHistory } from 'react-router';
 export default function Profile(): JSX.Element {
   const classes = useStyles();
   const { allVideos } = useAllVideos();
+  const { loggedInUser } = useAuth();
   const { userDetails, handleGetUserDetails } = useUserDetails();
+  const [userHasVideos, setUserHasVideos] = useState(false);
+  const [isUser, setIsUser] = useState(false);
   const [user, setUser] = useState<IUserDetails>({
     username: '',
     userId: '',
@@ -36,14 +40,22 @@ export default function Profile(): JSX.Element {
   };
 
   useEffect(() => {
-    if (userDetails) {
+    if (loggedInUser && userDetails) {
       setUser(userDetails);
+      if (loggedInUser.id === userDetails.userId) {
+        setIsUser(true);
+      } else {
+        setIsUser(false);
+      }
     }
-  }, [userDetails]);
+  }, [loggedInUser, userDetails]);
 
   useEffect(() => {
     if (allVideos && userDetails) {
       handleGetUserDetails({ username: userDetails?.username, id: userDetails?.userId, email: 'undefined' });
+    }
+    if (userDetails?.videos.length) {
+      setUserHasVideos(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allVideos]);
@@ -67,7 +79,7 @@ export default function Profile(): JSX.Element {
           md={4}
         >
           <Box display="flex" flexDirection="column" alignItems="center">
-            <ProfilePhoto user={user} />
+            <ProfilePhoto isUser={isUser} user={user} />
 
             <Box className={classes.bottomSpace}>
               <Typography variant="h5">{user.username}</Typography>
@@ -78,8 +90,8 @@ export default function Profile(): JSX.Element {
               <Typography variant="subtitle1">Posts: &nbsp;{userDetails?.videos.length}</Typography>{' '}
               <Typography variant="subtitle1">Views: &nbsp;{userDetails?.views.length}</Typography>
             </Box>
-            <Follow />
-            <AboutUser />
+            <Follow isUser={isUser} />
+            <AboutUser isUser={isUser} />
             <Box>
               <Typography variant="subtitle1" align="center">
                 email: {user.email}
@@ -109,7 +121,13 @@ export default function Profile(): JSX.Element {
               position: { md: 'absolute', xs: 'relative', sm: 'relative' },
             }}
           >
-            <VideosList videos={userDetails?.videos} videoPlayerOptions={videoPlayerOptions} />
+            {userHasVideos ? (
+              <VideosList videos={userDetails?.videos} videoPlayerOptions={videoPlayerOptions} />
+            ) : (
+              <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+                <Typography>This account has no videos </Typography>
+              </Box>
+            )}
           </Box>
         </Grid>
       </Grid>
