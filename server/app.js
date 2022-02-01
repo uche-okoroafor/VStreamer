@@ -43,6 +43,11 @@ app.use(json())
 app.use(urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'build')))
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+})
 
 app.use((req, res, next) => {
   req.io = io
@@ -70,7 +75,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname), 'client', 'build', 'index.html')
   )
 } else {
-  app.get('/', (req, res) => {
+  app.get('/*', (req, res) => {
     res.send('API is running')
   })
 }

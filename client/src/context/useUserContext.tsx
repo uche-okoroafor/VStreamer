@@ -24,13 +24,13 @@ export const UserDetailsProvider: FunctionComponent = ({ children }): JSX.Elemen
   const handleGetUserDetails = async (user: User): Promise<void> => {
     try {
       const response = await getUserDetails(user.id);
+      console.log(response?.data, 'response?.data');
       if (response?.data) {
         setUserVideos(response.data.videos);
         setUserDetails(response.data);
       }
     } catch (err) {
       console.error(err);
-      updateSnackBarMessage('profile not updated, please try again');
     }
   };
 

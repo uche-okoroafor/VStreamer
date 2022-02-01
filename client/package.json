@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@mui/icons-material": "^5.0.4",
+    "@mui/material": "^5.3.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.0.6",
@@ -41,10 +44,14 @@
     "eject": "react-scripts eject",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix"
   },
+  "engines": {
+    "node": "14.15.1",
+    "npm": "6.14.8"
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "https://vstreamer-server.herokuapp.com",
+  "proxy": "https://vstreamer-api-server.herokuapp.com",
   "browserslist": {
     "production": [">0.2%", "not dead", "not op_mini all"],
     "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
@@ -58,7 +65,8 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^5.1.3",
     "lint-staged": "^10.5.4",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "terser": "^3.14.1"
   },
   "lint-staged": {
     "src/**/*.{tsx, ts, js,jsx}": ["eslint . --fix", "git add"]
