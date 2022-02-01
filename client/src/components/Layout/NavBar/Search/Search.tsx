@@ -54,6 +54,24 @@ export default function SearchVideo(): JSX.Element {
           onChange={(e) => setSearchedVideo(e.target.value)}
           inputProps={{ 'aria-label': 'search' }}
         />
+
+        {openDrawer && (
+          <Box
+            className={classes.drawer}
+            sx={{ zIndex: 'modal', height: 0, color: 'text.primary' }}
+            role="presentation"
+            onClick={(event) => toggleDrawer(false, '0', 0, event)}
+            // onKeyDown={(event) => (false, '0', 0, event)}
+          >
+            <Paper>
+              <SearchedVideosList
+                searchedVideo={searchedVideo}
+                setSearchedVideo={setSearchedVideo}
+                toggleDrawer={toggleDrawer}
+              />
+            </Paper>
+          </Box>
+        )}
       </Search>
       {openDrawer && (
         <Box onClick={(event) => toggleDrawer(false, '0', 0, event)} className={classes.drawerBackDrop}></Box>
