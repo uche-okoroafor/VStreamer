@@ -6,14 +6,15 @@ const useStyles = makeStyles(() => ({
     height: '100vh',
     position: 'fixed',
     top: 0,
-    backgroundColor: 'rgb(0, 0, 0, 0.8)',
+    background: `linear-gradient( rgba(0, 0, 0, 0.3) 100%, rgba(0, 0, 0, 0.3)100%),url(${image})`,
     backgroundRepeat: ' no-repeat',
     backgroundSize: 'cover',
-    backgroundImage: `url(${image})`,
     backgroundAttachment: 'fixed',
     backgroundPosition: 'center',
     padding: '20px',
+    paddingTop: '0',
   },
+
   authWrapper: {
     display: 'flex',
     alignItems: 'flex-start',
@@ -29,6 +30,10 @@ const useStyles = makeStyles(() => ({
     color: '#000000',
     fontWeight: 700,
     fontFamily: "'Open Sans'",
+  },
+  loginContainer: {
+    background: 'rgb(25, 118, 210,0.8)',
+    padding: '20px 30px',
   },
 }));
 

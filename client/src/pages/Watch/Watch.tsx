@@ -29,6 +29,7 @@ export default function Watch(): JSX.Element {
     } else {
       setVideoSource(watchVideo?.videoSource);
     }
+    window.scrollTo(0, 0);
   }, [watchVideo]);
 
   const videoPlayerOptions = {

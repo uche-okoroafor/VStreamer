@@ -45,7 +45,7 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
       onSubmit={handleSubmit}
     >
       {({ handleSubmit, handleChange, values, touched, errors, isSubmitting }) => (
-        <form onSubmit={handleSubmit} style={{ color: 'white' }} className={classes.form} noValidate>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
             id="email"
             label={<Typography className={classes.label}>E-mail address</Typography>}
@@ -88,7 +88,6 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
               {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'Login'}
             </Button>
           </Box>
-          <div style={{ height: 95 }} />
         </form>
       )}
     </Formik>
