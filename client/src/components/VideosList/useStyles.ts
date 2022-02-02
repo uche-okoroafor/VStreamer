@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   textSpacing: {
     margin: '5px 0',
     fontSize: '0.8rem',
@@ -26,6 +26,9 @@ const useStyles = makeStyles({
     marginTop: '2rem',
     width: '80%',
   },
-});
+  textFontSize: {
+    fontSize: '0.8rem',
+  },
+}));
 
 export default useStyles;

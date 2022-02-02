@@ -10,30 +10,18 @@ import { useSnackBar } from '../../../context/useSnackbarContext';
 import useStyles from '../useStyles';
 
 interface Props {
-  renderedComponent: string;
-  video: IVideoDetails;
+  isUser: boolean;
 }
 
-export default function AboutUser(): JSX.Element {
+export default function AboutUser({ isUser }: Props): JSX.Element {
   const { loggedInUser } = useAuth();
   const { userDetails, handleGetUserDetails } = useUserDetails();
-  const [isUser, setIsUser] = useState(false);
   const classes = useStyles();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userFollowing, setUserFollowing] = useState(false);
   const [aboutUser, setAboutUser] = useState(userDetails?.aboutUser);
   const [edit, setEdit] = useState(true);
   const { updateSnackBarMessage } = useSnackBar();
-
-  useEffect(() => {
-    if (loggedInUser && userDetails) {
-      if (loggedInUser.id === userDetails.userId) {
-        setIsUser(true);
-      } else {
-        setIsUser(false);
-      }
-    }
-  }, [loggedInUser, userDetails]);
 
   useEffect(() => {
     if (userDetails) {

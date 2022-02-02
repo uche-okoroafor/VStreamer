@@ -42,13 +42,7 @@ exports.validateUpdateColumnParams = [
   }
 ]
 
-exports.validateColumnParams = [
-  handleParams('boardId'),
-  handleParams('columnId'),
-  (req, res, next) => {
-    handleError(req, res, next)
-  }
-]
+
 
 exports.validateMoveCardOutParams = [
   handleParams('boardId'),

@@ -29,6 +29,7 @@ export default function Watch(): JSX.Element {
     } else {
       setVideoSource(watchVideo?.videoSource);
     }
+    window.scrollTo(0, 0);
   }, [watchVideo]);
 
   const videoPlayerOptions = {
@@ -75,11 +76,14 @@ export default function Watch(): JSX.Element {
                   setVideoDuration={setVideoDuration}
                 />
               }{' '}
-              <TrackVisibility>
-                {({ isVisible }) => {
-                  setDisplayCommentBtn(isVisible);
-                }}
-              </TrackVisibility>
+              <Box style={{ paddingTop: '7rem', background: 'green' }}>
+                {' '}
+                <TrackVisibility>
+                  {({ isVisible }) => {
+                    setDisplayCommentBtn(isVisible);
+                  }}
+                </TrackVisibility>
+              </Box>
             </Box>
 
             <Container sx={{ borderBottom: '2px solid #f9f9f9', background: 'white' }}>

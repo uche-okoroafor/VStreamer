@@ -46,26 +46,27 @@ export default function Login(): JSX.Element {
 
   return (
     <Grid container component="main" className={classes.root}>
-      {/* <CssBaseline /> */}
       <Box className={classes.authWrapper} style={{ color: 'white' }}>
         <AuthHeader linkTo="/signup" asideText="Don't have an account?" btnText="Create account" />
-        <Box width="100%" maxWidth={450} p={3} alignSelf="center">
-          <Grid container>
-            <Grid item xs>
-              <Typography
-                className={classes.welcome}
-                align="center"
-                style={{ color: 'white' }}
-                component="h1"
-                variant="h5"
-              >
-                Welcome to VStreamer
-              </Typography>
+        <Box width="100%" maxWidth={500} p={3} alignSelf="center">
+          <Paper elevation={5} className={classes.loginContainer}>
+            <Grid container>
+              <Grid item xs>
+                <Typography
+                  className={classes.welcome}
+                  align="center"
+                  style={{ color: 'white' }}
+                  component="h1"
+                  variant="h5"
+                >
+                  Sign in
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
-          <LoginForm handleSubmit={handleSubmit} />
+            <LoginForm handleSubmit={handleSubmit} />
+          </Paper>
         </Box>
-        <Box p={1} alignSelf="center" />
+        <Box alignSelf="center" />
       </Box>
     </Grid>
   );

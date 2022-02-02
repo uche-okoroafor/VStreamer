@@ -17,9 +17,10 @@ import { useSnackBar } from '../../../context/useSnackbarContext';
 import { useUserDetails } from '../../../context/useUserContext';
 interface Props {
   user: IUserDetails;
+  isUser: boolean;
 }
 
-export default function ProflePhoto({ user }: Props): JSX.Element {
+export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
   const classes = useStyles();
   const { userDetails, handleGetUserDetails } = useUserDetails();
   const [image, setImage] = useState<IFile | null>(null);
@@ -76,7 +77,7 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
     setUploadStatus(false);
     setIsSaving(false);
   };
-  const handledeleteImage = async (): Promise<void> => {
+  const handleDeleteImage = async (): Promise<void> => {
     setUploadStatus(true);
     setFiles(undefined);
     setIsSaving(true);
@@ -112,22 +113,24 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
       <Box className={classes.bottomSpace} sx={{ position: 'relative' }}>
         <Avatar {...stringAvatar(user.username.toUpperCase(), 100, 100)} src={handleUserImage()} />
         {!openUpdateForm ? (
-          <IconButton
-            sx={{
-              position: 'absolute',
-              right: '10%',
-              top: '80%',
-              background: 'green',
-              '&:hover': {
+          isUser && (
+            <IconButton
+              sx={{
+                position: 'absolute',
+                right: '10%',
+                top: '80%',
                 background: 'green',
-              },
-            }}
-            aria-label="update"
-            // color="secondary"
-            onClick={() => setOpenUpdateForm(true)}
-          >
-            <DriveFolderUploadIcon sx={{ color: 'white' }} />
-          </IconButton>
+                '&:hover': {
+                  background: 'green',
+                },
+              }}
+              aria-label="update"
+              // color="secondary"
+              onClick={() => setOpenUpdateForm(true)}
+            >
+              <DriveFolderUploadIcon sx={{ color: 'white' }} />
+            </IconButton>
+          )
         ) : (
           <Paper
             sx={{
@@ -163,7 +166,7 @@ export default function ProflePhoto({ user }: Props): JSX.Element {
                 {isSaving ? <CircularProgress style={{ fontSize: 0, width: '20px', height: '20px' }} /> : 'Save'}
               </Button>
             )}
-            <Button onClick={handledeleteImage} startIcon={<DeleteIcon />} variant="contained" color="secondary">
+            <Button onClick={handleDeleteImage} startIcon={<DeleteIcon />} variant="contained" color="secondary">
               Delete
             </Button>
           </Paper>

@@ -5,25 +5,16 @@ import { useUserDetails } from '../../../context/useUserContext';
 import { useAllVideos } from '../../../context/useAllVideosContext';
 import { follow, unfollow } from '../../../helpers/APICalls/followApis';
 import { useSnackBar } from '../../../context/useSnackbarContext';
-
-export default function Follow(): JSX.Element {
+interface Props {
+  isUser: boolean;
+}
+export default function Follow({ isUser }: Props): JSX.Element {
   const { loggedInUser } = useAuth();
   const { userDetails, handleGetUserDetails } = useUserDetails();
-  const [isUser, setIsUser] = useState(false);
   const { handleGetAllVideos } = useAllVideos();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userFollowing, setUserFollowing] = useState(false);
   const { updateSnackBarMessage } = useSnackBar();
-
-  useEffect(() => {
-    if (loggedInUser && userDetails) {
-      if (loggedInUser.id === userDetails.userId) {
-        setIsUser(true);
-      } else {
-        setIsUser(false);
-      }
-    }
-  }, [loggedInUser, userDetails]);
 
   useEffect(() => {
     if (loggedInUser && userDetails) {
