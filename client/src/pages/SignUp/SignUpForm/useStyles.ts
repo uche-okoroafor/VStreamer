@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 19,
     color: 'white',
     paddingLeft: '5px',
+    marginTop: -20,
   },
   inputs: {
     marginTop: '.8rem',

@@ -18,6 +18,7 @@ import {
   updateCommentDislikes,
 } from '../../../../helpers/APICalls/commentLikes';
 import { stringAvatar } from '../../../../pages/Profile/useStyles';
+import CommittedUsers from '../../../../components/CommittedUsers/CommittedUsers';
 
 interface Props {
   comment: IComment;
@@ -119,7 +120,7 @@ export default function LikeAndDislikeComment({ comment }: Props): JSX.Element {
   return (
     <>
       <Stack direction="row" spacing={1}>
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" className={classes.likeContainer}>
           <IconButton
             aria-label="update"
             // color="primary"
@@ -129,6 +130,7 @@ export default function LikeAndDislikeComment({ comment }: Props): JSX.Element {
             <ThumbUpIcon sx={{ fontSize: '1.2rem', color: checkUserExist(comment.likes) ? 'green' : '' }} />{' '}
           </IconButton>{' '}
           <Typography>{comment.likes?.length !== 0 && comment.likes?.length}</Typography>
+          <CommittedUsers usersList={comment.likes} styles={classes.list} />
         </Stack>
         <Stack direction="row" alignItems="center">
           <IconButton

@@ -1,10 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-  textSpacing: {
-    margin: '5px 0',
-    fontSize: '0.8rem',
-  },
   imageBox: {
     height: '16rem',
     display: 'flex',
@@ -29,6 +25,53 @@ const useStyles = makeStyles((theme) => ({
   textFontSize: {
     fontSize: '0.8rem',
   },
+  clickAndPlay: {
+    borderRadius: '1rem',
+    background: 'rgb(5,5,5)',
+    padding: '10px 20px',
+  },
+
+  clickAndPlayTitle: {
+    padding: '1.2rem',
+    borderRadius: '50%',
+    background: 'black',
+    marginRight: '10px',
+    color: '#EEEEEE',
+  },
+  clickAndPlayTitleContainer: { position: 'absolute', top: '6%', left: '3%', display: 'flex', alignItems: 'center' },
+  clickAndPlayContainer: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    cursor: 'pointer',
+    color: 'white',
+    zIndex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '&:hover': {
+      '& $clickAndPlay': {
+        background: '#1976D2',
+      },
+    },
+  },
+  textSpacing: {
+    margin: '5px 0',
+    fontSize: '0.8rem',
+    '&:hover': {
+      '& $list': {
+        display: 'block',
+      },
+    },
+  },
+  likesContainer: {
+    '&:hover': {
+      '& $list': {
+        display: 'block',
+      },
+    },
+  },
+  list: { display: 'none' },
 }));
 
 export default useStyles;

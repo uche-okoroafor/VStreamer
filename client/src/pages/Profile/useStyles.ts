@@ -43,12 +43,6 @@ export const stringAvatar = (
 };
 
 const useStyles = makeStyles((theme) => ({
-  // root: {
-  //   minHeight: '100vh',
-  //   '& .MuiInput-underline:before': {
-  //     borderBottom: '1.2px solid rgba(0, 0, 0, 0.2)',
-  //   },
-  // },
   profile: {
     color: 'white',
   },
@@ -80,8 +74,25 @@ const useStyles = makeStyles((theme) => ({
       background: 'green',
     },
   },
-
+  followerList: { right: '-50%' },
+  viewsList: { right: '10%' },
   bottomSpace: { marginBottom: '30px' },
+
+  followersContainer: {
+    position: 'relative',
+    borderRadius: '5px',
+    padding: '4px',
+    '&:hover': {
+      background: '#1871CA',
+      '& $list': {
+        display: 'block',
+      },
+    },
+  },
+
+  list: {
+    display: 'none',
+  },
 }));
 
 export default useStyles;

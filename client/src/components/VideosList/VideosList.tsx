@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import { useHistory } from 'react-router-dom';
 import VideoPlayer from '../VideoPlayer/VideosPlayer';
 import { IVideoDetails } from '../../interface/VideoDetails';
 import { useSnackBar } from '../../context/useSnackbarContext';
-import { Typography, Grid, Box, Button, Paper, Stack } from '@mui/material';
+import { Typography, Box, Paper, Stack } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import DeleteVideo from '../../pages/Profile/DeleteVideo/DeleteVideo';
 import useStyles from './useStyles';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -13,6 +14,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useUserDetails } from '../../context/useUserContext';
 import { User } from '../../interface/User';
 import moment from 'moment';
+import CommittedUsers from '../../components/CommittedUsers/CommittedUsers';
 
 interface IProps {
   videos: Array<IVideoDetails> | undefined;
@@ -26,6 +28,12 @@ interface IProps {
   };
 }
 
+/**
+ * @dev renders the preview list of videos
+ * @props videos contains all videos
+ * @props videoPlayerOptions is the options of how the player should be displayed
+ */
+
 export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.Element {
   const { handleSetWatchVideo, watchVideo } = useAllVideos();
   const history = useHistory();
@@ -34,7 +42,7 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
   const { component } = videoPlayerOptions;
   const videoListStyle = useStyles();
   const [videoDuration, setVideoDuration] = useState<string | undefined>();
-  const { userDetails, handleGetUserDetails } = useUserDetails();
+  const { handleGetUserDetails } = useUserDetails();
   // const [displayViewedVideo, setDisplayViewedVideo] = useState(false);
 
   const displayViewedVideo = (videoId: string): boolean => {
@@ -58,113 +66,145 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
     await handleGetUserDetails(user);
     history.push(`/profile/${user.username}`);
   };
-
+  const capitalizeFirstLetter = (title: string) => {
+    return title.charAt(0).toUpperCase() + title.slice(1);
+  };
+  const isYoutubeVideo = (source: string) => {
+    if (source.includes('youtube')) {
+      return true;
+    }
+    return false;
+  };
   return (
     <React.Fragment>
-      {videos ? (
-        videos.map(
-          (video) =>
-            displayViewedVideo(video._id) && (
-              <Paper className={classes.videoContainer} key={video._id}>
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  sx={{
-                    position: 'relative',
-                    background: 'black',
-                  }}
-                >
+      {videos
+        ? videos.map(
+            (video) =>
+              displayViewedVideo(video._id) && (
+                <Paper className={classes.videoContainer} key={video._id}>
                   <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
                     sx={{
-                      position: 'absolute',
-                      width: '100%',
-                      height: '100%',
-                      cursor: 'pointer',
-                      zIndex: 1,
+                      position: 'relative',
+                      background: 'black',
                     }}
-                    onClick={() => handleClickVideo(video)}
-                  ></Box>
-                  <VideoPlayer
-                    videoSource={video.videoSource}
-                    videoPlayerOptions={videoPlayerOptions}
-                    setVideoDuration={setVideoDuration}
-                  />
-                </Box>
-                {videoPlayerOptions
-                  ? videoPlayerOptions.displayDetails && (
-                      <Box className={classes.videoDetailsContainer} style={{ width: '100%', position: 'relative' }}>
-                        <Box>
-                          <Typography variant="h5" align="center">
-                            {video.videoTitle}
+                  >
+                    <Box className={videoListStyle.clickAndPlayContainer} onClick={() => handleClickVideo(video)}>
+                      {!isYoutubeVideo(video.videoSource) && (
+                        <Box className={videoListStyle.clickAndPlayTitleContainer}>
+                          <Box className={videoListStyle.clickAndPlayTitle}></Box>
+                          <Typography style={{ fontSize: '1.2rem' }}>
+                            {capitalizeFirstLetter(video.videoTitle)} - {video.artist}
                           </Typography>
                         </Box>
-                        <Box></Box>
-                        <Box className={videoListStyle.textSpacing}>
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="subtitle1">Posted by: </Typography>{' '}
-                            <Typography
-                              onClick={() =>
-                                handleDisplayUserProfile({
-                                  username: video.username,
-                                  id: video.userId,
-                                  email: 'undefined',
-                                })
-                              }
-                              sx={{ fontWeight: 'bold', cursor: 'pointer' }}
-                              color="primary"
-                            >
-                              {video.username}
-                            </Typography>
-                          </Stack>
-                        </Box>{' '}
-                        <Box className={videoListStyle.textSpacing}>
-                          <Typography variant="subtitle1">Artist: {video.artist}</Typography>
-                        </Box>
-                        <Box className={videoListStyle.textSpacing}>
-                          <Typography variant="subtitle1">Category: {video.videoCategory}</Typography>
-                        </Box>
-                        <Box className={videoListStyle.textSpacing}>
-                          <Typography variant="subtitle1">Duration: {video.videoDuration}</Typography>
-                        </Box>{' '}
-                        <Box className={videoListStyle.textSpacing}>
-                          <Typography variant="subtitle1" component="span">
-                            Date: &nbsp;
-                            <Typography style={{ fontSize: '0.8rem' }} component="span">
-                              {moment(video.datePosted).format('MMMM Do YYYY')}
-                            </Typography>
-                          </Typography>
-                        </Box>
-                        <Box className={videoListStyle.textSpacing}>
-                          <Stack direction="row" spacing={2}>
-                            {' '}
-                            <Box>
-                              {' '}
-                              <ThumbUpIcon sx={{ color: 'green', marginRight: '7px' }} />
-                              {video.likes?.length}
-                            </Box>{' '}
-                            <Box>
-                              <ThumbDownAltIcon sx={{ color: 'red', marginRight: '7px' }} />
-                              {video.dislikes?.length}
-                            </Box>
-                          </Stack>
-                        </Box>
-                        <Box className={videoListStyle.textSpacing}>
-                          <Typography variant="subtitle1">
-                            <RemoveRedEyeIcon sx={{ marginRight: '7px' }} />
-                            {video.views?.length}
-                          </Typography>
-                        </Box>
-                        <DeleteVideo renderedComponent={component} video={video} />
+                      )}
+                      <Box className={videoListStyle.clickAndPlay}>
+                        {' '}
+                        <PlayArrowIcon fontSize="large" />
                       </Box>
-                    )
-                  : ''}
-              </Paper>
-            ),
-        )
-      ) : (
-        <Typography>No Videos to Display</Typography>
-      )}
+                    </Box>
+                    <VideoPlayer
+                      videoSource={video.videoSource}
+                      videoPlayerOptions={videoPlayerOptions}
+                      setVideoDuration={setVideoDuration}
+                      displayControls={false}
+                    />
+                  </Box>
+                  {videoPlayerOptions
+                    ? videoPlayerOptions.displayDetails && (
+                        <Box className={classes.videoDetailsContainer} style={{ width: '100%', position: 'relative' }}>
+                          <Box>
+                            <Typography sx={{ fontWeight: '900' }} variant="h5" align="center">
+                              {capitalizeFirstLetter(String(video.videoTitle))}
+                            </Typography>
+                          </Box>
+                          <Box></Box>
+                          <Box className={videoListStyle.textSpacing}>
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Typography variant="subtitle1">Posted by: </Typography>{' '}
+                              <Typography
+                                onClick={() =>
+                                  handleDisplayUserProfile({
+                                    username: video.username,
+                                    id: video.userId,
+                                    email: 'undefined',
+                                  })
+                                }
+                                sx={{ fontWeight: 'bold', cursor: 'pointer' }}
+                                color="primary"
+                              >
+                                {video.username}
+                              </Typography>
+                            </Stack>
+                          </Box>{' '}
+                          <Box className={videoListStyle.textSpacing}>
+                            <Typography variant="subtitle1">
+                              Artist:{' '}
+                              <Typography style={{ fontSize: '0.8rem' }} component="span">
+                                {video.artist}
+                              </Typography>{' '}
+                            </Typography>
+                          </Box>
+                          <Box className={videoListStyle.textSpacing}>
+                            <Typography variant="subtitle1">
+                              Category:{' '}
+                              <Typography style={{ fontSize: '0.8rem' }} component="span">
+                                {video.videoCategory}
+                              </Typography>{' '}
+                            </Typography>
+                          </Box>
+                          <Box className={videoListStyle.textSpacing}>
+                            <Typography variant="subtitle1">
+                              Duration:{' '}
+                              <Typography style={{ fontSize: '0.8rem' }} component="span">
+                                {video.videoDuration}
+                              </Typography>{' '}
+                            </Typography>
+                          </Box>{' '}
+                          <Box className={videoListStyle.textSpacing}>
+                            <Typography variant="subtitle1" component="span">
+                              Date: &nbsp;
+                              <Typography style={{ fontSize: '0.8rem' }} component="span">
+                                {moment(video.datePosted).format('MMMM Do YYYY')}
+                              </Typography>
+                            </Typography>
+                          </Box>
+                          <Box className={videoListStyle.textSpacing}>
+                            <Stack direction="row" spacing={2}>
+                              {' '}
+                              <Box className={videoListStyle.likesContainer}>
+                                {' '}
+                                <ThumbUpIcon sx={{ color: 'green', marginRight: '7px', cursor: 'pointer' }} />
+                                {video.likes?.length}
+                                {component !== 'Home' && (
+                                  <CommittedUsers usersList={video?.likes} styles={videoListStyle.list} />
+                                )}
+                              </Box>{' '}
+                              <Box>
+                                <ThumbDownAltIcon sx={{ color: 'red', marginRight: '7px' }} />
+                                {video.dislikes?.length}
+                              </Box>
+                            </Stack>
+                          </Box>
+                          <Box className={videoListStyle.textSpacing}>
+                            <Typography variant="subtitle1" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>
+                              <RemoveRedEyeIcon sx={{ marginRight: '7px' }} />
+                              {video.views?.length}
+                            </Typography>
+                            {component !== 'Home' && (
+                              <CommittedUsers usersList={video.views} styles={videoListStyle.list} />
+                            )}
+                          </Box>
+                          <DeleteVideo renderedComponent={component} video={video} />
+                        </Box>
+                      )
+                    : ''}
+                </Paper>
+              ),
+          )
+        : null}
     </React.Fragment>
   );
 }

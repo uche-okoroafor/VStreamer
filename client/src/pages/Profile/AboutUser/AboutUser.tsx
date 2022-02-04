@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Button, CircularProgress, TextareaAutosize, Typography, Stack } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { useAuth } from '../../../context/useAuthContext';
 import { useUserDetails } from '../../../context/useUserContext';
-import { IVideoDetails } from '../../../interface/VideoDetails';
 import { updateAboutUser } from '../../../helpers/APICalls/aboutApis';
 import IconButton from '@mui/material/IconButton';
 import { useSnackBar } from '../../../context/useSnackbarContext';
@@ -14,13 +12,11 @@ interface Props {
 }
 
 export default function AboutUser({ isUser }: Props): JSX.Element {
-  const { loggedInUser } = useAuth();
   const { userDetails, handleGetUserDetails } = useUserDetails();
   const classes = useStyles();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [userFollowing, setUserFollowing] = useState(false);
   const [aboutUser, setAboutUser] = useState(userDetails?.aboutUser);
-  const [edit, setEdit] = useState(true);
+  const [edit, setEdit] = useState(false);
   const { updateSnackBarMessage } = useSnackBar();
 
   useEffect(() => {
@@ -31,6 +27,9 @@ export default function AboutUser({ isUser }: Props): JSX.Element {
   }, [userDetails]);
 
   const handleSetAboutUser = async (): Promise<void> => {
+    if (aboutUser === userDetails?.aboutUser) {
+      return setEdit(false);
+    }
     setIsSubmitting(true);
 
     if (userDetails) {
@@ -44,7 +43,7 @@ export default function AboutUser({ isUser }: Props): JSX.Element {
           updateSnackBarMessage('something went wrong,please try again');
         }
 
-        setEdit(true);
+        setEdit(false);
       } catch (err) {
         console.error(err);
         updateSnackBarMessage('something went wrong,please try again');
@@ -67,17 +66,17 @@ export default function AboutUser({ isUser }: Props): JSX.Element {
           About
         </Typography>
         <Box style={{ width: '90%', position: 'relative' }}>
-          {edit && isUser && (
+          {!edit && isUser && (
             <IconButton
               sx={{ position: 'absolute', top: '-13%', right: '0%' }}
               aria-label="update"
               color="primary"
-              onClick={() => setEdit(false)}
+              onClick={() => setEdit(true)}
             >
               <EditIcon sx={{ color: 'white' }} />
             </IconButton>
           )}
-          {edit ? (
+          {!edit ? (
             <Box
               style={{
                 width: '100%',
@@ -88,10 +87,12 @@ export default function AboutUser({ isUser }: Props): JSX.Element {
               }}
             >
               {aboutUser ? (
-                <Typography align="center">{aboutUser}</Typography>
+                <Typography align="center" fontStyle="italic">
+                  {aboutUser}
+                </Typography>
               ) : (
                 isUser && (
-                  <Typography align="center" variant="subtitle1">
+                  <Typography align="center" style={{ color: '#EEEEEE' }} variant="subtitle1">
                     write something about yourself
                   </Typography>
                 )
@@ -117,7 +118,7 @@ export default function AboutUser({ isUser }: Props): JSX.Element {
                 </Button>
                 <Button
                   onClick={() => {
-                    setEdit(true);
+                    setEdit(false);
                     setAboutUser(userDetails?.aboutUser);
                   }}
                   color="primary"
