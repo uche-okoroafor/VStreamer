@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Avatar from '@mui/material/Avatar';
 import useStyles from '../useStyles';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { stringAvatar } from '../useStyles';
 import { IUserDetails } from '../../../interface/User';
 import { uploadImage, deleteImage } from '../../../helpers/APICalls/imageApis';
@@ -22,13 +22,15 @@ interface Props {
 
 export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
   const classes = useStyles();
-  const { userDetails, handleGetUserDetails } = useUserDetails();
+  const { userDetails, handleGetUserDetails, updateUserAvatar } = useUserDetails();
   const [image, setImage] = useState<IFile | null>(null);
   const [file, setFiles] = useState<string | undefined>(undefined);
   const [openUpdateForm, setOpenUpdateForm] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(false);
   const { updateSnackBarMessage } = useSnackBar();
   const [isSaving, setIsSaving] = useState(false);
+  const [loadProfile, setLoadProfile] = useState(false);
+  const [imageSource, setImageSource] = useState('');
 
   const onDrop = useCallback(
     (acceptedFile) => {
@@ -43,17 +45,18 @@ export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
     accept: 'image/jpeg, image/png',
   });
 
-  const handleUserImage = (): string => {
+  useMemo(() => {
     if (file === undefined) {
       if (user?.userImage !== undefined) {
-        return `/image/download-image/${user.userImage}`;
+        setImageSource(`/image/download-image/${user.userImage}`);
       } else {
-        return '';
+        setImageSource('');
       }
     } else {
-      return file;
+      setImageSource(file);
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file, isUser]);
 
   const handleSaveImage = async (): Promise<void> => {
     setUploadStatus(true);
@@ -62,10 +65,12 @@ export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
       const { data } = await uploadImage(image);
       if (data) {
         if (data.success) {
-          handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
-
+          await handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
           setFiles(undefined);
           setOpenUpdateForm(false);
+          if (file) {
+            updateUserAvatar(file);
+          }
         } else if (data?.error) {
           updateSnackBarMessage(data?.error?.message);
         }
@@ -111,7 +116,7 @@ export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
         ></Box>
       )}
       <Box className={classes.bottomSpace} sx={{ position: 'relative' }}>
-        <Avatar {...stringAvatar(user.username.toUpperCase(), 100, 100)} src={handleUserImage()} />
+        <Avatar {...stringAvatar(user.username.toUpperCase(), 100, 100)} src={imageSource} />
         {!openUpdateForm ? (
           isUser && (
             <IconButton

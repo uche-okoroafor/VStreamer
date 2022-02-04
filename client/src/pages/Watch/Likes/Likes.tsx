@@ -9,6 +9,7 @@ import useStyles from '../useStyles';
 import IconButton from '@mui/material/IconButton';
 import { updateLikes, updateDislikes, removeLikes, removeDislikes } from '../../../helpers/APICalls/likesApis';
 import { useSnackBar } from '../../../context/useSnackbarContext';
+import CommittedUsers from '../../../components/CommittedUsers/CommittedUsers';
 
 export default function Likes(): JSX.Element {
   const classes = useStyles();
@@ -102,11 +103,12 @@ export default function Likes(): JSX.Element {
   return (
     <>
       <Stack direction="row" spacing={1}>
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" className={classes.likeContainer}>
           <IconButton aria-label="update" onClick={handleLike} size="small">
             <ThumbUpIcon sx={{ color: checkUserExist(likes) ? 'green' : '#757575' }} />
           </IconButton>
           <Typography> {likes?.length}</Typography>
+          <CommittedUsers usersList={likes} styles={classes.list} />
         </Stack>
 
         <Stack direction="row" alignItems="center">

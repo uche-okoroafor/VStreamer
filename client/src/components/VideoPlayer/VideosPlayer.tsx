@@ -12,9 +12,15 @@ interface IProps {
     component: string;
     classes: any;
   };
+  displayControls: boolean;
 }
 
-export default function VideoPlayer({ videoSource, videoPlayerOptions, setVideoDuration }: IProps): JSX.Element {
+export default function VideoPlayer({
+  videoSource,
+  videoPlayerOptions,
+  setVideoDuration,
+  displayControls,
+}: IProps): JSX.Element {
   const { width, height, autoPlay, component, classes } = videoPlayerOptions;
 
   const handleDuration = (duration: number): void => {
@@ -27,7 +33,7 @@ export default function VideoPlayer({ videoSource, videoPlayerOptions, setVideoD
       {videoSource ? (
         <Player
           playing={autoPlay}
-          controls
+          controls={displayControls}
           width={parseInt(width)}
           onDuration={(duration) => handleDuration(duration)}
           height={parseInt(height)}

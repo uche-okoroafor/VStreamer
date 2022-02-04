@@ -30,6 +30,19 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  loadingContainer: {
+    width: '100%',
+    height: '80vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  videosContainer: {
+    minHeight: '100vh',
+    padding: ' 25px  10px',
+    margin: '0 auto',
+  },
 }));
 
 export default useStyles;

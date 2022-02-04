@@ -118,9 +118,9 @@ export default function UploadVideoForm({
       return setTempVideoSource(videoFromYoutube);
     } else {
       const urlParams = 'youtu.be/';
-      const indexOfvideoId = videoFromYoutube.search(urlParams) + urlParams.length;
+      const indexOfVideoId = videoFromYoutube.search(urlParams) + urlParams.length;
       const youTubeVideoIdLength = 11;
-      const videoId = videoFromYoutube.substr(indexOfvideoId, youTubeVideoIdLength);
+      const videoId = videoFromYoutube.substr(indexOfVideoId, youTubeVideoIdLength);
       const videoUrl = `https://www.youtube.com/embed/${videoId}`;
       setVideoSource(videoUrl);
 
@@ -168,6 +168,7 @@ export default function UploadVideoForm({
               videoSource={tempVideoSource}
               setVideoDuration={setVideoDuration}
               videoPlayerOptions={videoPlayerOptions}
+              displayControls={true}
             />
           </Box>
 
@@ -188,5 +189,3 @@ export default function UploadVideoForm({
     </Box>
   );
 }
-
-// "proxy": "https://vstreamer-api-server.herokuapp.com",

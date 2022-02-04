@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import logo from '../NavBar/Logo/logo.svg';
 import { useHistory } from 'react-router';
-import { useAuth } from '../../../context/useAuthContext';
 import SearchVideo from './Search/Search';
 import { useUserDetails } from '../../../context/useUserContext';
 import { User } from '../../../interface/User';
@@ -24,14 +23,8 @@ interface IProps {
 export default function NavBar({ loggedInUser }: IProps): JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const { logout } = useAuth();
   const history = useHistory();
-  const { handleGetUserDetails } = useUserDetails();
-
+  const { handleGetUserDetails, userAvatar } = useUserDetails();
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -112,10 +105,7 @@ export default function NavBar({ loggedInUser }: IProps): JSX.Element {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <Avatar
-                {...stringAvatar(loggedInUser.username.toUpperCase(), 50, 50)}
-                src={`/image/get-image/${loggedInUser.id}`}
-              />
+              <Avatar {...stringAvatar(loggedInUser.username.toUpperCase(), 50, 50)} src={userAvatar} />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

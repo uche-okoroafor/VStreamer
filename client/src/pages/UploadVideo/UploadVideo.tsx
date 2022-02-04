@@ -39,7 +39,7 @@ export default function UploadVideo(): JSX.Element {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    if (!videoTitle || !description || !category) {
+    if (!videoTitle || !description || !category || isSubmitting) {
       return;
     }
 
@@ -95,8 +95,10 @@ export default function UploadVideo(): JSX.Element {
   const handleUploadVideoDetails = async (videoDetails: IVideoDetails): Promise<void> => {
     try {
       const { data } = await uploadVideoDetails(videoDetails);
+      console.log('🚀 ~ file: UploadVideo.tsx ~ line 98 ~ handleUploadVideoDetails ~ data', data);
       if (data?.success) {
         setUploadSuccess(true);
+        setUploadProgress(100);
         handleGetAllVideos();
       } else {
         updateSnackBarMessage('video not uploaded');

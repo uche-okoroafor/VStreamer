@@ -1,13 +1,11 @@
-import { Box, Container, Paper, Grid, useMediaQuery, useTheme, Typography } from '@material-ui/core';
+import { Box, Grid, useMediaQuery, useTheme, CircularProgress } from '@material-ui/core';
 import { useEffect } from 'react';
 import VideosList from '../../components/VideosList/VideosList';
 import { useAllVideos } from '../../context/useAllVideosContext';
-import { useAuth } from '../../context/useAuthContext';
 import useStyles from './useStyles';
 
 export default function Home(): JSX.Element {
   const classes = useStyles();
-  const { loggedInUser } = useAuth();
   const { allVideos, handleGetAllVideos } = useAllVideos();
   const theme = useTheme();
   const isSmallOrLess = useMediaQuery(theme.breakpoints.up('sm'));
@@ -27,15 +25,14 @@ export default function Home(): JSX.Element {
 
   return (
     <Grid container component="div">
-      <Grid
-        item
-        lg={10}
-        md={11}
-        sm={10}
-        xs={12}
-        style={{ minHeight: '100vh', padding: ' 25px  10px', margin: '0 auto' }}
-      >
-        <VideosList videos={allVideos} videoPlayerOptions={videoPlayerOptions} />
+      <Grid item lg={10} md={11} sm={10} xs={12} className={classes.videosContainer}>
+        {allVideos !== undefined ? (
+          <VideosList videos={allVideos} videoPlayerOptions={videoPlayerOptions} />
+        ) : (
+          <Box className={classes.loadingContainer}>
+            <CircularProgress />
+          </Box>
+        )}
       </Grid>
     </Grid>
   );

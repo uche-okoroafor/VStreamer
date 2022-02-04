@@ -59,6 +59,45 @@ const useStyles = makeStyles(() => ({
     marginBottom: '5px ',
   },
   addCommentBtn: { position: 'absolute', marginTop: '-3rem', right: '0%', background: '#1976D2' },
+  viewsContainer: {
+    cursor: 'pointer',
+    position: 'relative',
+
+    '&:hover': {
+      '& $list': {
+        display: 'block',
+      },
+    },
+  },
+  likeContainer: {
+    position: 'relative',
+
+    '&:hover': {
+      '& $list': {
+        display: 'block',
+      },
+    },
+  },
+  list: {
+    display: 'none',
+    top: '2.5rem',
+  },
+
+  watchedVideoTitle: {
+    display: 'none',
+    color: '#EEEEEE',
+    position: 'absolute',
+    left: '7%',
+  },
+  videoPlayerContainer: {
+    background: 'black',
+    position: 'relative',
+    '&:hover': {
+      '& $watchedVideoTitle': {
+        display: 'flex',
+      },
+    },
+  },
 }));
 
 export default useStyles;

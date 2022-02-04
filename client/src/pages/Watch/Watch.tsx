@@ -2,7 +2,7 @@ import { Grid, Box, Container, Stack, Avatar, Typography, useMediaQuery, useThem
 import { useAllVideos } from '../../context/useAllVideosContext';
 import VideoPlayer from '../../components/VideoPlayer/VideosPlayer';
 import VideosList from '../../components/VideosList/VideosList';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { stringAvatar } from './useStyles';
 import { useUserDetails } from '../../context/useUserContext';
 import useStyles from './useStyles';
@@ -23,14 +23,21 @@ export default function Watch(): JSX.Element {
   const theme = useTheme();
   const isSmallOrLess = useMediaQuery(theme.breakpoints.up('sm'));
   const history = useHistory();
+  const [watchedVideoId, setWatchedVideoId] = useState<string | undefined>(undefined);
+
   useEffect(() => {
     if (watchVideo?.videoSource.includes('youtube')) {
       setVideoSource(watchVideo?.videoSource + '?autoplay=1');
     } else {
       setVideoSource(watchVideo?.videoSource);
     }
-    window.scrollTo(0, 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchVideo]);
+
+  useMemo(() => {
+    window.scrollTo(0, 0);
+    setWatchedVideoId(watchVideo?._id);
+  }, [watchVideo?._id]);
 
   const videoPlayerOptions = {
     width: '850',
@@ -56,6 +63,15 @@ export default function Watch(): JSX.Element {
       history.push(`/profile/${watchVideo.username}`);
     }
   };
+  const capitalizeFirstLetter = (title: string) => {
+    return title.charAt(0).toUpperCase() + title.slice(1);
+  };
+  const isYoutubeVideo = (source: string | undefined) => {
+    if (source?.includes('youtube')) {
+      return true;
+    }
+    return false;
+  };
   return (
     <>
       <Grid container style={{ paddingTop: '30px', position: 'relative' }} className="viewed-video-container">
@@ -68,12 +84,13 @@ export default function Watch(): JSX.Element {
           sx={{ paddingBottom: 5, paddingLeft: '10px', paddingRight: { xs: '10px', sm: '10px', md: '0' } }}
         >
           <Box display="flex" flexDirection="column">
-            <Box display="flex" justifyContent="center" sx={{ background: 'black' }}>
+            <Box display="flex" justifyContent="center" className={classes.videoPlayerContainer}>
               {
                 <VideoPlayer
                   videoSource={videoSource}
                   videoPlayerOptions={videoPlayerOptions}
                   setVideoDuration={setVideoDuration}
+                  displayControls={true}
                 />
               }{' '}
               <Box style={{ paddingTop: '7rem', background: 'green' }}>
@@ -84,21 +101,31 @@ export default function Watch(): JSX.Element {
                   }}
                 </TrackVisibility>
               </Box>
+              {!isYoutubeVideo(watchVideo?.videoSource) && (
+                <Box className={classes.watchedVideoTitle} alignItems="center">
+                  <Box sx={{ borderRadius: '50%', background: 'black', margin: '10px' }} p={2}></Box>{' '}
+                  <Typography style={{ fontSize: '1.3rem' }}>
+                    {capitalizeFirstLetter(String(watchVideo?.videoTitle))}
+                  </Typography>
+                </Box>
+              )}
             </Box>
 
             <Container sx={{ borderBottom: '2px solid #f9f9f9', background: 'white' }}>
               <Box sx={{ padding: '10px 0', whiteSpace: 'nowrap' }}>
                 <Stack direction="row" alignItems="center">
                   <Stack direction="row" spacing={1} style={{ flexGrow: 1 }} alignItems="center">
-                    <Typography variant="h5">{watchVideo?.videoTitle}</Typography>{' '}
+                    <Typography variant="h5" sx={{ fontWeight: '900' }}>
+                      {capitalizeFirstLetter(String(watchVideo?.videoTitle))}
+                    </Typography>{' '}
                     {watchVideo?.artist && <Typography variant="h5">-</Typography>}
-                    <Typography variant="h5">{watchVideo?.artist}</Typography>{' '}
+                    <Typography variant="h6">{watchVideo?.artist}</Typography>{' '}
                   </Stack>
                   <Stack direction="row" spacing={1} alignItems="center">
                     {' '}
                     <Typography
                       color="primary"
-                      sx={{ cursor: 'pointer' }}
+                      sx={{ cursor: 'pointer', fontWeight: '900' }}
                       onClick={handleDisplayUserProfile}
                       variant="h5"
                     >

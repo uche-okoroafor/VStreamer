@@ -6,13 +6,15 @@ import { useAuth } from '../../../context/useAuthContext';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { addViewer } from '../../../helpers/APICalls/viewsApi';
 import { useSnackBar } from '../../../context/useSnackbarContext';
+import CommittedUsers from '../../../components/CommittedUsers/CommittedUsers';
+import useStyles from '../useStyles';
 
 export default function Viewers(): JSX.Element {
   const { watchVideo, handleGetAllVideos, handleSetWatchVideo, allVideos } = useAllVideos();
   const { loggedInUser } = useAuth();
   const { updateSnackBarMessage } = useSnackBar();
   const [viewers, setViewers] = useState<Array<IViews>>([]);
-
+  const classes = useStyles();
   const handleAddViewer = async (): Promise<void> => {
     if (loggedInUser) {
       try {
@@ -56,10 +58,11 @@ export default function Viewers(): JSX.Element {
 
   return (
     <>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={1} className={classes.viewsContainer}>
         <Typography>{viewers.length}</Typography>
         <RemoveRedEyeIcon />
-        <Typography>views</Typography>
+        <Typography sx={{ fontWeight: '900' }}>views</Typography>
+        <CommittedUsers usersList={viewers} styles={classes.list} />
       </Stack>
     </>
   );

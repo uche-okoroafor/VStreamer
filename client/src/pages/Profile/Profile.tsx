@@ -7,17 +7,17 @@ import VideosList from '../../components/VideosList/VideosList';
 import { IUserDetails } from '../../interface/User';
 import ProfilePhoto from './ProfilePhoto/ProfilePhoto';
 import { useAllVideos } from '../../context/useAllVideosContext';
-import { IVideoDetails } from '../../interface/VideoDetails';
+import CommittedUsers from '../../components/CommittedUsers/CommittedUsers';
 
 import Follow from './Follow/Follow';
 import AboutUser from './AboutUser/AboutUser';
-import { useHistory } from 'react-router';
+import { CircularProgress } from '@material-ui/core';
 
 export default function Profile(): JSX.Element {
   const classes = useStyles();
   const { allVideos } = useAllVideos();
   const { loggedInUser } = useAuth();
-  const { userDetails, handleGetUserDetails } = useUserDetails();
+  const { userDetails, handleGetUserDetails, isLoading } = useUserDetails();
   const [userHasVideos, setUserHasVideos] = useState(false);
   const [isUser, setIsUser] = useState(false);
   const [user, setUser] = useState<IUserDetails>({
@@ -86,15 +86,27 @@ export default function Profile(): JSX.Element {
             </Box>
 
             <Box sx={{ marginBottom: '20px', width: '100%' }} display="flex" justifyContent="space-evenly">
-              <Typography variant="subtitle1">Followers: &nbsp; {userDetails?.followers.length}</Typography>{' '}
-              <Typography variant="subtitle1">Posts: &nbsp;{userDetails?.videos.length}</Typography>{' '}
-              <Typography variant="subtitle1">Views: &nbsp;{userDetails?.views.length}</Typography>
+              <Box className={classes.followersContainer}>
+                {' '}
+                <Typography variant="subtitle1" style={{ cursor: 'pointer' }}>
+                  Followers: &nbsp; {userDetails?.followers.length}
+                </Typography>{' '}
+                {isUser && <CommittedUsers usersList={userDetails?.followers} styles={classes.list} />}
+              </Box>
+              <Box sx={{ padding: '4px' }}>
+                <Typography variant="subtitle1">Posts: &nbsp;{userDetails?.videos.length}</Typography>{' '}
+              </Box>
+              <Box className={classes.followersContainer}>
+                <Typography variant="subtitle1" style={{ cursor: 'pointer' }}>
+                  Views: &nbsp;{userDetails?.views.length}
+                </Typography>
+              </Box>
             </Box>
             <Follow isUser={isUser} />
             <AboutUser isUser={isUser} />
             <Box>
               <Typography variant="subtitle1" align="center">
-                email: {user.email}
+                Email: {user.email}
               </Typography>
             </Box>
           </Box>
@@ -125,7 +137,7 @@ export default function Profile(): JSX.Element {
               <VideosList videos={userDetails?.videos} videoPlayerOptions={videoPlayerOptions} />
             ) : (
               <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-                <Typography>This account has no videos </Typography>
+                {isLoading ? <CircularProgress /> : <Typography>This account has no videos </Typography>}
               </Box>
             )}
           </Box>

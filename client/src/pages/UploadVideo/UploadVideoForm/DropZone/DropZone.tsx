@@ -64,7 +64,7 @@ const DropZone = ({ handleChange }: Props): JSX.Element => {
         name="videoSource"
         label="You can paste the video url here"
         onChange={handleInputChange}
-        variant="standard"
+        variant="filled"
       />
     </Paper>
   );
