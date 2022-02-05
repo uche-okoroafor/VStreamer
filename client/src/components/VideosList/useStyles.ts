@@ -55,6 +55,12 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  videoTitle: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '6rem',
+  },
   textSpacing: {
     margin: '5px 0',
     fontSize: '0.8rem',

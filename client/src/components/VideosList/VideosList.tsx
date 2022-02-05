@@ -95,7 +95,12 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
                       {!isYoutubeVideo(video.videoSource) && (
                         <Box className={videoListStyle.clickAndPlayTitleContainer}>
                           <Box className={videoListStyle.clickAndPlayTitle}></Box>
-                          <Typography style={{ fontSize: '1.2rem' }}>
+                          <Typography
+                            className={videoListStyle.videoTitle}
+                            style={{
+                              fontSize: '1.2rem',
+                            }}
+                          >
                             {capitalizeFirstLetter(video.videoTitle)} - {video.artist}
                           </Typography>
                         </Box>

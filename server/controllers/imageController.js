@@ -6,8 +6,6 @@ const { uploadFile, getFileStream } = require('../middleware/s3')
 const User = require('../models/User')
 const asyncHandler = require('express-async-handler')
 
-
-
 // @route POST /image
 // @desc upload image
 // @access Private
@@ -17,6 +15,10 @@ exports.uploadImageController = asyncHandler(async (req, res) => {
   const file = req.file
 
   const cloudResponse = await uploadFile(file)
+  console.log(
+    '🚀 ~ file: imageController.js ~ line 18 ~ exports.uploadImageController=asyncHandler ~ cloudResponse',
+    cloudResponse
+  )
   if (cloudResponse) {
     await unlinkFile(file.path)
     const image = await User.updateOne(
@@ -37,10 +39,29 @@ exports.uploadImageController = asyncHandler(async (req, res) => {
 
 exports.downloadImageController = asyncHandler(async (req, res) => {
   const { key } = req.params
-
+  console.log(
+    '🚀 ~ file: imageController.js ~ line 42 ~ exports.downloadImageController=asyncHandler ~ key',
+    key
+  )
   if (!key) {
     return res.status(400).send({ error: 'key is not defined' })
   }
+
+  // const params = { Bucket: 'vstreamer-user-photos', Key: `${key}.jpg` }
+  // const promise = s3.getSignedUrlPromise('getObject', params)
+  // promise.then(
+  //   function (url) {
+  //     res.send(url)
+  //     console.log(
+  //       '🚀 ~ file: imageController.js ~ line 51 ~ exports.downloadImageController=asyncHandler ~ url',
+  //       url
+  //     )
+  //   },
+  //   function (err) {
+  //     console.log(err)
+  //   }
+  // )
+
   const readStream = getFileStream(key)
   if (readStream) {
     return readStream.pipe(res)
