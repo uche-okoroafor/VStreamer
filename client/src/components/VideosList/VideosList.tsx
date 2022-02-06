@@ -30,7 +30,7 @@ interface IProps {
 
 /**
  * @dev renders the preview list of videos
- * @props videos contains all videos
+ * @props videos contains all videos from the server
  * @props videoPlayerOptions is the options of how the player should be displayed
  */
 
