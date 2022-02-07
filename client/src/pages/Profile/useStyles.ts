@@ -93,6 +93,30 @@ const useStyles = makeStyles((theme) => ({
   list: {
     display: 'none',
   },
+  folder: {
+    position: 'absolute',
+    right: '10%',
+    top: '80%',
+    background: 'green',
+    '&:hover': {
+      background: 'green',
+    },
+  },
+  btnContainer: {
+    position: 'absolute',
+    whiteSpace: 'nowrap',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '10px',
+    margin: '0 auto',
+  },
+  loadingIcon: {
+    fontSize: 0,
+    width: '20px',
+    height: '20px',
+  },
+  updateForm: { position: 'fixed', width: '100%', height: '100vh', left: 0, top: 0 },
 }));
 
 export default useStyles;

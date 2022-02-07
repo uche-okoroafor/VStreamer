@@ -41,13 +41,14 @@ export const UserDetailsProvider: FunctionComponent = ({ children }): JSX.Elemen
       if (response?.data) {
         setUserVideos(response.data.videos);
         setUserDetails(response.data);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 3000);
       }
     } catch (err) {
       console.error(err);
-    }
-    setTimeout(() => {
       setIsLoading(false);
-    }, 10000);
+    }
   };
   const updateUserAvatar = (avatarId: string) => {
     setUserAvatar(avatarId);

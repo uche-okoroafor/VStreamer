@@ -92,7 +92,7 @@ export default function AboutUser({ isUser }: Props): JSX.Element {
                 </Typography>
               ) : (
                 isUser && (
-                  <Typography align="center" style={{ color: '#EEEEEE' }} variant="subtitle1">
+                  <Typography align="center" style={{ color: 'rgb(238,238,238,0.5)' }} variant="subtitle1">
                     write something about yourself
                   </Typography>
                 )

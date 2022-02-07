@@ -1,4 +1,4 @@
-import { Grid, Box, Container, Stack, Avatar, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Grid, Box, Container, Stack, Avatar, Typography, useMediaQuery, useTheme, Paper } from '@mui/material';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import VideoPlayer from '../../components/VideoPlayer/VideosPlayer';
 import VideosList from '../../components/VideosList/VideosList';
@@ -110,58 +110,58 @@ export default function Watch(): JSX.Element {
                 </Box>
               )}
             </Box>
-
-            <Container sx={{ borderBottom: '2px solid #f9f9f9', background: 'white' }}>
-              <Box sx={{ padding: '10px 0', whiteSpace: 'nowrap' }}>
-                <Stack direction="row" alignItems="center">
-                  <Stack direction="row" spacing={1} style={{ flexGrow: 1 }} alignItems="center">
-                    <Typography variant="h5" sx={{ fontWeight: '900' }}>
-                      {capitalizeFirstLetter(String(watchVideo?.videoTitle))}
-                    </Typography>{' '}
-                    {watchVideo?.artist && <Typography variant="h5">-</Typography>}
-                    <Typography variant="h6">{watchVideo?.artist}</Typography>{' '}
-                  </Stack>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    {' '}
-                    <Typography
-                      color="primary"
-                      sx={{ cursor: 'pointer', fontWeight: '900' }}
-                      onClick={handleDisplayUserProfile}
-                      variant="h5"
-                    >
-                      {watchVideo?.username}
-                    </Typography>
-                    <Avatar
-                      style={{ cursor: 'pointer', border: '1px solid #1976D2' }}
-                      onClick={handleDisplayUserProfile}
-                      {...stringAvatar(watchVideo ? watchVideo.username.toUpperCase() : '', 50, 50)}
-                      src={`/image/get-image/${watchVideo?.userId}`}
-                    />
-                  </Stack>
-                </Stack>
-                <Box sx={{ margin: '5px auto' }}>
-                  <Typography>{watchVideo?.videoDescription}</Typography>
-                </Box>
-                <Stack direction="row" alignItems="center" sx={{ margin: '5px auto' }}>
-                  <Box display="flex" alignItems="center" style={{ flexGrow: 1 }}>
-                    <Stack direction="row" spacing={5} alignItems="center">
+            <Paper sx={{ borderBottom: '2px solid #f9f9f9', background: 'white' }}>
+              <Container>
+                <Box sx={{ padding: '10px 0', whiteSpace: 'nowrap' }}>
+                  <Stack direction="row" alignItems="center">
+                    <Stack direction="row" spacing={1} style={{ flexGrow: 1 }} alignItems="center">
+                      <Typography variant="h5" sx={{ fontWeight: '900' }}>
+                        {capitalizeFirstLetter(String(watchVideo?.videoTitle))}
+                      </Typography>{' '}
+                      {watchVideo?.artist && <Typography variant="h5">-</Typography>}
+                      <Typography variant="h6">{watchVideo?.artist}</Typography>{' '}
+                    </Stack>
+                    <Stack direction="row" spacing={1} alignItems="center">
                       {' '}
-                      <Likes />
-                      <Viewers />
-                    </Stack>
-                  </Box>{' '}
-                  <Box>
-                    <Stack direction="row" spacing={5} alignItems="center">
-                      <Typography style={{ fontSize: '0.9rem' }}>
-                        {moment(watchVideo?.datePosted).format('MMMM Do YYYY')}
+                      <Typography
+                        color="primary"
+                        sx={{ cursor: 'pointer', fontWeight: '900' }}
+                        onClick={handleDisplayUserProfile}
+                        variant="h5"
+                      >
+                        {watchVideo?.username}
                       </Typography>
-                      <Typography>{watchVideo?.videoCategory}</Typography>
+                      <Avatar
+                        style={{ cursor: 'pointer', border: '1px solid #1976D2' }}
+                        onClick={handleDisplayUserProfile}
+                        {...stringAvatar(watchVideo ? watchVideo.username.toUpperCase() : '', 50, 50)}
+                        src={`/image/get-image/${watchVideo?.userId}`}
+                      />
                     </Stack>
+                  </Stack>
+                  <Box sx={{ margin: '5px auto' }}>
+                    <Typography>{watchVideo?.videoDescription}</Typography>
                   </Box>
-                </Stack>
-              </Box>{' '}
-            </Container>
-
+                  <Stack direction="row" alignItems="center" sx={{ margin: '5px auto' }}>
+                    <Box display="flex" alignItems="center" style={{ flexGrow: 1 }}>
+                      <Stack direction="row" spacing={5} alignItems="center">
+                        {' '}
+                        <Likes />
+                        <Viewers />
+                      </Stack>
+                    </Box>{' '}
+                    <Box>
+                      <Stack direction="row" spacing={5} alignItems="center">
+                        <Typography style={{ fontSize: '0.9rem' }}>
+                          {moment(watchVideo?.datePosted).format('MMMM Do YYYY')}
+                        </Typography>
+                        <Typography>{watchVideo?.videoCategory}</Typography>
+                      </Stack>
+                    </Box>
+                  </Stack>
+                </Box>{' '}
+              </Container>
+            </Paper>
             <Container sx={{ padding: 0 }}>
               <Grid container sx={{ position: 'relative' }}>
                 <Grid item xs={12} sm={8} md={12} sx={{}}>

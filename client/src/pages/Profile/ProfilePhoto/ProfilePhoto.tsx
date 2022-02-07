@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Avatar from '@mui/material/Avatar';
 import useStyles from '../useStyles';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { stringAvatar } from '../useStyles';
 import { IUserDetails } from '../../../interface/User';
 import { uploadImage, deleteImage } from '../../../helpers/APICalls/imageApis';
@@ -29,8 +29,6 @@ export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
   const [uploadStatus, setUploadStatus] = useState(false);
   const { updateSnackBarMessage } = useSnackBar();
   const [isSaving, setIsSaving] = useState(false);
-  const [loadProfile, setLoadProfile] = useState(false);
-  const [imageSource, setImageSource] = useState('');
 
   const onDrop = useCallback(
     (acceptedFile) => {
@@ -45,18 +43,17 @@ export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
     accept: 'image/jpeg, image/png',
   });
 
-  useMemo(() => {
+  const handleUserImage = (): string => {
     if (file === undefined) {
-      if (user?.userImage !== undefined) {
-        setImageSource(`/image/download-image/${user.userImage}`);
+      if (user.userImage) {
+        return `/image/download-image/${user.userImage}`;
       } else {
-        setImageSource('');
+        return '';
       }
     } else {
-      setImageSource(file);
+      return file;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file, isUser]);
+  };
 
   const handleSaveImage = async (): Promise<void> => {
     setUploadStatus(true);
@@ -65,7 +62,8 @@ export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
       const { data } = await uploadImage(image);
       if (data) {
         if (data.success) {
-          await handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
+          handleGetUserDetails({ username: user.username, id: user.userId, email: 'undefined' });
+
           setFiles(undefined);
           setOpenUpdateForm(false);
           if (file) {
@@ -116,7 +114,10 @@ export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
         ></Box>
       )}
       <Box className={classes.bottomSpace} sx={{ position: 'relative' }}>
-        <Avatar {...stringAvatar(user.username.toUpperCase(), 100, 100)} src={imageSource} />
+        <Avatar
+          {...stringAvatar(user.username ? user.username.toUpperCase() : 'V', 100, 100)}
+          src={handleUserImage()}
+        />
         {!openUpdateForm ? (
           isUser && (
             <IconButton
@@ -130,7 +131,6 @@ export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
                 },
               }}
               aria-label="update"
-              // color="secondary"
               onClick={() => setOpenUpdateForm(true)}
             >
               <DriveFolderUploadIcon sx={{ color: 'white' }} />
