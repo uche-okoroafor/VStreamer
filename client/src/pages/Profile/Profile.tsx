@@ -1,7 +1,7 @@
 import { Typography, Grid, Box } from '@mui/material';
 import useStyles from './useStyles';
 import { useAuth } from '../../context/useAuthContext';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useUserDetails } from '../../context/useUserContext';
 import VideosList from '../../components/VideosList/VideosList';
 import { IUserDetails } from '../../interface/User';
@@ -30,6 +30,7 @@ export default function Profile(): JSX.Element {
     userImage: '',
     videos: [],
   });
+  console.log(typeof user.username, user.username);
   const videoPlayerOptions = {
     width: '500',
     height: '280',
@@ -38,8 +39,14 @@ export default function Profile(): JSX.Element {
     component: 'Profile',
     classes,
   };
-
-  useEffect(() => {
+  const checkUserHasVideos = () => {
+    if (userDetails?.videos.length) {
+      setUserHasVideos(true);
+    } else {
+      setUserHasVideos(false);
+    }
+  };
+  const checkUser = () => {
     if (loggedInUser && userDetails) {
       setUser(userDetails);
       if (loggedInUser.id === userDetails.userId) {
@@ -48,15 +55,21 @@ export default function Profile(): JSX.Element {
         setIsUser(false);
       }
     }
-  }, [loggedInUser, userDetails]);
-
-  useEffect(() => {
+  };
+  const updateUserDetails = () => {
     if (allVideos && userDetails) {
       handleGetUserDetails({ username: userDetails?.username, id: userDetails?.userId, email: 'undefined' });
     }
-    if (userDetails?.videos.length) {
-      setUserHasVideos(true);
-    }
+  };
+
+  useEffect(() => {
+    checkUser();
+    checkUserHasVideos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loggedInUser, userDetails]);
+
+  useEffect(() => {
+    updateUserDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allVideos]);
 

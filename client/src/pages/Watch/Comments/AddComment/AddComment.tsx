@@ -1,4 +1,4 @@
-import { Button, Box, TextareaAutosize, Stack, Typography } from '@mui/material';
+import { Button, Box, TextareaAutosize, Stack, Typography, Paper } from '@mui/material';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useAllVideos } from '../../../../context/useAllVideosContext';
 import { useEffect } from 'react';
@@ -100,7 +100,6 @@ export default function AddComment({
     <>
       <Box
         sx={{
-          padding: '10px 60px',
           borderRadius: '5px',
           position: 'fixed',
           minHeight: 80,
@@ -110,7 +109,7 @@ export default function AddComment({
         }}
       >
         {openComment ? (
-          <Box sx={{ background: 'white', width: '100%' }}>
+          <Paper sx={{ background: 'white', width: '100%', padding: '20px 40px' }}>
             <form onSubmit={isEditComment ? handleEditComment : handleAddComment} style={{ width: '100%' }}>
               <TextareaAutosize
                 aria-label="minimum height"
@@ -131,7 +130,7 @@ export default function AddComment({
                 </Button>
               </Stack>
             </form>
-          </Box>
+          </Paper>
         ) : (
           <Box sx={{ position: 'relative', width: '10%', background: 'green', float: 'right' }}>
             <IconButton
