@@ -103,9 +103,16 @@ export default function AddComment({
           borderRadius: '5px',
           position: 'fixed',
           minHeight: 80,
-          width: openComment ? '64%' : '5%',
+          width: {
+            xs: openComment ? '80%' : '5%',
+            sm: openComment ? '80%' : '5%',
+            md: openComment ? '64%' : '5%',
+          },
           bottom: 0,
-          right: '31%',
+          right: {
+            xs: '10%',
+            md: '31%',
+          },
         }}
       >
         {openComment ? (
