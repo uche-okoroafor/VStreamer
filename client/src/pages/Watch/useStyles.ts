@@ -92,6 +92,7 @@ const useStyles = makeStyles(() => ({
   videoPlayerContainer: {
     background: 'black',
     position: 'relative',
+
     '&:hover': {
       '& $watchedVideoTitle': {
         display: 'flex',

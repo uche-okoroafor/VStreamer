@@ -95,7 +95,6 @@ export default function UploadVideo(): JSX.Element {
   const handleUploadVideoDetails = async (videoDetails: IVideoDetails): Promise<void> => {
     try {
       const { data } = await uploadVideoDetails(videoDetails);
-      console.log('🚀 ~ file: UploadVideo.tsx ~ line 98 ~ handleUploadVideoDetails ~ data', data);
       if (data?.success) {
         setUploadSuccess(true);
         setUploadProgress(100);

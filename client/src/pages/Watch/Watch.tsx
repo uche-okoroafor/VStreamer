@@ -1,4 +1,4 @@
-import { Grid, Box, Container, Stack, Avatar, Typography, useMediaQuery, useTheme, Paper } from '@mui/material';
+import { Grid, Box, Container, Stack, Avatar, Typography, useMediaQuery, useTheme, Paper, Button } from '@mui/material';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import VideoPlayer from '../../components/VideoPlayer/VideosPlayer';
 import VideosList from '../../components/VideosList/VideosList';
@@ -20,6 +20,7 @@ export default function Watch(): JSX.Element {
   const [videoSource, setVideoSource] = useState<string | undefined>(undefined);
   const [videoDuration, setVideoDuration] = useState<string | undefined>(undefined);
   const [displayCommentBtn, setDisplayCommentBtn] = useState(false);
+  const [displayComments, setDisplayComments] = useState(true);
   const theme = useTheme();
   const isSmallOrLess = useMediaQuery(theme.breakpoints.up('sm'));
   const history = useHistory();
@@ -55,6 +56,14 @@ export default function Watch(): JSX.Element {
     component: 'Watch',
     classes,
   };
+  const videosListPlayerOptionsMobile = {
+    width: '600',
+    height: '400',
+    autoPlay: false,
+    displayDetails: false,
+    component: 'Watch',
+    classes,
+  };
 
   const handleDisplayUserProfile = async (): Promise<void> => {
     if (watchVideo) {
@@ -71,6 +80,9 @@ export default function Watch(): JSX.Element {
       return true;
     }
     return false;
+  };
+  const toggleCommentDisplay = () => {
+    setDisplayComments(!displayComments);
   };
   return (
     <>
@@ -142,7 +154,11 @@ export default function Watch(): JSX.Element {
                   <Box sx={{ margin: '5px auto' }}>
                     <Typography>{watchVideo?.videoDescription}</Typography>
                   </Box>
-                  <Stack direction="row" alignItems="center" sx={{ margin: '5px auto' }}>
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    sx={{ margin: '5px auto', display: { xs: 'none', sm: 'flex', md: 'flex' } }}
+                  >
                     <Box display="flex" alignItems="center" style={{ flexGrow: 1 }}>
                       <Stack direction="row" spacing={5} alignItems="center">
                         {' '}
@@ -159,32 +175,57 @@ export default function Watch(): JSX.Element {
                       </Stack>
                     </Box>
                   </Stack>
+                  <Box sx={{ display: { xs: 'block', sm: 'none', md: 'none' } }}>
+                    {' '}
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                      <Likes />
+                      <Viewers />
+                    </Stack>
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      sx={{ margin: '5px auto', display: { xs: 'flex', sm: 'none', md: 'none' } }}
+                    >
+                      <Typography style={{ fontSize: '0.9rem' }}>
+                        {moment(watchVideo?.datePosted).format('MMMM Do YYYY')}
+                      </Typography>
+                      <Typography>{watchVideo?.videoCategory}</Typography>
+                    </Stack>
+                  </Box>
                 </Box>{' '}
               </Container>
             </Paper>
             <Container sx={{ padding: 0 }}>
               <Grid container sx={{ position: 'relative' }}>
-                <Grid item xs={12} sm={8} md={12} sx={{}}>
+                <Box sx={{ padding: '10px', display: { sm: 'block', xs: 'block', md: 'none', width: '100%' } }}>
                   {' '}
-                  <Comments displayCommentBtn={displayCommentBtn} />
-                </Grid>
-                <Grid
-                  item
-                  xs={4}
-                  sx={{
-                    overflowY: 'scroll',
-                    top: 0,
-                    bottom: 0,
-                    // left: 0,
-                    right: -17,
-                    position: 'absolute',
-                    display: { sm: 'block', xs: 'none', md: 'none' },
-                    paddingTop: '0',
-                  }}
-                >
-                  {' '}
-                  <VideosList videoPlayerOptions={videosListPlayerOptions} videos={allVideos} />
-                </Grid>
+                  <Button variant="contained" onClick={toggleCommentDisplay}>
+                    {displayComments ? 'Videos' : 'Comments'}
+                  </Button>
+                </Box>
+
+                {displayComments ? (
+                  <Grid item xs={12}>
+                    {' '}
+                    <Comments displayCommentBtn={displayCommentBtn} />
+                  </Grid>
+                ) : (
+                  <Grid
+                    item
+                    xs={11}
+                    sm={8}
+                    sx={{
+                      overflowY: 'scroll',
+                      display: { sm: 'block', xs: 'block', md: 'none' },
+                      paddingTop: '0',
+                      margin: '0 auto',
+                    }}
+                  >
+                    {' '}
+                    <VideosList videoPlayerOptions={videosListPlayerOptionsMobile} videos={allVideos} />
+                  </Grid>
+                )}
               </Grid>
             </Container>
           </Box>

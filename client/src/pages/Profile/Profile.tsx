@@ -30,7 +30,6 @@ export default function Profile(): JSX.Element {
     userImage: '',
     videos: [],
   });
-  console.log(typeof user.username, user.username);
   const videoPlayerOptions = {
     width: '500',
     height: '280',
