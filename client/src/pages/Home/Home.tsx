@@ -4,6 +4,11 @@ import VideosList from '../../components/VideosList/VideosList';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import useStyles from './useStyles';
 
+/**
+ * @dev renders home page with list of videos and its details
+ */
+
+
 export default function Home(): JSX.Element {
   const classes = useStyles();
   const { allVideos, handleGetAllVideos } = useAllVideos();
