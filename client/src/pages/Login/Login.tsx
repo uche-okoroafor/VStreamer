@@ -13,6 +13,11 @@ import { useSnackBar } from '../../context/useSnackbarContext';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import { useEffect } from 'react';
 
+
+/**
+ * @dev renders Login page
+ */
+
 export default function Login(): JSX.Element {
   const classes = useStyles();
   const { updateLoginContext } = useAuth();
