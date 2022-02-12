@@ -3,6 +3,7 @@ import { useAllVideos } from '../../../../../context/useAllVideosContext';
 import { useHistory } from 'react-router-dom';
 import { List, Typography, ListItem, ListItemText } from '@material-ui/core';
 import { IVideoDetails } from '../../../../../interface/VideoDetails';
+
 interface IProps {
   searchedVideo: string;
   toggleDrawer: (
@@ -17,6 +18,7 @@ interface IProps {
 function SearchedVideosList({ searchedVideo, setSearchedVideo, toggleDrawer }: IProps): JSX.Element {
   const { allVideos, handleSetWatchVideo } = useAllVideos();
   const [searchResult, setSearchResult] = useState<Array<IVideoDetails>>([]);
+
   const history = useHistory();
 
   useEffect(() => {

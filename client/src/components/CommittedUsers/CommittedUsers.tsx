@@ -12,6 +12,7 @@ import { UserDetailsContext, useUserDetails } from '../../context/useUserContext
 import { useHistory } from 'react-router-dom';
 import useStyles from './useStyles';
 import { useState, useEffect, useMemo } from 'react';
+
 interface IProps {
   usersList: { username: string; _id?: string; userId: string }[] | undefined;
   styles: any;
@@ -22,7 +23,6 @@ export default function CommittedUsers({ usersList, styles }: IProps): JSX.Eleme
   const [reloadImage, setReloadImage] = useState(false);
   const classes = useStyles();
   const history = useHistory();
-
   const handleDisplayUserProfile = async (user: User): Promise<void> => {
     await handleGetUserDetails(user);
     history.push(`/profile/${user.username}`);
@@ -45,8 +45,20 @@ export default function CommittedUsers({ usersList, styles }: IProps): JSX.Eleme
           background: 'white',
           position: 'absolute',
           zIndex: 1,
-          overflowY: 'hidden',
-          height: 'auto',
+          overflow: 'hidden',
+          overflowY: 'scroll',
+          maxHeight: '250px',
+          '&::-webkit-scrollbar': {
+            width: '0.2em',
+            height: '0.5em',
+          },
+          '&::-webkit-scrollbar-track': {
+            boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+            webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'rgb(25,118,210)',
+          },
         }}
       >
         <List disablePadding sx={{ minWidth: 250 }}>

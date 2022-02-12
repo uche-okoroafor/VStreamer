@@ -75,6 +75,9 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
     }
     return false;
   };
+  const rect = document.getElementById('check')?.getBoundingClientRect();
+  console.log(rect, 'sanctions');
+
   return (
     <React.Fragment>
       {videos
@@ -193,7 +196,7 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
                               </Box>
                             </Stack>
                           </Box>
-                          <Box className={videoListStyle.textSpacing}>
+                          <Box id="check" className={videoListStyle.textSpacing}>
                             <Typography variant="subtitle1" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>
                               <RemoveRedEyeIcon sx={{ marginRight: '7px' }} />
                               {video.views?.length}
