@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material';
 import { IViews } from '../../../interface/VideoDetails';
 import { useAllVideos } from '../../../context/useAllVideosContext';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../../context/useAuthContext';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { addViewer } from '../../../helpers/APICalls/viewsApi';
@@ -14,6 +14,7 @@ export default function Viewers(): JSX.Element {
   const { loggedInUser } = useAuth();
   const { updateSnackBarMessage } = useSnackBar();
   const [viewers, setViewers] = useState<Array<IViews>>([]);
+
   const classes = useStyles();
   const handleAddViewer = async (): Promise<void> => {
     if (loggedInUser) {
@@ -21,16 +22,16 @@ export default function Viewers(): JSX.Element {
         const { data } = await addViewer(loggedInUser?.username, watchVideo?.userId, watchVideo?._id);
         if (data?.success) {
           handleGetAllVideos();
+        } else {
         }
       } catch (err) {
         console.error(err);
-        updateSnackBarMessage('viewer not added');
       }
     }
   };
 
   const checkUser = (): boolean => {
-    if (watchVideo?.views) {
+    if (watchVideo?.views?.length) {
       const filterUser = watchVideo.views.filter((user) => user.userId === loggedInUser?.id);
       if (filterUser.length) {
         return true;
@@ -45,12 +46,12 @@ export default function Viewers(): JSX.Element {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allVideos]);
-
   useEffect(() => {
     if (!checkUser()) {
       handleAddViewer();
     }
-    if (watchVideo?.views) {
+
+    if (watchVideo?.views?.length) {
       setViewers(watchVideo.views);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

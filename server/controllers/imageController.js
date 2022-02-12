@@ -15,7 +15,6 @@ exports.uploadImageController = asyncHandler(async (req, res) => {
   const file = req.file
 
   const cloudResponse = await uploadFile(file)
-
   if (cloudResponse) {
     await unlinkFile(file.path)
     const image = await User.updateOne(
@@ -36,10 +35,10 @@ exports.uploadImageController = asyncHandler(async (req, res) => {
 
 exports.downloadImageController = asyncHandler(async (req, res) => {
   const { key } = req.params
-  if (!key || key === undefined || key === 'undefined') {
+
+  if (!key) {
     return res.status(400).send({ error: 'key is not defined' })
   }
-
   const readStream = getFileStream(key)
   if (readStream) {
     return readStream.pipe(res)
@@ -52,8 +51,7 @@ exports.getUserImageKeyController = asyncHandler(async (req, res) => {
   const user = await User.findById(userId)
   if (user) {
     const key = user.userImage
-
-    if (!key || key === undefined || key === 'undefined') {
+    if (!key) {
       return res.status(200).send({ key: undefined })
     } else {
       const readStream = getFileStream(key)

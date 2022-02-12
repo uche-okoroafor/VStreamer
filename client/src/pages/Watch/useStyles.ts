@@ -80,7 +80,7 @@ const useStyles = makeStyles(() => ({
   },
   list: {
     display: 'none',
-    top: '2.5rem',
+    top: '1.7rem',
   },
 
   watchedVideoTitle: {

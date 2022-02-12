@@ -4,32 +4,52 @@ const Views = require('../models/Views')
 const ObjectID = require('mongodb').ObjectID
 
 // @route POST /like
-// @desc Addes like to the video
+// @desc Adds like to the video
 // @access Private
 exports.addViewerController = asyncHandler(async (req, res, next) => {
   const loggedInUserId = req.user.id
   const { loggedInUsername, userId, videoId } = req.body
   const videoObjectId = ObjectID(videoId)
-
-  const views = new Views({
+  const viewer = new Views({
     username: loggedInUsername,
     userId: loggedInUserId
   })
 
-  const addVideoViews = await User.updateOne(
+  const findUser = await User.find(
+    { _id: userId },
     {
-      _id: userId,
-      'videos._id': videoObjectId
-    },
-    {
-      $push: {
-        'videos.$.views': views
+      videos: {
+        $elemMatch: { _id: videoObjectId }
       }
     }
   )
-  if (addVideoViews.nModified === 1) {
-    return res.status(200).json({ success: true })
+
+  if (findUser) {
+    const viewerExist = await findUser[0].videos[0].views.filter(
+      user => user.userId === loggedInUserId
+    )
+
+    if (viewerExist.length === 0) {
+      const viewsList = [...findUser[0].videos[0].views, viewer]
+      const addVideoViews = await User.updateOne(
+        {
+          _id: userId,
+          'videos._id': videoObjectId
+        },
+        {
+          $set: {
+            'videos.$.views': viewsList
+          }
+        }
+      )
+      if (addVideoViews.nModified === 1) {
+        return res.status(200).json({ success: true })
+      }
+    } else {
+      return res.status(200).json({ success: false })
+    }
   }
+
   res.status(500)
   throw new Error('something went wrong')
 })
