@@ -64,6 +64,7 @@ export default function UpdateVideo({ renderedComponent, video }: Props): JSX.El
             disabled={isDeleting}
             onClick={handleOpenDialog}
             variant="contained"
+            style={{ background: '#E00000' }}
             color="warning"
           >
             Delete

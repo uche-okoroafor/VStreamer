@@ -76,11 +76,18 @@ const useStyles = makeStyles(() => ({
       '& $list': {
         display: 'block',
       },
+      '& $listLikes': {
+        display: 'block',
+      },
     },
   },
   list: {
     display: 'none',
-    top: '1.7rem',
+    // top: '1.7rem',
+  },
+  listLikes: {
+    display: 'none',
+    left: '100%',
   },
 
   watchedVideoTitle: {

@@ -27,9 +27,13 @@ export default function Home(): JSX.Element {
     if (allVideos === undefined) handleGetAllVideos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allVideos]);
+  const rect2 = document.getElementById('pro1')?.getBoundingClientRect();
+
+  const rect3 = document.getElementById('pro2')?.getBoundingClientRect();
 
   return (
     <Grid container component="div">
+      <Box id="pro1"></Box>
       <Grid item lg={10} md={11} sm={10} xs={12} className={classes.videosContainer}>
         {allVideos !== undefined ? (
           <VideosList videos={allVideos} videoPlayerOptions={videoPlayerOptions} />
@@ -39,6 +43,7 @@ export default function Home(): JSX.Element {
           </Box>
         )}
       </Grid>
+      <Box id="pro2"></Box>
     </Grid>
   );
 }

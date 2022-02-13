@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    maxWidth: '6rem',
+    maxWidth: '80%',
   },
   textSpacing: {
     margin: '5px 0',
@@ -77,7 +77,10 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  list: { display: 'none' },
+  list: {
+    display: 'none',
+    left: '20%',
+  },
 }));
 
 export default useStyles;

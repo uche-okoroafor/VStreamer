@@ -57,13 +57,16 @@ export default function Viewers(): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchVideo]);
 
+  const handleListPosition = () => {
+    return '1.7rem';
+  };
   return (
     <>
       <Stack direction="row" spacing={1} className={classes.viewsContainer}>
         <Typography>{viewers.length}</Typography>
         <RemoveRedEyeIcon />
         <Typography sx={{ fontWeight: '900' }}>views</Typography>
-        <CommittedUsers usersList={viewers} styles={classes.list} />
+        <CommittedUsers listPosition={handleListPosition()} usersList={viewers} classStyle={classes.list} />
       </Stack>
     </>
   );

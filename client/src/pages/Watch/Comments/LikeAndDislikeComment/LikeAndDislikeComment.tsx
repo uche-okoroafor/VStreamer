@@ -117,6 +117,10 @@ export default function LikeAndDislikeComment({ comment }: Props): JSX.Element {
       }
     }
   };
+  const handleListPosition = () => {
+    return '-9rem';
+  };
+
   return (
     <>
       <Stack direction="row" spacing={1}>
@@ -130,7 +134,11 @@ export default function LikeAndDislikeComment({ comment }: Props): JSX.Element {
             <ThumbUpIcon sx={{ fontSize: '1.2rem', color: checkUserExist(comment.likes) ? 'green' : '' }} />{' '}
           </IconButton>{' '}
           <Typography>{comment.likes?.length !== 0 && comment.likes?.length}</Typography>
-          <CommittedUsers usersList={comment.likes} styles={classes.list} />
+          <CommittedUsers
+            usersList={comment.likes}
+            listPosition={handleListPosition()}
+            classStyle={classes.listLikes}
+          />
         </Stack>
         <Stack direction="row" alignItems="center">
           <IconButton
