@@ -61,8 +61,8 @@ export default function NavBar({ loggedInUser }: IProps): JSX.Element {
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            onClick={() => '/home'}
             sx={{ mr: 2 }}
+            onClick={() => history.push('/home')}
           >
             {/* <MenuIcon /> */}
             <Box display="flex" justifyContent="center">

@@ -14,6 +14,8 @@ import CommittedUsers from '../../../components/CommittedUsers/CommittedUsers';
 export default function Likes(): JSX.Element {
   const classes = useStyles();
   const { allVideos, watchVideo, handleGetAllVideos, handleSetWatchVideo } = useAllVideos();
+  const [disableButton, setDisableButton] = useState(false);
+  const [addingDislike, setAddingDislike] = useState(false);
   const { loggedInUser } = useAuth();
   const [likes, setLikes] = useState<ILike[] | undefined>([]);
   const [dislikes, setDislikes] = useState<ILike[] | undefined>([]);
@@ -39,6 +41,7 @@ export default function Likes(): JSX.Element {
   };
 
   const handleLike = async (): Promise<void> => {
+    setDisableButton(true);
     if (loggedInUser) {
       if (watchVideo) {
         const { _id, userId } = watchVideo;
@@ -51,11 +54,13 @@ export default function Likes(): JSX.Element {
           if (checkUserExist(likes)) {
             const { data } = await removeLikes(userId, videoId);
             if (data?.success) {
+              setDisableButton(false);
               return handleGetAllVideos();
             }
           } else {
             const { data } = await updateLikes(loggedInUser.username, userId, videoId, loggedInUser.userImage);
             if (data?.success) {
+              setDisableButton(false);
               return handleGetAllVideos();
             } else {
               updateSnackBarMessage('something went wrong,please try again');
@@ -70,6 +75,7 @@ export default function Likes(): JSX.Element {
   };
 
   const handleDislike = async (): Promise<void> => {
+    setDisableButton(true);
     if (loggedInUser) {
       if (watchVideo) {
         const { _id, userId } = watchVideo;
@@ -83,11 +89,13 @@ export default function Likes(): JSX.Element {
           if (checkUserExist(dislikes)) {
             const { data } = await removeDislikes(userId, videoId);
             if (data?.success) {
+              setDisableButton(false);
               return handleGetAllVideos();
             }
           } else {
             const { data } = await updateDislikes(loggedInUser.username, userId, videoId);
             if (data?.success) {
+              setDisableButton(false);
               return handleGetAllVideos();
             } else {
               updateSnackBarMessage('something went wrong,please try again');
@@ -99,20 +107,23 @@ export default function Likes(): JSX.Element {
       }
     }
   };
+  const handleListPosition = () => {
+    return '1.7rem';
+  };
 
   return (
     <>
       <Stack direction="row" spacing={1}>
         <Stack direction="row" alignItems="center" className={classes.likeContainer}>
-          <IconButton aria-label="update" onClick={handleLike} size="small">
+          <IconButton aria-label="update" disabled={disableButton} onClick={handleLike} size="small">
             <ThumbUpIcon sx={{ color: checkUserExist(likes) ? 'green' : '#757575' }} />
           </IconButton>
           <Typography> {likes?.length}</Typography>
-          <CommittedUsers usersList={likes} styles={classes.list} />
+          <CommittedUsers listPosition={handleListPosition()} classStyle={classes.list} usersList={likes} />
         </Stack>
 
         <Stack direction="row" alignItems="center">
-          <IconButton aria-label="update" size="small" onClick={handleDislike}>
+          <IconButton aria-label="update" size="small" disabled={disableButton} onClick={handleDislike}>
             <ThumbDownAltIcon sx={{ color: checkUserExist(dislikes) ? 'red' : '#757575' }} />
           </IconButton>
           <Typography> {dislikes?.length}</Typography>

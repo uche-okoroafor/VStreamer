@@ -171,7 +171,13 @@ export default function ProfilePhoto({ user, isUser }: Props): JSX.Element {
                 {isSaving ? <CircularProgress style={{ fontSize: 0, width: '20px', height: '20px' }} /> : 'Save'}
               </Button>
             )}
-            <Button onClick={handleDeleteImage} startIcon={<DeleteIcon />} variant="contained" color="secondary">
+            <Button
+              onClick={handleDeleteImage}
+              startIcon={<DeleteIcon />}
+              style={{ background: '#E00000' }}
+              variant="contained"
+              color="warning"
+            >
               Delete
             </Button>
           </Paper>

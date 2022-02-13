@@ -8,7 +8,6 @@ import { IUserDetails } from '../../interface/User';
 import ProfilePhoto from './ProfilePhoto/ProfilePhoto';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import CommittedUsers from '../../components/CommittedUsers/CommittedUsers';
-
 import Follow from './Follow/Follow';
 import AboutUser from './AboutUser/AboutUser';
 import { CircularProgress } from '@material-ui/core';
@@ -20,6 +19,7 @@ export default function Profile(): JSX.Element {
   const { userDetails, handleGetUserDetails, isLoading } = useUserDetails();
   const [userHasVideos, setUserHasVideos] = useState(false);
   const [isUser, setIsUser] = useState(false);
+
   const [user, setUser] = useState<IUserDetails>({
     username: '',
     userId: '',
@@ -81,6 +81,7 @@ export default function Profile(): JSX.Element {
           overflow: { md: 'hidden', xs: 'scroll', sm: 'scroll' },
         }}
       >
+        {' '}
         <Grid
           item
           className={classes.profile}
@@ -93,7 +94,7 @@ export default function Profile(): JSX.Element {
           <Box display="flex" flexDirection="column" alignItems="center">
             <ProfilePhoto isUser={isUser} user={user} />
 
-            <Box className={classes.bottomSpace}>
+            <Box id="check2" className={classes.bottomSpace}>
               <Typography variant="h5">{user.username}</Typography>
             </Box>
 
@@ -103,7 +104,9 @@ export default function Profile(): JSX.Element {
                 <Typography variant="subtitle1" style={{ cursor: 'pointer' }}>
                   Followers: &nbsp; {userDetails?.followers.length}
                 </Typography>{' '}
-                {isUser && <CommittedUsers usersList={userDetails?.followers} styles={classes.list} />}
+                {isUser && (
+                  <CommittedUsers usersList={userDetails?.followers} listPosition={''} classStyle={classes.list} />
+                )}
               </Box>
               <Box sx={{ padding: '4px' }}>
                 <Typography variant="subtitle1">Posts: &nbsp;{userDetails?.videos.length}</Typography>{' '}
@@ -115,7 +118,9 @@ export default function Profile(): JSX.Element {
               </Box>
             </Box>
             <Follow isUser={isUser} />
+
             <AboutUser isUser={isUser} />
+            <Box id="check2"></Box>
             <Box>
               <Typography variant="subtitle1" align="center">
                 Email: {user.email}
@@ -152,7 +157,7 @@ export default function Profile(): JSX.Element {
                 {isLoading ? <CircularProgress /> : <Typography>This account has no videos </Typography>}
               </Box>
             )}
-          </Box>
+          </Box>{' '}
         </Grid>
       </Grid>
     </>

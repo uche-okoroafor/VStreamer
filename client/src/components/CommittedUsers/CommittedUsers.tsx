@@ -15,10 +15,11 @@ import { useState, useEffect, useMemo } from 'react';
 
 interface IProps {
   usersList: { username: string; _id?: string; userId: string }[] | undefined;
-  styles: any;
+  classStyle: any;
+  listPosition: string;
 }
 
-export default function CommittedUsers({ usersList, styles }: IProps): JSX.Element {
+export default function CommittedUsers({ usersList, classStyle, listPosition }: IProps): JSX.Element {
   const { handleGetUserDetails, userDetails } = useUserDetails();
   const [reloadImage, setReloadImage] = useState(false);
   const classes = useStyles();
@@ -40,9 +41,10 @@ export default function CommittedUsers({ usersList, styles }: IProps): JSX.Eleme
     <>
       <Paper
         elevation={5}
-        className={styles}
+        className={classStyle}
         sx={{
           background: 'white',
+          top: listPosition,
           position: 'absolute',
           zIndex: 1,
           overflow: 'hidden',

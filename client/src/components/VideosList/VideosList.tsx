@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAllVideos } from '../../context/useAllVideosContext';
 import { useHistory } from 'react-router-dom';
 import VideoPlayer from '../VideoPlayer/VideosPlayer';
-import { IVideoDetails } from '../../interface/VideoDetails';
+import { ILike, IVideoDetails } from '../../interface/VideoDetails';
 import { useSnackBar } from '../../context/useSnackbarContext';
 import { Typography, Box, Paper, Stack } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -75,8 +75,19 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
     }
     return false;
   };
-  const rect = document.getElementById('check')?.getBoundingClientRect();
-  console.log(rect, 'sanctions');
+  const handleListPosition = (listLength: number | undefined) => {
+    // if (listLength) {
+    //   if (listLength > 1) {
+    //     console.log('working', listLength);
+    //     return '5%';
+    //   } else {
+    //     console.log('sec', listLength);
+
+    //     return '10%';
+    //   }
+    // }
+    return '10%';
+  };
 
   return (
     <React.Fragment>
@@ -187,7 +198,11 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
                                 <ThumbUpIcon sx={{ color: 'green', marginRight: '7px', cursor: 'pointer' }} />
                                 {video.likes?.length}
                                 {component !== 'Home' && (
-                                  <CommittedUsers usersList={video?.likes} styles={videoListStyle.list} />
+                                  <CommittedUsers
+                                    usersList={video?.likes}
+                                    listPosition={handleListPosition(video?.likes?.length)}
+                                    classStyle={videoListStyle.list}
+                                  />
                                 )}
                               </Box>{' '}
                               <Box>
@@ -196,13 +211,17 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
                               </Box>
                             </Stack>
                           </Box>
-                          <Box id="check" className={videoListStyle.textSpacing}>
+                          <Box className={videoListStyle.textSpacing}>
                             <Typography variant="subtitle1" style={{ fontSize: '0.8rem', cursor: 'pointer' }}>
                               <RemoveRedEyeIcon sx={{ marginRight: '7px' }} />
                               {video.views?.length}
                             </Typography>
                             {component !== 'Home' && (
-                              <CommittedUsers usersList={video.views} styles={videoListStyle.list} />
+                              <CommittedUsers
+                                usersList={video.views}
+                                classStyle={videoListStyle.list}
+                                listPosition={handleListPosition(video?.likes?.length)}
+                              />
                             )}
                           </Box>
                           <DeleteVideo renderedComponent={component} video={video} />

@@ -74,7 +74,7 @@ export default function Follow({ isUser }: Props): JSX.Element {
             onClick={handleFollower}
             disabled={isSubmitting}
             style={{ color: 'white' }}
-            color="secondary"
+            color="success"
             variant="contained"
           >
             {userFollowing ? 'unfollow' : 'follow'}
