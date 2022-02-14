@@ -35,7 +35,6 @@ exports.uploadImageController = asyncHandler(async (req, res) => {
 
 exports.downloadImageController = asyncHandler(async (req, res) => {
   const { key } = req.params
-
   if (!key) {
     return res.status(400).send({ error: 'key is not defined' })
   }
@@ -48,6 +47,7 @@ exports.downloadImageController = asyncHandler(async (req, res) => {
 
 exports.getUserImageKeyController = asyncHandler(async (req, res) => {
   const { userId } = req.params
+
   const user = await User.findById(userId)
   if (user) {
     const key = user.userImage
