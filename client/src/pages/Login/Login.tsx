@@ -11,18 +11,42 @@ import AuthHeader from '../../components/AuthHeader/AuthHeader';
 import { useAuth } from '../../context/useAuthContext';
 import { useSnackBar } from '../../context/useSnackbarContext';
 import { useAllVideos } from '../../context/useAllVideosContext';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { CircularProgress } from '@material-ui/core';
 
 export default function Login(): JSX.Element {
   const classes = useStyles();
   const { updateLoginContext } = useAuth();
   const { updateSnackBarMessage } = useSnackBar();
   const { allVideos, handleGetAllVideos } = useAllVideos();
+  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (allVideos === undefined) handleGetAllVideos();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allVideos]);
+
+  const loginGuest = () => {
+    login('guest@gmail.com', '123456').then((data) => {
+      if (data.error) {
+        setIsLoading(false);
+        // updateSnackBarMessage(data.error);
+      } else if (data.success) {
+        updateLoginContext(data.success);
+      } else {
+        // should not get here from backend but this catch is for an unknown issue
+        console.error({ data });
+
+        setIsLoading(false);
+        updateSnackBarMessage('An unexpected error occurred. Please try again');
+      }
+    });
+  };
 
   const handleSubmit = (
     { email, password }: { email: string; password: string },
@@ -63,11 +87,27 @@ export default function Login(): JSX.Element {
                 </Typography>
               </Grid>
             </Grid>
-            <LoginForm handleSubmit={handleSubmit} />
+            <LoginForm handleSubmit={handleSubmit} isLoading={isLoading} loginGuest={loginGuest} />
           </Paper>
         </Box>
         <Box alignSelf="center" />
       </Box>
+      {loading && (
+        <Box
+          style={{
+            background: 'white',
+            position: 'fixed',
+            width: '100%',
+            height: '100%',
+            left: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress style={{ color: '#2069AF' }} />
+        </Box>
+      )}
     </Grid>
   );
 }

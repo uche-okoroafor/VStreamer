@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 import { CircularProgress } from '@material-ui/core';
+import { useState } from 'react';
 
 interface Props {
   handleSubmit: (
@@ -24,9 +25,11 @@ interface Props {
       password: string;
     }>,
   ) => void;
+  loginGuest: () => void;
+  isLoading: boolean;
 }
 
-export default function Login({ handleSubmit }: Props): JSX.Element {
+export default function Login({ handleSubmit, loginGuest, isLoading }: Props): JSX.Element {
   const classes = useStyles();
 
   return (
@@ -85,9 +88,14 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
             onChange={handleChange}
             variant="filled"
           />
+          <Button size="small" style={{ color: 'white' }}>
+            <Typography align="center" style={{ fontWeight: 'bolder' }} onClick={loginGuest}>
+              Login as Guest
+            </Typography>
+          </Button>
           <Box textAlign="center">
             <Button type="submit" size="large" variant="contained" color="primary" className={classes.submit}>
-              {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'Login'}
+              {isSubmitting || isLoading ? <CircularProgress style={{ color: 'white' }} /> : 'Login'}
             </Button>
           </Box>
         </form>
