@@ -15,7 +15,7 @@ import { useUserDetails } from '../../context/useUserContext';
 import { User } from '../../interface/User';
 import moment from 'moment';
 import CommittedUsers from '../../components/CommittedUsers/CommittedUsers';
-
+// import VideoThumbnail from 'react-video-thumbnail';
 interface IProps {
   videos: Array<IVideoDetails> | undefined;
   videoPlayerOptions: {
@@ -76,16 +76,6 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
     return false;
   };
   const handleListPosition = (listLength: number | undefined) => {
-    // if (listLength) {
-    //   if (listLength > 1) {
-    //     console.log('working', listLength);
-    //     return '5%';
-    //   } else {
-    //     console.log('sec', listLength);
-
-    //     return '10%';
-    //   }
-    // }
     return '10%';
   };
 
@@ -108,7 +98,14 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
                     <Box className={videoListStyle.clickAndPlayContainer} onClick={() => handleClickVideo(video)}>
                       {!isYoutubeVideo(video.videoSource) && (
                         <Box className={videoListStyle.clickAndPlayTitleContainer}>
-                          <Box className={videoListStyle.clickAndPlayTitle}></Box>
+                          <Box className={videoListStyle.clickAndPlayTitle}>
+                            {/* <VideoThumbnail
+                            videoUrl={video.videoSource}
+                            thumbnailHandler={(thumbnail:any) => console.log(thumbnail)}
+                            width={120}
+                            height={80}
+                            /> */}
+                          </Box>
                           <Typography
                             className={videoListStyle.videoTitle}
                             style={{
