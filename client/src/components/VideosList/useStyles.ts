@@ -31,14 +31,25 @@ const useStyles = makeStyles((theme) => ({
     padding: '10px 20px',
   },
 
-  clickAndPlayTitle: {
-    padding: '1.2rem',
+  Thumbnail: {
+    width: '45px',
+    height: '45px',
     borderRadius: '50%',
     background: 'black',
     marginRight: '10px',
     color: '#EEEEEE',
+    overflow: 'hidden',
   },
-  clickAndPlayTitleContainer: { position: 'absolute', top: '6%', left: '3%', display: 'flex', alignItems: 'center' },
+  clickAndPlayTitleContainer: {
+    position: 'absolute',
+    top: '6%',
+    left: '3%',
+    display: 'flex',
+    alignItems: 'center',
+    overflow: 'hidden',
+    justifyContent: 'center',
+    // zIndex: 3,
+  },
   clickAndPlayContainer: {
     position: 'absolute',
     width: '100%',

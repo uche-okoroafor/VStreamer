@@ -15,7 +15,7 @@ import { useUserDetails } from '../../context/useUserContext';
 import { User } from '../../interface/User';
 import moment from 'moment';
 import CommittedUsers from '../../components/CommittedUsers/CommittedUsers';
-// import VideoThumbnail from 'react-video-thumbnail';
+import VideoThumbnail from 'react-video-thumbnail';
 interface IProps {
   videos: Array<IVideoDetails> | undefined;
   videoPlayerOptions: {
@@ -43,6 +43,7 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
   const videoListStyle = useStyles();
   const [videoDuration, setVideoDuration] = useState<string | undefined>();
   const { handleGetUserDetails } = useUserDetails();
+  const [thumbnailImg, setThumbnail] = useState('');
   // const [displayViewedVideo, setDisplayViewedVideo] = useState(false);
 
   const displayViewedVideo = (videoId: string): boolean => {
@@ -95,16 +96,40 @@ export default function VideosList({ videos, videoPlayerOptions }: IProps): JSX.
                       background: 'black',
                     }}
                   >
+                    {!isYoutubeVideo(video.videoSource) && (
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          width: '100%',
+                          height: '100%',
+                          overflow: 'hidden',
+                          zIndex: 1,
+                        }}
+                      >
+                        <VideoThumbnail
+                          videoUrl={video.videoSource}
+                          thumbnailHandler={(thumbnail: any) => {
+                            setThumbnail(thumbnail);
+                          }}
+                          width={+videoPlayerOptions.width}
+                          height={+videoPlayerOptions.height}
+                          snapshotAtTime={20}
+                        />
+                      </Box>
+                    )}
                     <Box className={videoListStyle.clickAndPlayContainer} onClick={() => handleClickVideo(video)}>
                       {!isYoutubeVideo(video.videoSource) && (
                         <Box className={videoListStyle.clickAndPlayTitleContainer}>
-                          <Box className={videoListStyle.clickAndPlayTitle}>
-                            {/* <VideoThumbnail
-                            videoUrl={video.videoSource}
-                            thumbnailHandler={(thumbnail:any) => console.log(thumbnail)}
-                            width={120}
-                            height={80}
-                            /> */}
+                          <Box className={videoListStyle.Thumbnail}>
+                            <VideoThumbnail
+                              videoUrl={video.videoSource}
+                              thumbnailHandler={(thumbnail: any) => {
+                                setThumbnail(thumbnail);
+                              }}
+                              snapshotAtTime={10}
+                              width={70}
+                              height={70}
+                            />
                           </Box>
                           <Typography
                             className={videoListStyle.videoTitle}
