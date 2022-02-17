@@ -72,4 +72,5 @@ CLOUDINARY_API_SECRET=<your cloudinary api secret key>
 ## DEMO
 
 
-[![VStreamer](https://user-images.githubusercontent.com/71725892/145043084-3fff7691-61b1-41a4-b322-e72cf313e546.jpg)](https://user-images.githubusercontent.com/71725892/145594851-61671072-ca9c-4242-a4a0-6642d7479b79.mp4)
+[![VStreamer](https://user-images.githubusercontent.com/71725892/154419674-7d50bee9-ebec-4df4-8f50-193ca8fc97d1.png)](https://www.loom.com/share/269f5a41b05746c49ab39186034ae04e)
+
