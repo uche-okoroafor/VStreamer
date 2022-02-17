@@ -38,7 +38,6 @@ export const UserDetailsProvider: FunctionComponent = ({ children }): JSX.Elemen
     setIsLoading(true);
     try {
       const response = await getUserDetails(user.id);
-      console.log(response.data, 'response.data');
       if (response?.data) {
         setUserVideos(response.data.videos);
         setUserDetails(response.data);
