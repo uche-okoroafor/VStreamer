@@ -10,7 +10,8 @@ import { useAllVideos } from '../../context/useAllVideosContext';
 import CommittedUsers from '../../components/CommittedUsers/CommittedUsers';
 import Follow from './Follow/Follow';
 import AboutUser from './AboutUser/AboutUser';
-import { CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 export default function Profile(): JSX.Element {
   const classes = useStyles();
@@ -19,7 +20,7 @@ export default function Profile(): JSX.Element {
   const { userDetails, handleGetUserDetails, isLoading } = useUserDetails();
   const [userHasVideos, setUserHasVideos] = useState(false);
   const [isUser, setIsUser] = useState(false);
-
+  const history = useHistory();
   const [user, setUser] = useState<IUserDetails>({
     username: '',
     userId: '',
@@ -154,7 +155,21 @@ export default function Profile(): JSX.Element {
               <VideosList videos={userDetails?.videos} videoPlayerOptions={videoPlayerOptions} />
             ) : (
               <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-                {isLoading ? <CircularProgress /> : <Typography>This account has no videos </Typography>}
+                {isLoading ? (
+                  <CircularProgress />
+                ) : (
+                  <Box display={'flex'} flexDirection="column" justifyContent={'center'}>
+                    <Typography>This account has no videos </Typography>
+                    <Button
+                      style={{ margin: '20px' }}
+                      onClick={() => history.push('/upload-video')}
+                      variant="contained"
+                      color="primary"
+                    >
+                      Upload Video
+                    </Button>
+                  </Box>
+                )}
               </Box>
             )}
           </Box>{' '}

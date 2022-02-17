@@ -49,7 +49,7 @@ export default function Watch(): JSX.Element {
   };
 
   const videosListPlayerOptions = {
-    width: '300',
+    width: '350',
     height: '200',
     autoPlay: false,
     displayDetails: false,

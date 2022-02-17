@@ -1,4 +1,5 @@
 export interface IVideoDetails {
+  thumbnail?: string;
   _id: string;
   videoTitle: string;
   videoSource: string;
