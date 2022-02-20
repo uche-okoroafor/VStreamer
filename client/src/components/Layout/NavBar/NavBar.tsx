@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import logo from '../NavBar/Logo/logo.svg';
+import logo from '../../images/Logo/logo.svg';
 import { useHistory } from 'react-router';
 import SearchVideo from './Search/Search';
 import { useUserDetails } from '../../../context/useUserContext';
