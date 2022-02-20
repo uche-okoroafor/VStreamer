@@ -16,14 +16,30 @@ const AuthHeader = ({ linkTo, asideText, btnText }: Props): JSX.Element => {
   return (
     <Box display={'flex'} alignItems={'center'} width="100%" justifyContent={'space-between'}>
       <Box sx={{ marginLeft: { sm: '14px', xs: '0', md: '23px' } }}>
-        <Typography
-          variant="h4"
-          sx={{
-            fontSize: { sm: '1.6rem', xs: '1.5rem', md: '2rem' },
-          }}
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="open drawer"
+          sx={{ mr: 2 }}
+          onClick={() => history.push('/home')}
         >
-          VStreamer
-        </Typography>
+          {/* <MenuIcon /> */}
+          <Box display="flex" justifyContent="center">
+            {' '}
+            <img src={logo} alt="logo" style={{ marginRight: '10px' }} />{' '}
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{
+                fontSize: { sm: '1.6rem', xs: '1.5rem', md: '2rem' },
+              }}
+            >
+              VStreamer
+            </Typography>
+          </Box>
+        </IconButton>
       </Box>
       <Box className={classes.authHeader}>
         <Typography
