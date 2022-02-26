@@ -1,8 +1,10 @@
 import Button from '@mui/material/Button';
 // import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
+import logo from '../../Images/Logo/logo.svg';
+import { Link, useHistory } from 'react-router-dom';
 import useStyles from './useStyles';
 import { Typography, Box } from '@mui/material';
+import { IconButton } from '@mui/material';
 
 interface Props {
   linkTo: string;
@@ -12,7 +14,7 @@ interface Props {
 
 const AuthHeader = ({ linkTo, asideText, btnText }: Props): JSX.Element => {
   const classes = useStyles();
-
+  const history = useHistory();
   return (
     <Box display={'flex'} alignItems={'center'} width="100%" justifyContent={'space-between'}>
       <Box sx={{ marginLeft: { sm: '14px', xs: '0', md: '23px' } }}>
@@ -27,7 +29,7 @@ const AuthHeader = ({ linkTo, asideText, btnText }: Props): JSX.Element => {
           {/* <MenuIcon /> */}
           <Box display="flex" justifyContent="center">
             {' '}
-            <img src={logo} alt="logo" style={{ marginRight: '10px' }} />{' '}
+            <img src={logo} alt="logo" style={{ marginRight: '10px', fill: 'white' }} />{' '}
             <Typography
               variant="h6"
               noWrap
