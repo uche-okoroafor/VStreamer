@@ -7,6 +7,8 @@ interface IProps {
   exact: boolean;
 }
 
+// Protected Route
+
 const ProtectedRoute: React.FC<IProps> = (props) => {
   return localStorage.getItem('user-token') ? <Route {...props} /> : <Redirect to="/login" />;
 };
