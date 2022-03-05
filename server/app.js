@@ -19,6 +19,8 @@ const commentRouter = require('./routes/commentRouter.js')
 const viewerRouter = require('./routes/viewerRouter.js')
 const followRouter = require('./routes/followRouter.js')
 const aboutRouter = require('./routes/aboutRouter.js')
+const visitorRouter = require('./routes/visitorRouter.js')
+
 
 const { json, urlencoded } = express
 
@@ -58,9 +60,7 @@ app.use('/comment', commentRouter)
 app.use('/views', viewerRouter)
 app.use('/follow', followRouter)
 app.use('/about', aboutRouter)
-app.use('/check', (req, res) => {
-  res.json({ success: 'Hello worlds' })
-})
+app.use('/visitor',visitorRouter)
 
 app.use(express.static(join(__dirname, 'public')))
 app.use(express.static(path.join(__dirname, 'build')))
