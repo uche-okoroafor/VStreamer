@@ -5,7 +5,8 @@ const visitSchema = new mongoose.Schema({
   visitTime: {
     type: Date,
     default: Date.now
-  }
+  },
+  screenSize: { type: String }
 })
 
 const Visit = mongoose.model('visit', visitSchema)

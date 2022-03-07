@@ -5,13 +5,14 @@ const Visit = require('../models/Visits')
 // @route POST /like
 // @access Private
 exports.addVisitorController = asyncHandler(async (req, res, next) => {
-  const { ipAddress, link } = req.params
-
+  const { ipAddress, link, screenSize } = req.params
+  console.log(screenSize, req.body, 'screenSize')
   const checkVisitor = await Visitor.findOne({ ipAddress })
 
   if (checkVisitor) {
     const visits = new Visit({
-      link
+      link,
+      screenSize
     })
     await Visitor.updateOne(
       { ipAddress },
@@ -25,7 +26,8 @@ exports.addVisitorController = asyncHandler(async (req, res, next) => {
   } else {
     const visits = new Visit({
       link,
-      ipAddress
+      ipAddress,
+      screenSize
     })
     await Visitor.create({ ipAddress, visitedLinks: [visits] })
   }
