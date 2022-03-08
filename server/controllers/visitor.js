@@ -6,7 +6,6 @@ const Visit = require('../models/Visits')
 // @access Private
 exports.addVisitorController = asyncHandler(async (req, res, next) => {
   const { ipAddress, link, screenSize } = req.params
-  console.log(screenSize, req.body, 'screenSize')
   const checkVisitor = await Visitor.findOne({ ipAddress })
 
   if (checkVisitor) {
