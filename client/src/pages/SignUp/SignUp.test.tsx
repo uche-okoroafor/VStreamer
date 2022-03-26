@@ -1,36 +1,55 @@
-import { render } from '@testing-library/react';
-import SignUp from './SignUp';
-import { MemoryRouter } from 'react-router-dom';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import LoginForm from './LoginForm';
 
-describe('SignUp tests', () => {
+const props = { handleSubmit: jest.fn() };
+
+describe('LoginForm tests', () => {
   test('smoke test', () => {
-    render(
-      <MemoryRouter>
-        <SignUp />
-      </MemoryRouter>,
-    );
+    render(<LoginForm {...props} />);
   });
 
   test('snapshot test', () => {
-    const { asFragment } = render(
-      <MemoryRouter>
-        <SignUp />
-      </MemoryRouter>,
-    );
+    const { asFragment } = render(<LoginForm {...props} />);
     expect(asFragment).toMatchSnapshot();
   });
 
+  test('the login button is enabled', async () => {
+    render(<LoginForm {...props} />);
+    expect(await screen.findByRole('button', { name: /login/i })).toBeEnabled();
+  });
+
+  test('the login button is disabled on login', async () => {
+    render(<LoginForm {...props} />);
+    userEvent.type(screen.getByLabelText(/E-mail address/i), 'johnDoe@gmail.com');
+    userEvent.type(screen.getByLabelText(/Password/i), '123456');
+    // userEvent.click(await screen.findByRole('button', { name: /login/i }));
+    // expect(await screen.findByRole('button', { name: /login/i })).toBeDisabled();
+    screen.getByRole('');
+  });
+
   test('can input values and submit form', async () => {
-    const { getByText } = render(
-      <MemoryRouter>
-        <SignUp />
-      </MemoryRouter>,
-    );
-    const account = getByText('Already have an account?');
-    expect(account).toBeInTheDocument();
+    const { getByLabelText, getByText } = render(<LoginForm {...props} />);
+    const email = getByLabelText('E-mail address');
+    expect(email).toBeInTheDocument();
+    const password = getByLabelText('Password');
+    expect(password).toBeInTheDocument();
     const login = getByText('Login');
     expect(login).toBeInTheDocument();
-    const title = getByText('Create an account');
-    expect(title).toBeInTheDocument();
+
+    fireEvent.change(email, { target: { value: 'testUser@gmail.com' } });
+    fireEvent.change(password, { target: { value: 'password123' } });
+
+    fireEvent.click(login);
+
+    await waitFor(() => {
+      expect(props.handleSubmit).toBeCalledWith(
+        {
+          email: 'testUser@gmail.com',
+          password: 'password123',
+        },
+        expect.anything(),
+      );
+    });
   });
 });
